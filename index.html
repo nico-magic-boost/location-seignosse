@@ -4,13 +4,31 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) with Consent Mode v2 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PCYJBK00T3"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
+
+    // RGPD : par défaut tout est refusé
+    gtag('consent', 'default', {
+      'ad_storage': 'denied',
+      'ad_user_data': 'denied',
+      'ad_personalization': 'denied',
+      'analytics_storage': 'denied',
+      'wait_for_update': 500
+    });
+
+    // Restaurer un choix précédent
+    try {
+      var prev = localStorage.getItem('cookie-consent');
+      if (prev === 'granted') {
+        gtag('consent', 'update', { 'analytics_storage': 'granted' });
+      }
+    } catch (e) {}
+
     gtag('js', new Date());
-    gtag('config', 'G-PCYJBK00T3');
+    gtag('config', 'G-PCYJBK00T3', { 'anonymize_ip': true });
   </script>
 
   <title>Location maison vacances Seignosse | Uhaïna House — 130 m², 3 chambres climatisées</title>
@@ -578,6 +596,23 @@
       <p>&copy; <span id="year"></span> Uhaïna House · Seignosse (40510) · location-seignosse.fr</p>
     </div>
   </footer>
+
+  <!-- Bandeau cookies -->
+  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Consentement aux cookies" hidden>
+    <div class="cookie-banner-inner">
+      <div class="cookie-text">
+        <strong>🍪 Cookies</strong>
+        <p>
+          Nous utilisons des cookies d'analyse (Google Analytics) pour comprendre comment
+          le site est utilisé et l'améliorer. Aucune donnée publicitaire n'est collectée.
+        </p>
+      </div>
+      <div class="cookie-actions">
+        <button type="button" class="cta cta-ghost cookie-refuse">Refuser</button>
+        <button type="button" class="cta cta-primary cookie-accept">Accepter</button>
+      </div>
+    </div>
+  </div>
 
   <script src="assets/js/main.js" defer></script>
 </body>
