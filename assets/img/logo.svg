@@ -1,0 +1,46 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Uaïna House — Location à Seignosse">
+  <title>Uaïna House</title>
+  <defs>
+    <clipPath id="uaina-frame">
+      <circle cx="100" cy="100" r="94"/>
+    </clipPath>
+    <clipPath id="uaina-horizon">
+      <rect x="0" y="0" width="200" height="142"/>
+    </clipPath>
+  </defs>
+
+  <!-- Fond sable chaud -->
+  <circle cx="100" cy="100" r="94" fill="#F5EEE3"/>
+
+  <g clip-path="url(#uaina-frame)">
+    <!-- Soleil couchant (demi-cercle, se couche derrière les pins) -->
+    <circle cx="100" cy="142" r="38" fill="#E97A3C" clip-path="url(#uaina-horizon)"/>
+    <circle cx="100" cy="142" r="38" fill="none" stroke="#E97A3C" stroke-width="0" opacity="0.15"/>
+
+    <!-- Forêt de pins parasols (silhouettes stylisées) -->
+    <g fill="#1F2937">
+      <!-- Pin arrière gauche -->
+      <rect x="51" y="86" width="2" height="62" rx="1"/>
+      <ellipse cx="52" cy="86" rx="13" ry="4.2"/>
+
+      <!-- Pin gauche -->
+      <rect x="72" y="58" width="2.4" height="90" rx="1.2"/>
+      <ellipse cx="73.2" cy="58" rx="18" ry="5.5"/>
+
+      <!-- Pin central (le plus haut) -->
+      <rect x="99" y="40" width="2.8" height="108" rx="1.4"/>
+      <ellipse cx="100.4" cy="40" rx="24" ry="6.8"/>
+
+      <!-- Pin droit -->
+      <rect x="128" y="52" width="2.4" height="96" rx="1.2"/>
+      <ellipse cx="129.2" cy="52" rx="20" ry="6"/>
+
+      <!-- Pin arrière droit -->
+      <rect x="148" y="80" width="2" height="68" rx="1"/>
+      <ellipse cx="149" cy="80" rx="14" ry="4.5"/>
+    </g>
+  </g>
+
+  <!-- Cercle de contour discret pour la lisibilité sur fond clair -->
+  <circle cx="100" cy="100" r="94" fill="none" stroke="#1F2937" stroke-width="2" opacity="0.08"/>
+</svg>

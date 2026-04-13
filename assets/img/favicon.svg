@@ -1,0 +1,19 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Uaïna House">
+  <defs>
+    <clipPath id="fav-frame"><circle cx="32" cy="32" r="30"/></clipPath>
+    <clipPath id="fav-horizon"><rect x="0" y="0" width="64" height="44"/></clipPath>
+  </defs>
+  <circle cx="32" cy="32" r="30" fill="#F5EEE3"/>
+  <g clip-path="url(#fav-frame)">
+    <circle cx="32" cy="44" r="13" fill="#E97A3C" clip-path="url(#fav-horizon)"/>
+    <g fill="#1F2937">
+      <!-- 3 pins parasols simplifiés -->
+      <rect x="31" y="10" width="2" height="38" rx="1"/>
+      <ellipse cx="32" cy="10" rx="9" ry="2.6"/>
+      <rect x="18.5" y="18" width="1.8" height="30" rx="0.9"/>
+      <ellipse cx="19.4" cy="18" rx="6.5" ry="2.1"/>
+      <rect x="43.5" y="16" width="1.8" height="32" rx="0.9"/>
+      <ellipse cx="44.4" cy="16" rx="7" ry="2.3"/>
+    </g>
+  </g>
+</svg>
