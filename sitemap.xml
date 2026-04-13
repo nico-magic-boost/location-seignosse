@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/0.9">
   <url>
     <loc>https://location-seignosse.fr/</loc>
-    <changefreq>monthly</changefreq>
+    <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://location-seignosse.fr/assets/img/terrasse.jpg</image:loc>
+      <image:caption>Terrasse extérieure — Uhaïna House, Seignosse</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://location-seignosse.fr/assets/img/entree.jpg</image:loc>
+      <image:caption>Entrée de la maison de vacances à Seignosse</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://location-seignosse.fr/assets/img/couloir.jpg</image:loc>
+      <image:caption>Couloir intérieur — Uhaïna House</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://location-seignosse.fr/assets/img/bureau.jpg</image:loc>
+      <image:caption>Coin bureau de la maison — Seignosse</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://location-seignosse.fr/assets/img/wc.jpg</image:loc>
+      <image:caption>WC séparé — Uhaïna House</image:caption>
+    </image:image>
   </url>
 </urlset>

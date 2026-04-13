@@ -1,6 +1,6 @@
-# location-seignosse.fr — Uaïna House
+# location-seignosse.fr — Uhaïna House
 
-Site vitrine statique pour la location de vacances **Uaïna House** à Seignosse (Landes, 40510).
+Site vitrine statique pour la location de vacances **Uhaïna House** à Seignosse (Landes, 40510).
 
 ## Structure
 
@@ -95,4 +95,4 @@ dans l'onglet **Actions** du repo.
 
 ## Licence
 
-Contenu propriétaire — Uaïna House, Seignosse.
+Contenu propriétaire — Uhaïna House, Seignosse.
