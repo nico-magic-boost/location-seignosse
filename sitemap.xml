@@ -60,10 +60,16 @@
     <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/haus/" />
     <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/la-maison/" />
     <image:image><image:loc>https://location-seignosse.fr/assets/img/terrasse.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/facade.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/facade-cote.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/jardin.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/terrasse-jardin.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/plancha.jpg</image:loc></image:image>
     <image:image><image:loc>https://location-seignosse.fr/assets/img/entree.jpg</image:loc></image:image>
     <image:image><image:loc>https://location-seignosse.fr/assets/img/couloir.jpg</image:loc></image:image>
     <image:image><image:loc>https://location-seignosse.fr/assets/img/bureau.jpg</image:loc></image:image>
     <image:image><image:loc>https://location-seignosse.fr/assets/img/wc.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/terrasse-detail.jpg</image:loc></image:image>
   </url>
   <url>
     <loc>https://location-seignosse.fr/en/house/</loc>
