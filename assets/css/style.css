@@ -387,7 +387,7 @@ a:hover { text-decoration: underline; }
 .cta-row .cta-link:hover { color: var(--white); }
 
 .cta-reassure {
-  margin-top: 1.25rem;
+  margin-top: 2.25rem;
   font-size: 0.88rem;
   color: rgba(245, 238, 227, 0.7);
 }
