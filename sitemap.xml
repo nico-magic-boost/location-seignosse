@@ -1,53 +1,225 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/0.9">
+
+  <!-- ============ HOME ============ -->
   <url>
     <loc>https://location-seignosse.fr/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/" />
     <image:image>
       <image:loc>https://location-seignosse.fr/assets/img/terrasse.jpg</image:loc>
       <image:caption>Terrasse extérieure — Uhaïna House, Seignosse</image:caption>
     </image:image>
   </url>
+  <url>
+    <loc>https://location-seignosse.fr/en/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/" />
+  </url>
+
+  <!-- ============ THE HOUSE ============ -->
   <url>
     <loc>https://location-seignosse.fr/la-maison/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
-    <image:image>
-      <image:loc>https://location-seignosse.fr/assets/img/terrasse.jpg</image:loc>
-      <image:caption>Terrasse extérieure — Uhaïna House, Seignosse</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://location-seignosse.fr/assets/img/entree.jpg</image:loc>
-      <image:caption>Entrée de la maison de vacances à Seignosse</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://location-seignosse.fr/assets/img/couloir.jpg</image:loc>
-      <image:caption>Couloir intérieur — Uhaïna House</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://location-seignosse.fr/assets/img/bureau.jpg</image:loc>
-      <image:caption>Coin bureau de la maison — Seignosse</image:caption>
-    </image:image>
-    <image:image>
-      <image:loc>https://location-seignosse.fr/assets/img/wc.jpg</image:loc>
-      <image:caption>WC séparé — Uhaïna House</image:caption>
-    </image:image>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/la-maison/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/house/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/casa/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/haus/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/la-maison/" />
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/terrasse.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/entree.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/couloir.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/bureau.jpg</image:loc></image:image>
+    <image:image><image:loc>https://location-seignosse.fr/assets/img/wc.jpg</image:loc></image:image>
   </url>
+  <url>
+    <loc>https://location-seignosse.fr/en/house/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/la-maison/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/house/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/casa/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/haus/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/la-maison/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/casa/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/la-maison/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/house/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/casa/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/haus/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/la-maison/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/haus/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/la-maison/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/house/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/casa/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/haus/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/la-maison/" />
+  </url>
+
+  <!-- ============ SEIGNOSSE (LOCAL GUIDE) ============ -->
   <url>
     <loc>https://location-seignosse.fr/seignosse/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/seignosse/" />
   </url>
+  <url>
+    <loc>https://location-seignosse.fr/en/seignosse/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/seignosse/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/seignosse/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/seignosse/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/seignosse/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/seignosse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/seignosse/" />
+  </url>
+
+  <!-- ============ ABOUT ============ -->
   <url>
     <loc>https://location-seignosse.fr/a-propos/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/a-propos/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/about/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/nosotros/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/ueber-uns/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/a-propos/" />
   </url>
+  <url>
+    <loc>https://location-seignosse.fr/en/about/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.55</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/a-propos/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/about/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/nosotros/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/ueber-uns/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/a-propos/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/nosotros/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.55</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/a-propos/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/about/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/nosotros/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/ueber-uns/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/a-propos/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/ueber-uns/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.55</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/a-propos/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/about/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/nosotros/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/ueber-uns/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/a-propos/" />
+  </url>
+
+  <!-- ============ BOOK ============ -->
   <url>
     <loc>https://location-seignosse.fr/reserver/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/reserver/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/book/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/reservar/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/buchen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/reserver/" />
   </url>
+  <url>
+    <loc>https://location-seignosse.fr/en/book/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/reserver/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/book/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/reservar/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/buchen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/reserver/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/reservar/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/reserver/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/book/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/reservar/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/buchen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/reserver/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/buchen/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/reserver/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/book/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/reservar/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/buchen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/reserver/" />
+  </url>
+
 </urlset>
