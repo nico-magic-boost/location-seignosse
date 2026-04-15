@@ -1,0 +1,63 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install image tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y jpegoptim optipng imagemagick
+
+      - name: Resize oversized JPEGs (max 1920px wide)
+        run: |
+          shopt -s nullglob
+          find assets/img -type f \( -iname "*.jpg" -o -iname "*.jpeg" \) 2>/dev/null | while read -r f; do
+            w=$(identify -format "%w" "$f" 2>/dev/null || echo 0)
+            if [ "$w" -gt 1920 ]; then
+              convert "$f" -resize '1920x>' -quality 85 "$f"
+              echo "Resized: $f ($w -> 1920)"
+            fi
+          done
+
+      - name: Compress JPEGs
+        run: |
+          find assets/img -type f \( -iname "*.jpg" -o -iname "*.jpeg" \) \
+            -exec jpegoptim --max=82 --strip-all --all-progressive {} \; 2>/dev/null || true
+
+      - name: Compress PNGs
+        run: |
+          find assets/img -type f -iname "*.png" \
+            -exec optipng -quiet -o2 -strip all {} \; 2>/dev/null || true
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
