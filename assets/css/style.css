@@ -817,6 +817,29 @@ a:hover { text-decoration: underline; }
 }
 .nav-card:hover .nav-card-link { color: var(--sun); }
 
+/* About hero head (avatar + title) */
+.about-hero-head {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 3vw, 1.75rem);
+  margin: 0 0 0.5rem;
+}
+.about-hero-avatar {
+  width: clamp(96px, 12vw, 140px);
+  height: clamp(96px, 12vw, 140px);
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.14);
+  border: 3px solid #fff;
+}
+.about-hero-head .about-hero-title { min-width: 0; }
+.about-hero-head .eyebrow { margin: 0 0 0.45rem; }
+.about-hero-head h1 { margin: 0; }
+@media (max-width: 540px) {
+  .about-hero-head { flex-direction: column; align-items: flex-start; gap: 1rem; }
+}
+
 /* About layout */
 .about-layout {
   display: grid;
