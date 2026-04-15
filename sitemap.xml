@@ -228,4 +228,25 @@
     <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/reserver/" />
   </url>
 
+  <!-- ============ BLOG ============ -->
+  <url>
+    <loc>https://location-seignosse.fr/actualites/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <image:image>
+      <image:loc>https://location-seignosse.fr/assets/img/terrasse-jardin.jpg</image:loc>
+      <image:caption>Calendrier des événements 2026 à Seignosse</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/a-propos/nicolas/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+
 </urlset>
