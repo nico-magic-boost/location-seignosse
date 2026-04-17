@@ -1328,25 +1328,56 @@ a:hover { text-decoration: underline; }
 .reviews-hero h1 { margin-bottom: 0.5rem; }
 .reviews-hero .lead { color: var(--ink-soft); max-width: 62ch; }
 
-/* -------- Rating badge (global, all pages) -------- */
-.rating-badge {
-  display: inline-flex;
+/* -------- Floating widgets (rating popup + WhatsApp) -------- */
+.floating-widgets {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.65rem;
+}
+.rating-popup {
+  display: flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.6rem 1.1rem;
+  padding: 0.65rem 1.1rem;
   background: var(--sand-warm);
   border: 1px solid var(--sand-deep);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   text-decoration: none;
   transition: box-shadow 0.2s, transform 0.2s;
-  margin-bottom: 0.5rem;
+  position: relative;
+  animation: floatIn 0.4s ease-out;
 }
-.rating-badge:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-1px);
+.rating-popup:hover {
+  box-shadow: 0 8px 28px rgba(31,41,55,0.16);
+  transform: translateY(-2px);
   text-decoration: none;
 }
+.rating-popup-close {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--white);
+  border: 2px solid var(--sand-warm);
+  font-size: 12px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-family: inherit;
+  padding: 0;
+}
+.rating-popup-close:hover { background: var(--sun-dark); }
 .rating-badge-score {
   font-family: var(--font-serif);
   font-weight: 600;
@@ -1359,7 +1390,7 @@ a:hover { text-decoration: underline; }
   flex-direction: column;
   gap: 0.1rem;
 }
-.rating-badge .rating-stars {
+.rating-popup .rating-stars {
   color: var(--sun);
   font-size: 0.9rem;
   letter-spacing: 0.06em;
@@ -1372,6 +1403,33 @@ a:hover { text-decoration: underline; }
   font-size: 0.75rem;
   color: var(--sun-dark);
   font-weight: 500;
+}
+.whatsapp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25D366;
+  box-shadow: 0 4px 14px rgba(37,211,102,0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-decoration: none;
+  animation: floatIn 0.4s ease-out;
+}
+.whatsapp-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(37,211,102,0.45);
+  text-decoration: none;
+}
+.whatsapp-btn svg {
+  width: 30px;
+  height: 30px;
+  fill: #fff;
+}
+@keyframes floatIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .reviews-rating-big {
   display: flex;
