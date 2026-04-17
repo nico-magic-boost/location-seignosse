@@ -249,4 +249,46 @@
     <priority>0.4</priority>
   </url>
 
+  <!-- ============ AVIS / REVIEWS ============ -->
+  <url>
+    <loc>https://location-seignosse.fr/avis/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/avis/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/reviews/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/opiniones/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/bewertungen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/avis/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/en/reviews/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/avis/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/reviews/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/opiniones/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/bewertungen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/avis/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/opiniones/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/avis/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/reviews/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/opiniones/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/bewertungen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/avis/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/bewertungen/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/avis/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/reviews/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/opiniones/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/bewertungen/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/avis/" />
+  </url>
+
 </urlset>
