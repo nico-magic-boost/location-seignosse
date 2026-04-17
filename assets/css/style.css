@@ -1317,8 +1317,62 @@ a:hover { text-decoration: underline; }
   padding: clamp(2rem, 4vw, 3.5rem) 0 clamp(1.5rem, 3vw, 2.5rem);
   border-bottom: 1px solid var(--line);
 }
+.reviews-cover {
+  width: 100%;
+  max-height: 340px;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-md);
+}
 .reviews-hero h1 { margin-bottom: 0.5rem; }
 .reviews-hero .lead { color: var(--ink-soft); max-width: 62ch; }
+
+/* -------- Rating badge (global, all pages) -------- */
+.rating-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.6rem 1.1rem;
+  background: var(--sand-warm);
+  border: 1px solid var(--sand-deep);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  text-decoration: none;
+  transition: box-shadow 0.2s, transform 0.2s;
+  margin-bottom: 0.5rem;
+}
+.rating-badge:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+.rating-badge-score {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--ink);
+}
+.rating-badge-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.rating-badge .rating-stars {
+  color: var(--sun);
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+}
+.rating-badge-count {
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+.rating-badge-source {
+  font-size: 0.75rem;
+  color: var(--sun-dark);
+  font-weight: 500;
+}
 .reviews-rating-big {
   display: flex;
   align-items: center;
