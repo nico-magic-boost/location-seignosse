@@ -1318,6 +1318,7 @@ a:hover { text-decoration: underline; }
   border-bottom: 1px solid var(--line);
 }
 .reviews-hero h1 { margin-bottom: 0.5rem; }
+.reviews-hero .lead { color: var(--ink-soft); max-width: 62ch; }
 .reviews-rating-big {
   display: flex;
   align-items: center;
