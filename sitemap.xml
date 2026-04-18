@@ -233,21 +233,129 @@
     <loc>https://location-seignosse.fr/actualites/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/actualites/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/news/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/noticias/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/aktuelles/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/actualites/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/en/news/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/actualites/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/news/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/noticias/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/aktuelles/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/actualites/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/noticias/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/actualites/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/news/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/noticias/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/aktuelles/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/actualites/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/aktuelles/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.65</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/actualites/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/news/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/noticias/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/aktuelles/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/actualites/" />
   </url>
   <url>
     <loc>https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/news/seignosse-events-calendar/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/noticias/calendario-eventos-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/aktuelles/veranstaltungskalender-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/" />
     <image:image>
       <image:loc>https://location-seignosse.fr/assets/img/terrasse-jardin.jpg</image:loc>
       <image:caption>Calendrier des événements 2026 à Seignosse</image:caption>
     </image:image>
   </url>
   <url>
+    <loc>https://location-seignosse.fr/en/news/seignosse-events-calendar/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.55</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/news/seignosse-events-calendar/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/noticias/calendario-eventos-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/aktuelles/veranstaltungskalender-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/noticias/calendario-eventos-seignosse/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.55</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/news/seignosse-events-calendar/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/noticias/calendario-eventos-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/aktuelles/veranstaltungskalender-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/aktuelles/veranstaltungskalender-seignosse/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.55</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/news/seignosse-events-calendar/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/noticias/calendario-eventos-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/aktuelles/veranstaltungskalender-seignosse/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/actualites/calendrier-evenements-seignosse/" />
+  </url>
+
+  <!-- ============ NICOLAS (AUTHOR) ============ -->
+  <url>
     <loc>https://location-seignosse.fr/a-propos/nicolas/</loc>
     <changefreq>yearly</changefreq>
     <priority>0.4</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/a-propos/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/about/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/nosotros/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/ueber-uns/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/a-propos/nicolas/" />
   </url>
+  <url>
+    <loc>https://location-seignosse.fr/en/about/nicolas/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.35</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/a-propos/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/about/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/nosotros/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/ueber-uns/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/a-propos/nicolas/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/es/nosotros/nicolas/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.35</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/a-propos/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/about/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/nosotros/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/ueber-uns/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/a-propos/nicolas/" />
+  </url>
+  <url>
+    <loc>https://location-seignosse.fr/de/ueber-uns/nicolas/</loc>
+    <changefreq>yearly</changefreq>
+    <priority>0.35</priority>
+    <xhtml:link rel="alternate" hreflang="fr-FR" href="https://location-seignosse.fr/a-propos/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="en" href="https://location-seignosse.fr/en/about/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="es" href="https://location-seignosse.fr/es/nosotros/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="de" href="https://location-seignosse.fr/de/ueber-uns/nicolas/" />
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://location-seignosse.fr/a-propos/nicolas/" />
+  </url>
+
 
   <!-- ============ AVIS / REVIEWS ============ -->
   <url>
