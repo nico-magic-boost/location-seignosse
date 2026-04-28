@@ -47,7 +47,8 @@
   <link rel="apple-touch-icon" href="/assets/img/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" /></noscript>
   <link rel="stylesheet" href="/assets/css/style.css?v=4" />
 
   <script type="application/ld+json">
@@ -382,47 +383,47 @@
         </p>
         <div class="gallery">
           <figure class="gallery-item gallery-item-large">
-            <img src="/assets/img/terrasse.jpg" alt="Back terrace at sunset — Uhaïna House, Seignosse" loading="lazy" />
+            <img src="/assets/img/terrasse.jpg" alt="Back terrace at sunset — Uhaïna House, Seignosse" loading="lazy" decoding="async" />
             <figcaption>Terrace at sunset</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/facade.jpg" alt="Façade of the Uhaïna House holiday rental in Seignosse village" loading="lazy" />
+            <img src="/assets/img/facade.jpg" alt="Façade of the Uhaïna House holiday rental in Seignosse village" loading="lazy" decoding="async" />
             <figcaption>Façade</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/facade-cote.jpg" alt="Side view of the house and main entrance" loading="lazy" />
+            <img src="/assets/img/facade-cote.jpg" alt="Side view of the house and main entrance" loading="lazy" decoding="async" />
             <figcaption>Side view</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/jardin.jpg" alt="Enclosed garden of Uhaïna House in Seignosse" loading="lazy" />
+            <img src="/assets/img/jardin.jpg" alt="Enclosed garden of Uhaïna House in Seignosse" loading="lazy" decoding="async" />
             <figcaption>Garden</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/terrasse-jardin.jpg" alt="Terrace and garden on the sunny side — Seignosse" loading="lazy" />
+            <img src="/assets/img/terrasse-jardin.jpg" alt="Terrace and garden on the sunny side — Seignosse" loading="lazy" decoding="async" />
             <figcaption>Terrace &amp; garden</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/plancha.jpg" alt="Outdoor plancha for barbecues at Uhaïna House" loading="lazy" />
+            <img src="/assets/img/plancha.jpg" alt="Outdoor plancha for barbecues at Uhaïna House" loading="lazy" decoding="async" />
             <figcaption>Outdoor plancha</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/entree.jpg" alt="Entrance of the holiday rental house in Seignosse" loading="lazy" />
+            <img src="/assets/img/entree.jpg" alt="Entrance of the holiday rental house in Seignosse" loading="lazy" decoding="async" />
             <figcaption>The entrance</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/couloir.jpg" alt="Interior hallway of the Uhaïna House holiday home" loading="lazy" />
+            <img src="/assets/img/couloir.jpg" alt="Interior hallway of the Uhaïna House holiday home" loading="lazy" decoding="async" />
             <figcaption>The hallway</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/bureau.jpg" alt="Home office for remote work at Uhaïna House in Seignosse" loading="lazy" />
+            <img src="/assets/img/bureau.jpg" alt="Home office for remote work at Uhaïna House in Seignosse" loading="lazy" decoding="async" />
             <figcaption>The home office</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/wc.jpg" alt="Separate WC of the holiday rental house in Seignosse" loading="lazy" />
+            <img src="/assets/img/wc.jpg" alt="Separate WC of the holiday rental house in Seignosse" loading="lazy" decoding="async" />
             <figcaption>Separate WC</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/terrasse-detail.jpg" alt="Paved terrace detail — Uhaïna House" loading="lazy" />
+            <img src="/assets/img/terrasse-detail.jpg" alt="Paved terrace detail — Uhaïna House" loading="lazy" decoding="async" />
             <figcaption>Paved terrace</figcaption>
           </figure>
         </div>
@@ -544,7 +545,7 @@
   <!-- Floating widgets -->
   <div class="floating-widgets">
     <a class="rating-popup" href="/en/reviews/" id="rating-popup">
-      <button class="rating-popup-close" aria-label="Close" type="button">&#10005;</button>
+      <span class="rating-popup-close" role="button" tabindex="0" aria-label="Close">&#10005;</span>
       <span class="rating-badge-score">4.74</span>
       <span class="rating-badge-detail">
         <span class="rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>

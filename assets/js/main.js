@@ -37,11 +37,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     const closeBtn = popup.querySelector(".rating-popup-close");
     if (closeBtn) {
-      closeBtn.addEventListener("click", (e) => {
+      const dismiss = (e) => {
         e.preventDefault();
         e.stopPropagation();
         popup.style.display = "none";
         try { localStorage.setItem("rating-popup-closed", "1"); } catch (e) {}
+      };
+      closeBtn.addEventListener("click", dismiss);
+      closeBtn.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") dismiss(e);
       });
     }
   }

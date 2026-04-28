@@ -47,7 +47,8 @@
   <link rel="apple-touch-icon" href="/assets/img/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" /></noscript>
   <link rel="stylesheet" href="/assets/css/style.css?v=4" />
 
   <script type="application/ld+json">
@@ -120,7 +121,7 @@
         <div class="blog-grid">
           <a class="blog-card" href="/en/news/seignosse-events-calendar/">
             <div class="blog-card-media">
-              <img src="/assets/img/terrasse-jardin.jpg" alt="Convivial evening in the garden at Uhaïna House in Seignosse" width="800" height="500" loading="lazy" />
+              <img src="/assets/img/terrasse-jardin.jpg" alt="Convivial evening in the garden at Uhaïna House in Seignosse" width="800" height="500" loading="lazy" decoding="async" />
             </div>
             <div class="blog-card-body">
               <p class="blog-card-meta">
@@ -236,7 +237,7 @@
   <!-- Floating widgets -->
   <div class="floating-widgets">
     <a class="rating-popup" href="/en/reviews/" id="rating-popup">
-      <button class="rating-popup-close" aria-label="Close" type="button">&#10005;</button>
+      <span class="rating-popup-close" role="button" tabindex="0" aria-label="Close">&#10005;</span>
       <span class="rating-badge-score">4.74</span>
       <span class="rating-badge-detail">
         <span class="rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>

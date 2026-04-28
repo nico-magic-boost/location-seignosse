@@ -47,7 +47,8 @@
   <link rel="apple-touch-icon" href="/assets/img/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" /></noscript>
   <link rel="stylesheet" href="/assets/css/style.css?v=4" />
 
   <script type="application/ld+json">
@@ -133,47 +134,47 @@
         </p>
         <div class="gallery">
           <figure class="gallery-item gallery-item-large">
-            <img src="/assets/img/terrasse.jpg" alt="Terrasse arrière au coucher du soleil — Uhaïna House, Seignosse" loading="lazy" />
+            <img src="/assets/img/terrasse.jpg" alt="Terrasse arrière au coucher du soleil — Uhaïna House, Seignosse" loading="lazy" decoding="async" />
             <figcaption>Terrasse au coucher du soleil</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/facade.jpg" alt="Façade de la maison de vacances Uhaïna House à Seignosse bourg" loading="lazy" />
+            <img src="/assets/img/facade.jpg" alt="Façade de la maison de vacances Uhaïna House à Seignosse bourg" loading="lazy" decoding="async" />
             <figcaption>Façade</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/facade-cote.jpg" alt="Vue latérale de la maison et entrée principale" loading="lazy" />
+            <img src="/assets/img/facade-cote.jpg" alt="Vue latérale de la maison et entrée principale" loading="lazy" decoding="async" />
             <figcaption>Vue latérale</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/jardin.jpg" alt="Jardin clos de Uhaïna House à Seignosse" loading="lazy" />
+            <img src="/assets/img/jardin.jpg" alt="Jardin clos de Uhaïna House à Seignosse" loading="lazy" decoding="async" />
             <figcaption>Jardin</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/terrasse-jardin.jpg" alt="Terrasse et jardin côté sud — Seignosse" loading="lazy" />
+            <img src="/assets/img/terrasse-jardin.jpg" alt="Terrasse et jardin côté sud — Seignosse" loading="lazy" decoding="async" />
             <figcaption>Terrasse &amp; jardin</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/plancha.jpg" alt="Plancha extérieure pour barbecue à Uhaïna House" loading="lazy" />
+            <img src="/assets/img/plancha.jpg" alt="Plancha extérieure pour barbecue à Uhaïna House" loading="lazy" decoding="async" />
             <figcaption>Plancha extérieure</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/entree.jpg" alt="Entrée de la maison de location à Seignosse" loading="lazy" />
+            <img src="/assets/img/entree.jpg" alt="Entrée de la maison de location à Seignosse" loading="lazy" decoding="async" />
             <figcaption>L'entrée</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/couloir.jpg" alt="Couloir intérieur de la maison de vacances Uhaïna House" loading="lazy" />
+            <img src="/assets/img/couloir.jpg" alt="Couloir intérieur de la maison de vacances Uhaïna House" loading="lazy" decoding="async" />
             <figcaption>Le couloir</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/bureau.jpg" alt="Coin bureau pour télétravail à Uhaïna House à Seignosse" loading="lazy" />
+            <img src="/assets/img/bureau.jpg" alt="Coin bureau pour télétravail à Uhaïna House à Seignosse" loading="lazy" decoding="async" />
             <figcaption>Le coin bureau</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/wc.jpg" alt="WC séparé de la maison de location à Seignosse" loading="lazy" />
+            <img src="/assets/img/wc.jpg" alt="WC séparé de la maison de location à Seignosse" loading="lazy" decoding="async" />
             <figcaption>WC séparé</figcaption>
           </figure>
           <figure class="gallery-item">
-            <img src="/assets/img/terrasse-detail.jpg" alt="Détail de la terrasse pavée — Uhaïna House" loading="lazy" />
+            <img src="/assets/img/terrasse-detail.jpg" alt="Détail de la terrasse pavée — Uhaïna House" loading="lazy" decoding="async" />
             <figcaption>Terrasse pavée</figcaption>
           </figure>
         </div>
@@ -543,7 +544,7 @@
   <!-- Floating widgets -->
   <div class="floating-widgets">
     <a class="rating-popup" href="/avis/" id="rating-popup">
-      <button class="rating-popup-close" aria-label="Fermer" type="button">&#10005;</button>
+      <span class="rating-popup-close" role="button" tabindex="0" aria-label="Fermer">&#10005;</span>
       <span class="rating-badge-score">4,74</span>
       <span class="rating-badge-detail">
         <span class="rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span>
