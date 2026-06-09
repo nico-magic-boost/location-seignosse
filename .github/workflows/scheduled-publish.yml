@@ -1,0 +1,49 @@
+name: Publish scheduled articles
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # Every day at 6:00 AM UTC (8:00 Paris)
+  workflow_dispatch:       # Manual trigger
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Publish due articles
+        run: |
+          shopt -s nullglob
+          NOW=$(date -u +%s)
+          PUBLISHED=0
+
+          for f in _scheduled/*.json; do
+            PUBLISH_AT=$(python3 -c "import json,sys; d=json.load(open('$f')); print(d.get('publishAt',''))")
+            TARGET_EPOCH=$(date -u -d "$PUBLISH_AT" +%s 2>/dev/null || echo 0)
+
+            if [ "$TARGET_EPOCH" -le "$NOW" ] && [ "$TARGET_EPOCH" -gt 0 ]; then
+              TARGET_PATH=$(python3 -c "import json; d=json.load(open('$f')); print(d['path'])")
+              CONTENT=$(python3 -c "import json; d=json.load(open('$f')); print(d['content'])")
+
+              mkdir -p "$(dirname "$TARGET_PATH")"
+              echo "$CONTENT" > "$TARGET_PATH"
+              rm "$f"
+              PUBLISHED=$((PUBLISHED + 1))
+              echo "Published: $TARGET_PATH"
+            fi
+          done
+
+          if [ "$PUBLISHED" -gt 0 ]; then
+            git config user.name "GitHub Actions"
+            git config user.email "actions@github.com"
+            git add -A
+            git commit -m "Auto-publish $PUBLISHED scheduled article(s)"
+            git push
+          else
+            echo "No articles due for publishing"
+          fi

@@ -106,11 +106,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .image-card .ibtn.del{right:5px}.image-card .ibtn.cp{left:5px}
 
 .blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
-.blog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;cursor:pointer;transition:all .15s}
+.blog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;cursor:pointer;transition:all .15s;position:relative}
 .blog-card:hover{border-color:var(--accent);background:var(--card-hover)}
 .blog-card .blang{font-size:.63rem;padding:.12rem .4rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:700;display:inline-block}
 .blog-card .btitle{font-size:.95rem;font-weight:600;margin:.4rem 0 .2rem}.blog-card .bslug{font-size:.73rem;color:var(--muted)}
 .blog-card .bactions{display:flex;gap:.4rem;margin-top:.6rem}
+.blog-card .bstatus{position:absolute;top:10px;right:10px;font-size:.6rem;padding:.15rem .4rem;border-radius:4px;text-transform:uppercase;font-weight:700}
+.bstatus.draft{background:#854d0e;color:#fef08a}.bstatus.scheduled{background:#1e3a5f;color:#93c5fd}.bstatus.published{background:#166534;color:#bbf7d0}
+.blog-tabs{display:flex;gap:.2rem;margin-bottom:1.2rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+.blog-tabs button{padding:.45rem 1rem;border:none;background:none;color:var(--muted);font-size:.83rem;cursor:pointer;border-radius:6px 6px 0 0;transition:all .15s;display:flex;align-items:center;gap:.4rem}
+.blog-tabs button.active{color:var(--accent);background:rgba(233,122,60,.1);border-bottom:2px solid var(--accent)}
+.blog-tabs .badge{font-size:.65rem;background:var(--border);color:var(--text);padding:.1rem .4rem;border-radius:10px}
+.template-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.8rem;margin-bottom:1.2rem}
+.template-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:1rem;cursor:pointer;transition:all .15s;text-align:center}
+.template-card:hover{border-color:var(--accent)}
+.template-card .ticon{font-size:1.8rem;margin-bottom:.4rem}
+.template-card .tname{font-size:.85rem;font-weight:600}
+.template-card .tdesc{font-size:.72rem;color:var(--muted);margin-top:.2rem}
+.schedule-row{display:flex;gap:.8rem;align-items:flex-end;margin-top:.8rem;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius)}
+.schedule-row .form-group{margin-bottom:0;flex:1}
+.blog-actions{display:flex;gap:.5rem;margin-top:1rem;justify-content:flex-end;flex-wrap:wrap}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.visible{display:flex}
@@ -274,17 +289,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </div>
 <!-- BLOG -->
 <div class="section" id="sec-blog">
-  <div class="topbar"><h2>Blog</h2><div><button class="btn btn-primary btn-sm" onclick="newArticle()">+ Nouvel article</button></div></div>
+  <div class="topbar"><h2>Blog</h2><div><button class="btn btn-primary btn-sm" onclick="showTemplates()">+ Nouvel article</button></div></div>
   <div class="content">
-    <div id="blog-browse"></div>
+    <div id="blog-browse">
+      <div class="blog-tabs">
+        <button class="active" onclick="blogTab('drafts',this)">Brouillons <span class="badge" id="n-drafts">0</span></button>
+        <button onclick="blogTab('scheduled',this)">Programmes <span class="badge" id="n-scheduled">0</span></button>
+        <button onclick="blogTab('published',this)">Publies <span class="badge" id="n-published">0</span></button>
+      </div>
+      <div id="blog-tab-drafts" class="blog-grid"></div>
+      <div id="blog-tab-scheduled" class="blog-grid" style="display:none"></div>
+      <div id="blog-tab-published" class="blog-grid" style="display:none"></div>
+    </div>
     <div class="edit-panel" id="blog-edit">
       <div class="edit-header">
         <button class="back-btn" onclick="closeBlogEdit()">&#8592;</button>
         <h2 style="font-size:1rem" id="be-title">Nouvel article</h2>
-        <div style="margin-left:auto"><button class="btn btn-primary btn-sm" onclick="saveBlog()">Publier</button></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Titre</label><input type="text" id="b-title"/></div>
+        <div class="form-group"><label>Titre</label><input type="text" id="b-title" oninput="autoSlug()"/></div>
         <div class="form-group"><label>Slug (URL)</label><input type="text" id="b-slug" placeholder="mon-article"/></div>
       </div>
       <div class="form-row">
@@ -301,6 +324,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           </div>
           <div class="ve" id="be" contenteditable="true" style="min-height:280px"></div>
         </div>
+      </div>
+      <div class="schedule-row" id="schedule-row" style="display:none">
+        <div class="form-group"><label>Date de publication</label><input type="date" id="sched-date"/></div>
+        <div class="form-group"><label>Heure</label><input type="time" id="sched-time" value="08:00"/></div>
+        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('schedule-row').style.display='none'">Annuler</button>
+      </div>
+      <div class="blog-actions">
+        <button class="btn btn-ghost" onclick="saveDraft()">Sauvegarder le brouillon</button>
+        <button class="btn btn-ghost" onclick="showSchedule()">Programmer</button>
+        <button class="btn btn-primary" onclick="publishNow()">Publier maintenant</button>
       </div>
     </div>
   </div>
@@ -514,21 +547,119 @@ async function upFiles(files){for(const f of files){if(!f.type.startsWith("image
 function toB64(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(",")[1]);rd.onerror=j;rd.readAsDataURL(f)})}
 
 // ─── BLOG ───
+const TEMPLATES=[
+  {id:"guide",icon:"&#128204;",name:"Guide d'activites",desc:"Quoi faire a Seignosse...",body:"<h1>Guide : [Titre]</h1><p class='lead'>Introduction accrocheuse en 2-3 phrases.</p><h2>1. Premiere activite</h2><p>Description detaillee...</p><h2>2. Deuxieme activite</h2><p>Description detaillee...</p><h2>3. Troisieme activite</h2><p>Description detaillee...</p><h2>Conseils pratiques</h2><p>Informations utiles pour les visiteurs.</p><h2>En resume</h2><p>Conclusion et appel a l'action vers la reservation.</p>"},
+  {id:"event",icon:"&#128197;",name:"Evenement / Actualite",desc:"Annonce, agenda, nouveaute",body:"<h1>[Titre de l'evenement]</h1><p class='lead'>Resume de l'evenement en une phrase.</p><h2>De quoi s'agit-il ?</h2><p>Description complete...</p><h2>Infos pratiques</h2><ul><li><strong>Date :</strong> </li><li><strong>Lieu :</strong> </li><li><strong>Tarif :</strong> </li></ul><h2>Pourquoi y aller depuis Uhaina House ?</h2><p>Lien avec la maison et la proximite...</p>"},
+  {id:"compare",icon:"&#9878;",name:"Comparatif",desc:"Seignosse vs Hossegor, etc.",body:"<h1>[A] vs [B] : ou louer pour ses vacances ?</h1><p class='lead'>Comparatif complet pour vous aider a choisir.</p><h2>Presentation de [A]</h2><p>Points forts, ambiance, plages...</p><h2>Presentation de [B]</h2><p>Points forts, ambiance, plages...</p><h2>Tableau comparatif</h2><p>Critere par critere...</p><h2>Notre avis</h2><p>Recommandation et lien vers Uhaina House.</p>"},
+  {id:"pratique",icon:"&#128218;",name:"Guide pratique",desc:"Comment faire, conseils, FAQ",body:"<h1>[Titre du guide]</h1><p class='lead'>Ce guide vous explique tout sur...</p><h2>Avant de partir</h2><p>Preparation, equipement...</p><h2>Sur place</h2><p>Conseils pratiques...</p><h2>Nos recommandations</h2><p>Coups de coeur et bonnes adresses...</p><h2>FAQ</h2><p><strong>Question ?</strong><br/>Reponse.</p>"}
+];
+let curDraftId="",blogTabActive="drafts";
+
 async function loadBlog(){
-  const el=document.getElementById("blog-browse");el.innerHTML='<div class="spinner"></div>';el.style.display="block";
   document.getElementById("blog-edit").classList.remove("visible");
+  document.getElementById("blog-browse").style.display="block";
+  await Promise.all([loadDrafts(),loadScheduledDrafts(),loadPublished()]);
+}
+
+async function loadDrafts(){
+  const el=document.getElementById("blog-tab-drafts");el.innerHTML='<div class="spinner"></div>';
+  try{
+    const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").where("status","==","draft").orderBy("updatedAt","desc").get();
+    document.getElementById("n-drafts").textContent=snap.size;
+    if(snap.empty){el.innerHTML='<p style="color:var(--muted)">Aucun brouillon</p>';return}
+    let h="";snap.forEach(d=>{const v=d.data();h+=blogCardHtml(d.id,v,"draft")});el.innerHTML=h;
+  }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
+}
+
+async function loadScheduledDrafts(){
+  const el=document.getElementById("blog-tab-scheduled");el.innerHTML='<div class="spinner"></div>';
+  try{
+    const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").where("status","==","scheduled").orderBy("publishAt","asc").get();
+    document.getElementById("n-scheduled").textContent=snap.size;
+    if(snap.empty){el.innerHTML='<p style="color:var(--muted)">Aucun article programme</p>';return}
+    let h="";snap.forEach(d=>{const v=d.data();h+=blogCardHtml(d.id,v,"scheduled")});el.innerHTML=h;
+  }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
+}
+
+async function loadPublished(){
+  const el=document.getElementById("blog-tab-published");el.innerHTML='<div class="spinner"></div>';
   try{
     const tree=await getTree();const dirs=["actualites/","en/news/","es/noticias/","de/aktuelles/"];const lm={"actualites/":"FR","en/news/":"EN","es/noticias/":"ES","de/aktuelles/":"DE"};const lf=dirs.map(d=>d+"index.html");
     const arts=tree.filter(f=>f.type==="blob"&&f.path.endsWith("/index.html")&&dirs.some(d=>f.path.startsWith(d))&&!lf.includes(f.path));
-    if(!arts.length){el.innerHTML='<p style="color:var(--muted)">Aucun article</p>';return}
-    let h='<div class="blog-grid">';arts.sort((a,b)=>a.path.localeCompare(b.path)).forEach(a=>{let lang="FR";for(const[d,l]of Object.entries(lm)){if(a.path.startsWith(d)){lang=l;break}}const slug=a.path.replace(/\/index\.html$/,"").split("/").pop();h+=`<div class="blog-card"><span class="blang">${lang}</span><div class="btitle">${slug}</div><div class="bslug">/${a.path.replace(/index\.html$/,"")}</div><div class="bactions"><button class="btn btn-ghost btn-sm" onclick="editBlog('${a.path}')">Editer</button><button class="btn btn-danger btn-sm" onclick="delBlog('${a.path}')">Supprimer</button></div></div>`});h+="</div>";el.innerHTML=h;
+    document.getElementById("n-published").textContent=arts.length;
+    if(!arts.length){el.innerHTML='<p style="color:var(--muted)">Aucun article publie</p>';return}
+    let h="";arts.sort((a,b)=>a.path.localeCompare(b.path)).forEach(a=>{let lang="FR";for(const[d,l]of Object.entries(lm)){if(a.path.startsWith(d)){lang=l;break}}const slug=a.path.replace(/\/index\.html$/,"").split("/").pop();h+=`<div class="blog-card"><span class="bstatus published">Publie</span><span class="blang">${lang}</span><div class="btitle">${slug}</div><div class="bslug">/${a.path.replace(/index\.html$/,"")}</div><div class="bactions"><button class="btn btn-ghost btn-sm" onclick="editPublished('${a.path}')">Editer</button><button class="btn btn-danger btn-sm" onclick="delPublished('${a.path}')">Supprimer</button></div></div>`});el.innerHTML=h;
   }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
-function newArticle(){document.getElementById("blog-browse").style.display="none";document.getElementById("blog-edit").classList.add("visible");document.getElementById("be-title").textContent="Nouvel article";document.getElementById("b-title").value="";document.getElementById("b-slug").value="";document.getElementById("b-desc").value="";document.getElementById("b-lang").value="fr";document.getElementById("be").innerHTML="<h2>Titre</h2><p>Contenu...</p>";curBlogPath="";curBlogSha=""}
-async function editBlog(path){
+
+function blogCardHtml(id,v,status){
+  const date=status==="scheduled"&&v.publishAt?new Date(v.publishAt.seconds?v.publishAt.seconds*1000:v.publishAt).toLocaleDateString("fr",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"}):"";
+  const statusLabel=status==="draft"?"Brouillon":"Programme "+date;
+  return`<div class="blog-card"><span class="bstatus ${status}">${statusLabel}</span><span class="blang">${(v.lang||"fr").toUpperCase()}</span><div class="btitle">${esc(v.title||"Sans titre")}</div><div class="bslug">${esc(v.slug||"")}</div><div class="bactions"><button class="btn btn-ghost btn-sm" onclick="editDraft('${id}')">Editer</button><button class="btn btn-danger btn-sm" onclick="delDraft('${id}')">Supprimer</button></div></div>`;
+}
+
+function blogTab(name,btn){
+  blogTabActive=name;
+  document.querySelectorAll(".blog-tabs button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");
+  ["drafts","scheduled","published"].forEach(t=>{document.getElementById("blog-tab-"+t).style.display=t===name?"grid":"none"});
+}
+
+function showTemplates(){
+  let h='<h3>Choisir un modele</h3><div class="template-grid">';
+  TEMPLATES.forEach(t=>{h+=`<div class="template-card" onclick="newFromTemplate('${t.id}')"><div class="ticon">${t.icon}</div><div class="tname">${t.name}</div><div class="tdesc">${t.desc}</div></div>`});
+  h+=`<div class="template-card" onclick="newFromTemplate('blank')"><div class="ticon">&#128221;</div><div class="tname">Page vierge</div><div class="tdesc">Partir de zero</div></div>`;
+  h+='</div><div class="modal-actions"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button></div>';
+  openModal(h);
+}
+
+function newFromTemplate(id){
+  closeModal();
+  const tpl=TEMPLATES.find(t=>t.id===id);
+  document.getElementById("blog-browse").style.display="none";
+  document.getElementById("blog-edit").classList.add("visible");
+  document.getElementById("be-title").textContent="Nouvel article";
+  document.getElementById("b-title").value="";document.getElementById("b-slug").value="";
+  document.getElementById("b-desc").value="";document.getElementById("b-lang").value="fr";
+  document.getElementById("be").innerHTML=tpl?tpl.body:"<h1>Titre</h1><p>Contenu...</p>";
+  document.getElementById("schedule-row").style.display="none";
+  curDraftId="";curBlogPath="";curBlogSha="";
+}
+
+function autoSlug(){
+  const title=document.getElementById("b-title").value;
+  if(!curDraftId&&!curBlogPath){
+    document.getElementById("b-slug").value=title.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").substring(0,60);
+  }
+}
+
+async function editDraft(id){
+  document.getElementById("blog-browse").style.display="none";
+  document.getElementById("blog-edit").classList.add("visible");
+  document.getElementById("be-title").textContent="Modifier le brouillon";
+  toast("Chargement...","info");
+  try{
+    const doc=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").doc(id).get();
+    if(!doc.exists){toast("Brouillon introuvable","error");return}
+    const v=doc.data();curDraftId=id;
+    document.getElementById("b-title").value=v.title||"";
+    document.getElementById("b-slug").value=v.slug||"";
+    document.getElementById("b-desc").value=v.description||"";
+    document.getElementById("b-lang").value=v.lang||"fr";
+    document.getElementById("be").innerHTML=v.content||"";
+    if(v.status==="scheduled"&&v.publishAt){
+      const d=new Date(v.publishAt.seconds?v.publishAt.seconds*1000:v.publishAt);
+      document.getElementById("sched-date").value=d.toISOString().split("T")[0];
+      document.getElementById("sched-time").value=d.toTimeString().substring(0,5);
+      document.getElementById("schedule-row").style.display="flex";
+    }else{document.getElementById("schedule-row").style.display="none"}
+    curBlogPath="";curBlogSha="";toast("Charge");
+  }catch(e){toast("Erreur: "+e.message,"error")}
+}
+
+async function editPublished(path){
   document.getElementById("blog-browse").style.display="none";document.getElementById("blog-edit").classList.add("visible");
-  document.getElementById("be-title").textContent="Modifier";toast("Chargement...","info");
-  try{const{content,sha}=await getFile(path);curBlogPath=path;curBlogSha=sha;
+  document.getElementById("be-title").textContent="Modifier (publie)";toast("Chargement...","info");
+  try{const{content,sha}=await getFile(path);curBlogPath=path;curBlogSha=sha;curDraftId="";
     const doc=new DOMParser().parseFromString(content,"text/html");
     document.getElementById("b-title").value=doc.querySelector("title")?.textContent?.split("|")[0]?.trim()||"";
     document.getElementById("b-desc").value=doc.querySelector('meta[name="description"]')?.getAttribute("content")||"";
@@ -536,20 +667,101 @@ async function editBlog(path){
     let l="fr";if(path.startsWith("en/"))l="en";else if(path.startsWith("es/"))l="es";else if(path.startsWith("de/"))l="de";
     document.getElementById("b-lang").value=l;
     const art=doc.querySelector("article")||doc.querySelector("main")||doc.body;const cl=art.cloneNode(true);cl.querySelectorAll("script,style,nav,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(e=>e.remove());
-    document.getElementById("be").innerHTML=cl.innerHTML;toast("Charge")
+    document.getElementById("be").innerHTML=cl.innerHTML;
+    document.getElementById("schedule-row").style.display="none";toast("Charge");
   }catch(e){toast("Erreur: "+e.message,"error")}
 }
+
 function closeBlogEdit(){document.getElementById("blog-edit").classList.remove("visible");document.getElementById("blog-browse").style.display="block"}
-async function saveBlog(){
-  const title=document.getElementById("b-title").value.trim();const slug=document.getElementById("b-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g,"-");
-  const desc=document.getElementById("b-desc").value.trim();const lang=document.getElementById("b-lang").value;const body=document.getElementById("be").innerHTML;
-  if(!title||!slug){toast("Titre et slug requis","error");return}
-  const dm={fr:"actualites",en:"en/news",es:"es/noticias",de:"de/aktuelles"};const path=curBlogPath||(dm[lang]+"/"+slug+"/index.html");
-  const html=`<!doctype html>\n<html lang="${lang}">\n<head>\n  <meta charset="utf-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1"/>\n  <title>${esc(title)} | Uhaina House</title>\n  <meta name="description" content="${esc(desc)}"/>\n  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('index.html','')}"/>\n  <link rel="stylesheet" href="/assets/css/style.css"/>\n</head>\n<body>\n  <main class="container" style="padding:2rem 0">\n    <article>\n      ${body}\n    </article>\n  </main>\n  <script src="/assets/js/main.js" defer><\/script>\n</body>\n</html>`;
-  toast("Publication...","info");
-  try{const r=await putFile(path,html,(curBlogPath?"Update":"Create")+" "+title+" via admin",curBlogSha||undefined);curBlogSha=r.content.sha;curBlogPath=path;toast("Publie !")}catch(e){toast("Erreur: "+e.message,"error")}
+
+function getArticleData(){
+  const title=document.getElementById("b-title").value.trim();
+  const slug=document.getElementById("b-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g,"-");
+  const desc=document.getElementById("b-desc").value.trim();
+  const lang=document.getElementById("b-lang").value;
+  const content=document.getElementById("be").innerHTML;
+  if(!title||!slug){toast("Titre et slug requis","error");return null}
+  return{title,slug,description:desc,lang,content};
 }
-async function delBlog(path){if(!confirm("Supprimer ?"))return;try{const{sha}=await getFile(path);await delFile(path,sha,"Delete "+path);toast("Supprime");treeCache=[];loadBlog()}catch(e){toast(e.message,"error")}}
+
+function buildHtml(data){
+  const dm={fr:"actualites",en:"en/news",es:"es/noticias",de:"de/aktuelles"};
+  const path=dm[data.lang]+"/"+data.slug+"/index.html";
+  const html=`<!doctype html>\n<html lang="${data.lang}">\n<head>\n  <meta charset="utf-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1"/>\n  <title>${esc(data.title)} | Uhaina House</title>\n  <meta name="description" content="${esc(data.description)}"/>\n  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('index.html','')}"/>\n  <link rel="stylesheet" href="/assets/css/style.css"/>\n</head>\n<body>\n  <main class="container" style="padding:2rem 0">\n    <article>\n      ${data.content}\n    </article>\n  </main>\n  <script src="/assets/js/main.js" defer><\/script>\n</body>\n</html>`;
+  return{path,html};
+}
+
+async function saveDraft(){
+  const data=getArticleData();if(!data)return;
+  toast("Sauvegarde...","info");
+  try{
+    const ref=db.collection("admin").doc(auth.currentUser.uid).collection("drafts");
+    const payload={...data,status:"draft",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+    if(curDraftId){await ref.doc(curDraftId).update(payload)}
+    else{const d=await ref.add({...payload,createdAt:firebase.firestore.FieldValue.serverTimestamp()});curDraftId=d.id}
+    toast("Brouillon sauvegarde !");loadDrafts();
+  }catch(e){toast("Erreur: "+e.message,"error")}
+}
+
+function showSchedule(){
+  const row=document.getElementById("schedule-row");
+  if(row.style.display==="none"){
+    row.style.display="flex";
+    const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+    document.getElementById("sched-date").value=tomorrow.toISOString().split("T")[0];
+  }else{scheduleArticle()}
+}
+
+async function scheduleArticle(){
+  const data=getArticleData();if(!data)return;
+  const dateStr=document.getElementById("sched-date").value;
+  const timeStr=document.getElementById("sched-time").value;
+  if(!dateStr){toast("Choisis une date","error");return}
+  const publishAt=new Date(dateStr+"T"+timeStr+":00");
+  if(publishAt<=new Date()){toast("La date doit etre dans le futur","error");return}
+  toast("Programmation...","info");
+  try{
+    const{path,html}=buildHtml(data);
+    const ref=db.collection("admin").doc(auth.currentUser.uid).collection("drafts");
+    const payload={...data,status:"scheduled",publishAt,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+    if(curDraftId){await ref.doc(curDraftId).update(payload)}
+    else{const d=await ref.add({...payload,createdAt:firebase.firestore.FieldValue.serverTimestamp()});curDraftId=d.id}
+    const schedJson=JSON.stringify({publishAt:publishAt.toISOString(),path,content:html});
+    const schedPath="_scheduled/"+data.slug+".json";
+    let existingSha;try{const f=await getFile(schedPath);existingSha=f.sha}catch(e){}
+    await putFile(schedPath,schedJson,"Schedule: "+data.title+" for "+dateStr,existingSha);
+    toast("Programme pour le "+publishAt.toLocaleDateString("fr",{day:"numeric",month:"long",year:"numeric",hour:"2-digit",minute:"2-digit"})+" !");
+    loadScheduledDrafts();
+  }catch(e){toast("Erreur: "+e.message,"error")}
+}
+
+async function publishNow(){
+  const data=getArticleData();if(!data)return;
+  toast("Publication...","info");
+  try{
+    const{path,html}=buildHtml(data);
+    await putFile(path,html,"Publish: "+data.title+" via admin",curBlogSha||undefined);
+    if(curDraftId){
+      await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").doc(curDraftId).delete();
+      try{const f=await getFile("_scheduled/"+data.slug+".json");await delFile("_scheduled/"+data.slug+".json",f.sha,"Remove scheduled: "+data.slug)}catch(e){}
+    }
+    toast("Publie !");curDraftId="";curBlogPath=path;
+    loadPublished();loadDrafts();loadScheduledDrafts();
+  }catch(e){toast("Erreur: "+e.message,"error")}
+}
+
+async function delDraft(id){
+  if(!confirm("Supprimer ce brouillon ?"))return;
+  try{
+    const doc=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").doc(id).get();
+    if(doc.exists&&doc.data().status==="scheduled"){
+      try{const f=await getFile("_scheduled/"+doc.data().slug+".json");await delFile("_scheduled/"+doc.data().slug+".json",f.sha,"Cancel scheduled: "+doc.data().slug)}catch(e){}
+    }
+    await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").doc(id).delete();
+    toast("Supprime");loadDrafts();loadScheduledDrafts();
+  }catch(e){toast(e.message,"error")}
+}
+async function delPublished(path){if(!confirm("Supprimer ?"))return;try{const{sha}=await getFile(path);await delFile(path,sha,"Delete "+path);toast("Supprime");treeCache=[];loadPublished()}catch(e){toast(e.message,"error")}}
 
 // ─── UTILS ───
 function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
