@@ -5,141 +5,123 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="robots" content="noindex,nofollow"/>
 <title>Admin — Uhaïna House</title>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0f172a;--sidebar:#1e293b;--card:#1e293b;--card-hover:#263349;--border:#334155;--text:#e2e8f0;--muted:#94a3b8;--accent:#3b82f6;--accent-hover:#2563eb;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--radius:10px}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden}
 
-/* Auth */
-.auth-screen{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
-.auth-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:420px;max-width:90vw;text-align:center}
-.auth-box h1{font-size:1.6rem;margin-bottom:.3rem}
-.auth-box .subtitle{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
-.auth-box input{width:100%;padding:.75rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;margin-bottom:.8rem;text-align:center}
+.screen{display:none;align-items:center;justify-content:center;width:100%;height:100%}
+.screen.active{display:flex}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:400px;max-width:90vw;text-align:center}
+.auth-box h1{font-size:1.5rem;margin-bottom:.2rem}
+.auth-box .sub{color:var(--muted);font-size:.88rem;margin-bottom:1.8rem}
+.auth-box input{width:100%;padding:.7rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;margin-bottom:.7rem}
 .auth-box input:focus{outline:none;border-color:var(--accent)}
-.auth-error{color:var(--danger);font-size:.85rem;margin-bottom:.8rem;display:none}
+.auth-box .btn{width:100%;margin-bottom:.8rem}
+.auth-box .toggle{color:var(--accent);cursor:pointer;font-size:.85rem}
+.auth-box .toggle:hover{text-decoration:underline}
+.auth-box .error{color:var(--danger);font-size:.83rem;margin-bottom:.7rem;display:none}
+.auth-box .info{color:var(--muted);font-size:.82rem;text-align:left;line-height:1.5;margin-bottom:1rem;background:var(--bg);padding:.8rem 1rem;border-radius:8px;border:1px solid var(--border)}
 
-/* Sidebar */
-.sidebar{width:220px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.loading-screen{display:none;align-items:center;justify-content:center;width:100%;height:100%;flex-direction:column;gap:1rem}
+.loading-screen.active{display:flex}
+.loading-screen .spinner{width:36px;height:36px}
+
+.sidebar{width:220px;background:var(--sidebar);border-right:1px solid var(--border);display:none;flex-direction:column;flex-shrink:0}
+.sidebar.active{display:flex}
 .sidebar-logo{padding:1.3rem 1.2rem;border-bottom:1px solid var(--border);font-weight:700;font-size:1rem}
 .sidebar-logo span{color:var(--accent)}
 .sidebar-nav{flex:1;padding:.6rem 0}
 .sidebar-nav button{display:flex;align-items:center;gap:.6rem;width:100%;padding:.65rem 1.2rem;border:none;background:none;color:var(--muted);font-size:.88rem;cursor:pointer;text-align:left;transition:all .15s}
 .sidebar-nav button:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .sidebar-nav button.active{color:var(--accent);background:rgba(59,130,246,.08);border-right:3px solid var(--accent)}
-.sidebar-nav button .icon{font-size:1.1rem;width:22px;text-align:center}
-.sidebar-footer{padding:.8rem 1.2rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)}
+.sidebar-nav button .ico{font-size:1.1rem;width:22px;text-align:center}
+.sidebar-footer{padding:.8rem 1.2rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted);display:flex;justify-content:space-between}
 .sidebar-footer a{color:var(--accent);cursor:pointer}
 
-/* Main */
-.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.main{flex:1;display:none;flex-direction:column;overflow:hidden}
+.main.active{display:flex}
 .topbar{padding:.7rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;min-height:52px}
 .topbar h2{font-size:1.1rem;font-weight:600}
 .content{flex:1;overflow-y:auto;padding:1.5rem}
 
-/* Buttons */
 .btn{padding:.55rem 1.1rem;border:none;border-radius:var(--radius);font-size:.85rem;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:all .15s}
-.btn-primary{background:var(--accent);color:#fff}
-.btn-primary:hover{background:var(--accent-hover)}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover)}
 .btn-danger{background:var(--danger);color:#fff}
-.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
-.btn-ghost:hover{color:var(--text);border-color:var(--muted)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}.btn-ghost:hover{color:var(--text);border-color:var(--muted)}
 .btn-sm{padding:.4rem .8rem;font-size:.8rem}
 .btn:disabled{opacity:.5;cursor:not-allowed}
-.btn-icon{background:none;border:none;color:var(--muted);cursor:pointer;padding:.3rem;border-radius:6px;font-size:1rem}
-.btn-icon:hover{color:var(--text);background:rgba(255,255,255,.08)}
 
-/* Stats */
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
-.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;text-align:center}
-.stat-card .val{font-size:1.8rem;font-weight:700;color:var(--accent)}
-.stat-card .lbl{font-size:.75rem;color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.06em}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;text-align:center}
+.stat-card .val{font-size:1.8rem;font-weight:700;color:var(--accent)}.stat-card .lbl{font-size:.73rem;color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.06em}
 
-/* Page cards */
-.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
-.page-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;cursor:pointer;transition:all .15s}
+.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1rem}
+.page-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.1rem;cursor:pointer;transition:all .15s}
 .page-card:hover{border-color:var(--accent);background:var(--card-hover)}
-.page-card .page-lang{font-size:.65rem;padding:.15rem .45rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:700;display:inline-block;margin-bottom:.5rem}
-.page-card .page-title{font-size:.95rem;font-weight:600;margin-bottom:.3rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.page-card .page-path{font-size:.75rem;color:var(--muted)}
-.page-card .page-meta{font-size:.72rem;color:var(--muted);margin-top:.4rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.lang-group{margin-bottom:1.5rem}
-.lang-group h3{font-size:.85rem;color:var(--accent);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.08em}
+.page-card .lang{font-size:.63rem;padding:.12rem .4rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:700;display:inline-block;margin-bottom:.4rem}
+.page-card .name{font-size:.92rem;font-weight:600;margin-bottom:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.page-card .path{font-size:.73rem;color:var(--muted)}
+.lang-group{margin-bottom:1.5rem}.lang-group h3{font-size:.82rem;color:var(--accent);margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.08em}
 
-/* Edit panel */
-.edit-panel{display:none;height:100%}
-.edit-panel.visible{display:flex;flex-direction:column}
-.edit-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
-.edit-header .back-btn{font-size:1.3rem;cursor:pointer;color:var(--muted);background:none;border:none;padding:.2rem .5rem;border-radius:6px}
-.edit-header .back-btn:hover{color:var(--text);background:rgba(255,255,255,.06)}
-.edit-tabs{display:flex;gap:.3rem;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
-.edit-tabs button{padding:.45rem .9rem;border:none;background:none;color:var(--muted);font-size:.85rem;cursor:pointer;border-radius:6px 6px 0 0;transition:all .15s}
+.edit-panel{display:none;flex-direction:column;height:100%}.edit-panel.visible{display:flex}
+.edit-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
+.back-btn{font-size:1.3rem;cursor:pointer;color:var(--muted);background:none;border:none;padding:.2rem .5rem;border-radius:6px}
+.back-btn:hover{color:var(--text);background:rgba(255,255,255,.06)}
+.edit-tabs{display:flex;gap:.2rem;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+.edit-tabs button{padding:.4rem .9rem;border:none;background:none;color:var(--muted);font-size:.83rem;cursor:pointer;border-radius:6px 6px 0 0;transition:all .15s}
 .edit-tabs button.active{color:var(--accent);background:rgba(59,130,246,.1);border-bottom:2px solid var(--accent)}
-.tab-content{display:none}
-.tab-content.active{display:block}
+.tab{display:none}.tab.active{display:block}
 
-/* Form */
-.form-group{margin-bottom:1.2rem}
-.form-group label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.04em}
-.form-group input,.form-group textarea,.form-group select{width:100%;padding:.6rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.88rem}
+.form-group{margin-bottom:1.1rem}
+.form-group label{display:block;font-size:.76rem;color:var(--muted);margin-bottom:.3rem;text-transform:uppercase;letter-spacing:.04em}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:.6rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.86rem}
 .form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--accent)}
-.form-group textarea{min-height:80px;resize:vertical;font-family:inherit}
-.form-group .char-count{font-size:.7rem;color:var(--muted);text-align:right;margin-top:.2rem}
+.form-group textarea{min-height:70px;resize:vertical;font-family:inherit}
+.form-group .cc{font-size:.68rem;color:var(--muted);text-align:right;margin-top:.15rem}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
 
-/* Visual editor */
-.visual-editor-wrap{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
-.visual-editor-toolbar{display:flex;gap:.2rem;padding:.4rem .6rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
-.visual-editor-toolbar button{padding:.3rem .5rem;border:none;background:none;color:var(--muted);cursor:pointer;border-radius:4px;font-size:.85rem;font-weight:600}
-.visual-editor-toolbar button:hover{background:rgba(255,255,255,.08);color:var(--text)}
-.visual-editor-toolbar button.active{background:var(--accent);color:#fff}
-.visual-editor-toolbar .sep{width:1px;background:var(--border);margin:0 .3rem}
-.visual-editor{min-height:350px;padding:1.2rem;color:var(--text);font-size:.9rem;line-height:1.7;outline:none;overflow-y:auto;max-height:50vh}
-.visual-editor h1,.visual-editor h2,.visual-editor h3{margin:1rem 0 .5rem;color:var(--text)}
-.visual-editor p{margin-bottom:.8rem}
-.visual-editor a{color:var(--accent)}
-.visual-editor img{max-width:100%;border-radius:6px;margin:.5rem 0}
-.visual-editor ul,.visual-editor ol{margin:0 0 .8rem 1.5rem}
-.visual-editor blockquote{border-left:3px solid var(--accent);padding-left:1rem;color:var(--muted);margin:.8rem 0}
+.ve-wrap{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
+.ve-toolbar{display:flex;gap:.15rem;padding:.35rem .5rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.ve-toolbar button{padding:.25rem .45rem;border:none;background:none;color:var(--muted);cursor:pointer;border-radius:4px;font-size:.82rem;font-weight:600}
+.ve-toolbar button:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.ve-toolbar .sep{width:1px;background:var(--border);margin:0 .25rem}
+.ve{min-height:300px;padding:1.1rem;color:var(--text);font-size:.88rem;line-height:1.7;outline:none;overflow-y:auto;max-height:50vh}
+.ve h1,.ve h2,.ve h3{margin:1rem 0 .5rem}.ve p{margin-bottom:.7rem}.ve a{color:var(--accent)}.ve img{max-width:100%;border-radius:6px;margin:.5rem 0}.ve ul,.ve ol{margin:0 0 .8rem 1.5rem}
 
-/* Upload zone */
 .upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:1.5rem}
 .upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(59,130,246,.04)}
-.upload-zone .upload-icon{font-size:2.5rem;margin-bottom:.3rem}
-.upload-zone p{color:var(--muted);font-size:.88rem}
+.upload-zone p{color:var(--muted);font-size:.85rem;margin-top:.3rem}
 
-/* Image grid */
-.image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem}
+.image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:1rem}
 .image-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .15s;position:relative}
 .image-card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.image-card img{width:100%;height:120px;object-fit:cover;display:block}
-.image-card .image-info{padding:.5rem .7rem}
-.image-card .image-name{font-size:.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.image-card .image-size{font-size:.65rem;color:var(--muted);margin-top:.15rem}
-.image-card .image-delete{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:.75rem;cursor:pointer;opacity:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center}
-.image-card:hover .image-delete{opacity:1}
-.image-card .image-copy{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:.7rem;cursor:pointer;opacity:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center}
-.image-card:hover .image-copy{opacity:1}
+.image-card img{width:100%;height:115px;object-fit:cover;display:block}
+.image-card .iinfo{padding:.45rem .6rem}.image-card .iname{font-size:.73rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.image-card .isize{font-size:.63rem;color:var(--muted);margin-top:.1rem}
+.image-card .ibtn{position:absolute;top:5px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:22px;height:22px;font-size:.7rem;cursor:pointer;opacity:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center}
+.image-card:hover .ibtn{opacity:1}
+.image-card .ibtn.del{right:5px}.image-card .ibtn.cp{left:5px}
 
-/* Blog */
-.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
-.blog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;cursor:pointer;transition:all .15s}
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+.blog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem;cursor:pointer;transition:all .15s}
 .blog-card:hover{border-color:var(--accent);background:var(--card-hover)}
-.blog-card .blog-lang{font-size:.65rem;padding:.15rem .45rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:700;display:inline-block}
-.blog-card .blog-title{font-size:1rem;font-weight:600;margin:.5rem 0 .3rem}
-.blog-card .blog-slug{font-size:.75rem;color:var(--muted)}
-.blog-card-actions{display:flex;gap:.4rem;margin-top:.7rem}
+.blog-card .blang{font-size:.63rem;padding:.12rem .4rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:700;display:inline-block}
+.blog-card .btitle{font-size:.95rem;font-weight:600;margin:.4rem 0 .2rem}.blog-card .bslug{font-size:.73rem;color:var(--muted)}
+.blog-card .bactions{display:flex;gap:.4rem;margin-top:.6rem}
 
-/* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.visible{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;width:550px;max-width:92vw;max-height:85vh;overflow-y:auto}
-.modal h3{margin-bottom:.3rem;font-size:1.1rem}
-.modal .modal-desc{color:var(--muted);font-size:.85rem;margin-bottom:1.2rem}
-.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.5rem}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;width:520px;max-width:92vw;max-height:80vh;overflow-y:auto}
+.modal h3{margin-bottom:.8rem}.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.2rem}
+.img-picker{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:.4rem;max-height:250px;overflow-y:auto;margin-top:.6rem}
+.img-picker div{border:2px solid transparent;border-radius:6px;overflow:hidden;cursor:pointer;transition:border .15s}
+.img-picker div:hover,.img-picker div.sel{border-color:var(--accent)}
+.img-picker img{width:100%;height:70px;object-fit:cover;display:block}
 
-/* Toast */
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.75rem 1.2rem;border-radius:var(--radius);font-size:.85rem;z-index:2000;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:.5rem}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.7rem 1.1rem;border-radius:var(--radius);font-size:.83rem;z-index:2000;transform:translateY(80px);opacity:0;transition:all .3s}
 .toast.visible{transform:translateY(0);opacity:1}
 .toast.success{background:#166534;color:#bbf7d0;border:1px solid #22c55e}
 .toast.error{background:#7f1d1d;color:#fecaca;border:1px solid #ef4444}
@@ -147,49 +129,79 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .section{display:none}.section.active{display:block}
-.search-input{padding:.45rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;width:220px}
+.search-input{padding:.45rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.83rem;width:200px}
 .search-input:focus{outline:none;border-color:var(--accent)}
-
-/* Image picker modal */
-.image-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.5rem;max-height:300px;overflow-y:auto;margin-top:.8rem}
-.image-picker-item{border:2px solid transparent;border-radius:6px;overflow:hidden;cursor:pointer;transition:border-color .15s}
-.image-picker-item:hover,.image-picker-item.selected{border-color:var(--accent)}
-.image-picker-item img{width:100%;height:80px;object-fit:cover;display:block}
 </style>
 </head>
 <body>
 
-<!-- AUTH -->
-<div class="auth-screen" id="auth-screen">
+<!-- LOADING -->
+<div class="loading-screen active" id="loading-screen">
+  <div class="spinner" style="width:36px;height:36px"></div>
+  <span style="color:var(--muted);font-size:.9rem">Chargement...</span>
+</div>
+
+<!-- LOGIN -->
+<div class="screen" id="screen-login">
 <div class="auth-box">
   <h1>Uhaina House</h1>
-  <p class="subtitle">Panneau d'administration</p>
-  <div class="auth-error" id="auth-error"></div>
-  <input type="password" id="pat-input" placeholder="GitHub Personal Access Token"/>
-  <input type="text" id="repo-input" value="nico-magic-boost/location-seignosse" style="display:none"/>
-  <button class="btn btn-primary" style="width:100%" onclick="authenticate()">Connexion</button>
+  <p class="sub">Administration du site</p>
+  <div class="error" id="login-error"></div>
+  <input type="email" id="login-email" placeholder="Email"/>
+  <input type="password" id="login-pass" placeholder="Mot de passe"/>
+  <button class="btn btn-primary" onclick="doLogin()">Se connecter</button>
+  <span class="toggle" onclick="showScreen('screen-register')">Creer un compte</span>
 </div>
 </div>
 
-<!-- SIDEBAR -->
-<div class="sidebar" id="sidebar" style="display:none">
-<div class="sidebar-logo"><span>U</span> Uhaina Admin</div>
+<!-- REGISTER -->
+<div class="screen" id="screen-register">
+<div class="auth-box">
+  <h1>Creer un compte</h1>
+  <p class="sub">Premiere utilisation</p>
+  <div class="error" id="register-error"></div>
+  <input type="email" id="reg-email" placeholder="Email"/>
+  <input type="password" id="reg-pass" placeholder="Mot de passe (6 caracteres min.)"/>
+  <button class="btn btn-primary" onclick="doRegister()">Creer mon compte</button>
+  <span class="toggle" onclick="showScreen('screen-login')">Deja un compte ? Se connecter</span>
+</div>
+</div>
+
+<!-- PAT SETUP (one-time) -->
+<div class="screen" id="screen-pat">
+<div class="auth-box" style="text-align:left">
+  <h1 style="text-align:center">Configuration initiale</h1>
+  <p class="sub" style="text-align:center">Une seule fois, pour connecter l'admin a GitHub</p>
+  <div class="info">
+    <strong>Comment obtenir le token :</strong><br/>
+    1. GitHub > Avatar > Settings > Developer settings<br/>
+    2. Personal access tokens > Tokens (classic)<br/>
+    3. Generate new token > cocher <code>public_repo</code><br/>
+    4. Copier le token (ghp_...)
+  </div>
+  <div class="error" id="pat-error"></div>
+  <input type="password" id="pat-input" placeholder="Colle ton token GitHub ici"/>
+  <button class="btn btn-primary" style="width:100%" onclick="savePat()">Sauvegarder et continuer</button>
+</div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="sidebar" id="sidebar">
+<div class="sidebar-logo"><span>U</span> Admin</div>
 <nav class="sidebar-nav">
-  <button class="active" onclick="nav('dashboard',this)"><span class="icon">&#9638;</span> Dashboard</button>
-  <button onclick="nav('pages',this);loadPages()"><span class="icon">&#128196;</span> Pages</button>
-  <button onclick="nav('images',this);loadImages()"><span class="icon">&#128247;</span> Images</button>
-  <button onclick="nav('blog',this);loadBlog()"><span class="icon">&#9998;</span> Blog</button>
+  <button class="active" onclick="nav('dashboard',this)"><span class="ico">&#9638;</span> Dashboard</button>
+  <button onclick="nav('pages',this);loadPages()"><span class="ico">&#128196;</span> Pages</button>
+  <button onclick="nav('images',this);loadImages()"><span class="ico">&#128247;</span> Images</button>
+  <button onclick="nav('blog',this);loadBlog()"><span class="ico">&#9998;</span> Blog</button>
 </nav>
-<div class="sidebar-footer"><a onclick="logout()">Deconnexion</a></div>
+<div class="sidebar-footer"><span id="user-email"></span> <a onclick="doLogout()">Sortir</a></div>
 </div>
 
-<div class="main" id="main-panel" style="display:none">
-
+<div class="main" id="main-panel">
 <!-- DASHBOARD -->
 <div class="section active" id="sec-dashboard">
-  <div class="topbar"><h2>Dashboard</h2><div id="deploy-status" style="font-size:.82rem;color:var(--muted)"></div></div>
+  <div class="topbar"><h2>Dashboard</h2><div id="deploy-st" style="font-size:.8rem;color:var(--muted)"></div></div>
   <div class="content">
     <div class="stats-grid">
       <div class="stat-card"><div class="val" id="s-pages">-</div><div class="lbl">Pages</div></div>
@@ -197,13 +209,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <div class="stat-card"><div class="val" id="s-articles">-</div><div class="lbl">Articles</div></div>
       <div class="stat-card"><div class="val" id="s-langs">4</div><div class="lbl">Langues</div></div>
     </div>
-    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem">
-      <h3 style="font-size:.95rem;margin-bottom:.8rem">Derniers changements</h3>
-      <div id="commits-list" style="font-size:.83rem;color:var(--muted)"><div class="spinner"></div></div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.1rem">
+      <h3 style="font-size:.92rem;margin-bottom:.7rem">Derniers changements</h3>
+      <div id="commits-list" style="font-size:.82rem;color:var(--muted)"><div class="spinner"></div></div>
     </div>
   </div>
 </div>
-
 <!-- PAGES -->
 <div class="section" id="sec-pages">
   <div class="topbar"><h2>Pages</h2><div><input type="text" class="search-input" placeholder="Rechercher..." oninput="filterPages(this.value)"/></div></div>
@@ -212,227 +223,184 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="edit-panel" id="page-edit">
       <div class="edit-header">
         <button class="back-btn" onclick="closePageEdit()">&#8592;</button>
-        <div>
-          <h2 id="edit-page-title" style="font-size:1rem"></h2>
-          <span id="edit-page-path" style="font-size:.78rem;color:var(--muted)"></span>
-        </div>
+        <div><h2 id="ed-title" style="font-size:1rem"></h2><span id="ed-path" style="font-size:.75rem;color:var(--muted)"></span></div>
         <div style="margin-left:auto;display:flex;gap:.4rem">
-          <button class="btn btn-ghost btn-sm" onclick="previewPage()">&#128065; Apercu</button>
-          <button class="btn btn-primary btn-sm" id="save-page-btn" onclick="savePage()">Sauvegarder</button>
+          <button class="btn btn-ghost btn-sm" onclick="previewPage()">Apercu</button>
+          <button class="btn btn-primary btn-sm" id="save-pg" onclick="savePage()">Sauvegarder</button>
         </div>
       </div>
       <div class="edit-tabs">
-        <button class="active" onclick="editTab('seo',this)">SEO</button>
-        <button onclick="editTab('content',this)">Contenu</button>
+        <button class="active" onclick="etab('seo',this)">SEO</button>
+        <button onclick="etab('contenu',this)">Contenu</button>
       </div>
-      <div class="tab-content active" id="tab-seo">
-        <div class="form-group">
-          <label>Titre de la page (balise title)</label>
-          <input type="text" id="field-title" oninput="updateCharCount(this,70)"/>
-          <div class="char-count" id="cc-title">0/70</div>
-        </div>
-        <div class="form-group">
-          <label>Meta description</label>
-          <textarea id="field-desc" rows="3" oninput="updateCharCount(this,160)"></textarea>
-          <div class="char-count" id="cc-desc">0/160</div>
-        </div>
+      <div class="tab active" id="tab-seo">
+        <div class="form-group"><label>Titre de la page</label><input type="text" id="f-title" oninput="cc(this,70)"/><div class="cc" id="cc-title">0/70</div></div>
+        <div class="form-group"><label>Meta description</label><textarea id="f-desc" rows="2" oninput="cc(this,160)"></textarea><div class="cc" id="cc-desc">0/160</div></div>
         <div class="form-row">
-          <div class="form-group">
-            <label>OG Title (reseaux sociaux)</label>
-            <input type="text" id="field-og-title"/>
-          </div>
-          <div class="form-group">
-            <label>OG Description</label>
-            <input type="text" id="field-og-desc"/>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>URL canonique</label>
-          <input type="text" id="field-canonical" disabled style="opacity:.6"/>
+          <div class="form-group"><label>OG Title</label><input type="text" id="f-og-t"/></div>
+          <div class="form-group"><label>OG Description</label><input type="text" id="f-og-d"/></div>
         </div>
       </div>
-      <div class="tab-content" id="tab-content">
-        <div class="visual-editor-wrap">
-          <div class="visual-editor-toolbar">
-            <button onclick="execCmd('bold')" title="Gras"><b>G</b></button>
-            <button onclick="execCmd('italic')" title="Italique"><i>I</i></button>
-            <button onclick="execCmd('underline')" title="Souligne"><u>S</u></button>
+      <div class="tab" id="tab-contenu">
+        <div class="ve-wrap">
+          <div class="ve-toolbar">
+            <button onclick="cmd('bold')"><b>G</b></button>
+            <button onclick="cmd('italic')"><i>I</i></button>
+            <button onclick="cmd('underline')"><u>S</u></button>
             <div class="sep"></div>
-            <button onclick="execCmd('formatBlock','H2')" title="Titre H2">H2</button>
-            <button onclick="execCmd('formatBlock','H3')" title="Titre H3">H3</button>
-            <button onclick="execCmd('formatBlock','P')" title="Paragraphe">P</button>
+            <button onclick="cmd('formatBlock','H2')">H2</button>
+            <button onclick="cmd('formatBlock','H3')">H3</button>
+            <button onclick="cmd('formatBlock','P')">P</button>
             <div class="sep"></div>
-            <button onclick="execCmd('insertUnorderedList')" title="Liste">&#8226; Liste</button>
-            <button onclick="execCmd('insertOrderedList')" title="Liste numerotee">1. Liste</button>
+            <button onclick="cmd('insertUnorderedList')">&#8226; Liste</button>
+            <button onclick="cmd('insertOrderedList')">1. Liste</button>
             <div class="sep"></div>
-            <button onclick="insertLink()" title="Lien">&#128279; Lien</button>
-            <button onclick="insertImage()" title="Image">&#128247; Image</button>
-            <div class="sep"></div>
-            <button onclick="execCmd('removeFormat')" title="Supprimer formatage">&#10005;</button>
+            <button onclick="addLink()">&#128279; Lien</button>
+            <button onclick="addImg('ve')">&#128247; Image</button>
           </div>
-          <div class="visual-editor" id="visual-editor" contenteditable="true"></div>
+          <div class="ve" id="ve" contenteditable="true"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 <!-- IMAGES -->
 <div class="section" id="sec-images">
-  <div class="topbar"><h2>Images</h2><div id="img-count" style="font-size:.82rem;color:var(--muted)"></div></div>
+  <div class="topbar"><h2>Images</h2><div id="img-n" style="font-size:.8rem;color:var(--muted)"></div></div>
   <div class="content">
-    <div class="upload-zone" id="upload-zone">
-      <div class="upload-icon">&#128247;</div>
-      <p>Glisse tes images ici ou clique pour uploader</p>
-      <input type="file" id="file-input" multiple accept="image/*" style="display:none"/>
-    </div>
-    <div class="image-grid" id="images-grid"><div class="spinner"></div></div>
+    <div class="upload-zone" id="upload-zone"><div style="font-size:2.5rem">&#128247;</div><p>Glisse tes images ici ou clique pour uploader</p><input type="file" id="file-input" multiple accept="image/*" style="display:none"/></div>
+    <div class="image-grid" id="img-grid"><div class="spinner"></div></div>
   </div>
 </div>
-
 <!-- BLOG -->
 <div class="section" id="sec-blog">
-  <div class="topbar"><h2>Blog / Actualites</h2><div><button class="btn btn-primary btn-sm" onclick="newArticleModal()">+ Nouvel article</button></div></div>
+  <div class="topbar"><h2>Blog</h2><div><button class="btn btn-primary btn-sm" onclick="newArticle()">+ Nouvel article</button></div></div>
   <div class="content">
     <div id="blog-browse"></div>
     <div class="edit-panel" id="blog-edit">
       <div class="edit-header">
         <button class="back-btn" onclick="closeBlogEdit()">&#8592;</button>
-        <h2 style="font-size:1rem" id="blog-edit-title">Nouvel article</h2>
-        <div style="margin-left:auto;display:flex;gap:.4rem">
-          <button class="btn btn-primary btn-sm" onclick="saveBlogArticle()">Publier</button>
-        </div>
+        <h2 style="font-size:1rem" id="be-title">Nouvel article</h2>
+        <div style="margin-left:auto"><button class="btn btn-primary btn-sm" onclick="saveBlog()">Publier</button></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label>Titre</label>
-          <input type="text" id="blog-field-title"/>
-        </div>
-        <div class="form-group">
-          <label>Slug (URL)</label>
-          <input type="text" id="blog-field-slug" placeholder="mon-article"/>
-        </div>
+        <div class="form-group"><label>Titre</label><input type="text" id="b-title"/></div>
+        <div class="form-group"><label>Slug (URL)</label><input type="text" id="b-slug" placeholder="mon-article"/></div>
       </div>
       <div class="form-row">
-        <div class="form-group">
-          <label>Langue</label>
-          <select id="blog-field-lang">
-            <option value="fr">Francais</option>
-            <option value="en">English</option>
-            <option value="es">Espanol</option>
-            <option value="de">Deutsch</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Meta description</label>
-          <input type="text" id="blog-field-desc"/>
-        </div>
+        <div class="form-group"><label>Langue</label><select id="b-lang"><option value="fr">Francais</option><option value="en">English</option><option value="es">Espanol</option><option value="de">Deutsch</option></select></div>
+        <div class="form-group"><label>Meta description</label><input type="text" id="b-desc"/></div>
       </div>
-      <div class="form-group">
-        <label>Contenu de l'article</label>
-        <div class="visual-editor-wrap">
-          <div class="visual-editor-toolbar">
-            <button onclick="execCmdBlog('bold')"><b>G</b></button>
-            <button onclick="execCmdBlog('italic')"><i>I</i></button>
-            <button onclick="execCmdBlog('underline')"><u>S</u></button>
-            <div class="sep"></div>
-            <button onclick="execCmdBlog('formatBlock','H2')">H2</button>
-            <button onclick="execCmdBlog('formatBlock','H3')">H3</button>
-            <button onclick="execCmdBlog('formatBlock','P')">P</button>
-            <div class="sep"></div>
-            <button onclick="execCmdBlog('insertUnorderedList')">&#8226;</button>
-            <button onclick="execCmdBlog('insertOrderedList')">1.</button>
-            <div class="sep"></div>
-            <button onclick="insertLinkBlog()">&#128279;</button>
-            <button onclick="insertImageBlog()">&#128247;</button>
+      <div class="form-group"><label>Contenu</label>
+        <div class="ve-wrap">
+          <div class="ve-toolbar">
+            <button onclick="cmd2('bold')"><b>G</b></button><button onclick="cmd2('italic')"><i>I</i></button><button onclick="cmd2('underline')"><u>S</u></button>
+            <div class="sep"></div><button onclick="cmd2('formatBlock','H2')">H2</button><button onclick="cmd2('formatBlock','H3')">H3</button><button onclick="cmd2('formatBlock','P')">P</button>
+            <div class="sep"></div><button onclick="cmd2('insertUnorderedList')">&#8226;</button><button onclick="cmd2('insertOrderedList')">1.</button>
+            <div class="sep"></div><button onclick="addLink2()">&#128279;</button><button onclick="addImg('be')">&#128247;</button>
           </div>
-          <div class="visual-editor" id="blog-editor" contenteditable="true" style="min-height:300px"></div>
+          <div class="ve" id="be" contenteditable="true" style="min-height:280px"></div>
         </div>
       </div>
     </div>
   </div>
 </div>
-
 </div>
 
-<!-- MODAL -->
 <div class="modal-overlay" id="modal"><div class="modal" id="modal-body"></div></div>
-
-<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
-const API="https://api.github.com";
-let TOKEN="",OWNER="",REPO="";
-let treeCache=[];
-let currentPagePath="",currentPageSha="",currentPageHtml="";
-let currentBlogPath="",currentBlogSha="";
-let imagesCache=[];
+// ─── FIREBASE ───
+firebase.initializeApp({
+  apiKey:"AIzaSyCUIyB0-JxaOcwo27-uBq-Kfbzs0H1fAhk",
+  authDomain:"uhaina-admin.firebaseapp.com",
+  projectId:"uhaina-admin",
+  storageBucket:"uhaina-admin.firebasestorage.app",
+  messagingSenderId:"1079076497614",
+  appId:"1:1079076497614:web:4134c86b686dceb383889f"
+});
+const auth=firebase.auth();
+const db=firebase.firestore();
+const GH="https://api.github.com";
+let TOKEN="",OWNER="nico-magic-boost",REPO="location-seignosse";
+let treeCache=[],imgsCache=[],allPages=[];
+let curPath="",curSha="",curHtml="",curBlogPath="",curBlogSha="";
 
-// ─── AUTH ───
-function authenticate(){
-  TOKEN=document.getElementById("pat-input").value.trim();
-  const r=document.getElementById("repo-input").value.trim().split("/");
-  if(r.length!==2||!TOKEN){showErr("Token requis");return}
-  OWNER=r[0];REPO=r[1];
-  gh(`/repos/${OWNER}/${REPO}`).then(r=>{if(!r.ok)throw Error("Acces refuse");return r.json()}).then(()=>{
-    localStorage.setItem("admin-t",TOKEN);localStorage.setItem("admin-r",OWNER+"/"+REPO);
-    boot();
-  }).catch(e=>showErr(e.message));
+// ─── AUTH STATE ───
+auth.onAuthStateChanged(async user=>{
+  if(!user){showScreen("screen-login");return}
+  document.getElementById("user-email").textContent=user.email;
+  try{
+    const doc=await db.collection("admin").doc(user.uid).get();
+    if(doc.exists&&doc.data().token){
+      TOKEN=doc.data().token;
+      const r=await gh(`/repos/${OWNER}/${REPO}`);
+      if(!r.ok)throw Error("Token invalide");
+      showAdmin();
+    }else{showScreen("screen-pat")}
+  }catch(e){showScreen("screen-pat")}
+});
+
+function showScreen(id){
+  document.querySelectorAll(".screen,.loading-screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("sidebar").classList.remove("active");
+  document.getElementById("main-panel").classList.remove("active");
+  document.getElementById(id).classList.add("active");
 }
-function showErr(m){const e=document.getElementById("auth-error");e.textContent=m;e.style.display="block"}
-function logout(){localStorage.removeItem("admin-t");localStorage.removeItem("admin-r");location.reload()}
-function boot(){
-  document.getElementById("auth-screen").style.display="none";
-  document.getElementById("sidebar").style.display="flex";
-  document.getElementById("main-panel").style.display="flex";
+function showAdmin(){
+  document.querySelectorAll(".screen,.loading-screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById("sidebar").classList.add("active");
+  document.getElementById("main-panel").classList.add("active");
   loadDashboard();
 }
 
+async function doLogin(){
+  const email=document.getElementById("login-email").value.trim();
+  const pass=document.getElementById("login-pass").value;
+  if(!email||!pass){showLoginErr("Email et mot de passe requis");return}
+  try{await auth.signInWithEmailAndPassword(email,pass)}
+  catch(e){showLoginErr(e.code==="auth/wrong-password"||e.code==="auth/invalid-credential"?"Email ou mot de passe incorrect":e.code==="auth/user-not-found"?"Aucun compte avec cet email":e.message)}
+}
+function showLoginErr(m){const e=document.getElementById("login-error");e.textContent=m;e.style.display="block"}
+
+async function doRegister(){
+  const email=document.getElementById("reg-email").value.trim();
+  const pass=document.getElementById("reg-pass").value;
+  if(!email||pass.length<6){const e=document.getElementById("register-error");e.textContent="Email requis et mot de passe 6 car. min.";e.style.display="block";return}
+  try{await auth.createUserWithEmailAndPassword(email,pass)}
+  catch(e){const el=document.getElementById("register-error");el.textContent=e.message;el.style.display="block"}
+}
+
+async function savePat(){
+  const pat=document.getElementById("pat-input").value.trim();
+  if(!pat){const e=document.getElementById("pat-error");e.textContent="Token requis";e.style.display="block";return}
+  try{
+    const r=await fetch(GH+`/repos/${OWNER}/${REPO}`,{headers:{"Authorization":"Bearer "+pat}});
+    if(!r.ok)throw Error("Token invalide ou pas d'acces au repo");
+    await db.collection("admin").doc(auth.currentUser.uid).set({token:pat});
+    TOKEN=pat;
+    showAdmin();
+    toast("Configuration terminee !");
+  }catch(e){const el=document.getElementById("pat-error");el.textContent=e.message;el.style.display="block"}
+}
+
+function doLogout(){auth.signOut()}
+
 // ─── GITHUB API ───
 function gh(path,opts={}){
-  return fetch(API+path,{...opts,headers:{"Authorization":"Bearer "+TOKEN,"Accept":"application/vnd.github.v3+json",...(opts.headers||{}),...(opts.body?{"Content-Type":"application/json"}:{})}});
+  return fetch(GH+path,{...opts,headers:{"Authorization":"Bearer "+TOKEN,"Accept":"application/vnd.github.v3+json",...(opts.headers||{}),...(opts.body?{"Content-Type":"application/json"}:{})}});
 }
-async function getTree(){
-  if(treeCache.length)return treeCache;
-  const r=await gh(`/repos/${OWNER}/${REPO}/git/trees/main?recursive=1`);
-  const d=await r.json();treeCache=d.tree||[];return treeCache;
-}
-async function getFile(path){
-  const r=await gh(`/repos/${OWNER}/${REPO}/contents/${path}?ref=main`);
-  if(!r.ok)throw Error("Not found");const d=await r.json();
-  return{content:decodeBase64(d.content),sha:d.sha,size:d.size};
-}
-function decodeBase64(b){try{return decodeURIComponent(escape(atob(b.replace(/\n/g,""))))}catch(e){return atob(b.replace(/\n/g,""))}}
-async function putFile(path,content,msg,sha){
-  const body={message:msg,content:btoa(unescape(encodeURIComponent(content))),branch:"main"};
-  if(sha)body.sha=sha;
-  const r=await gh(`/repos/${OWNER}/${REPO}/contents/${path}`,{method:"PUT",body:JSON.stringify(body)});
-  if(!r.ok){const e=await r.json();throw Error(e.message||"Erreur")}
-  treeCache=[];return r.json();
-}
-async function putBinary(path,b64,msg,sha){
-  const body={message:msg,content:b64,branch:"main"};if(sha)body.sha=sha;
-  const r=await gh(`/repos/${OWNER}/${REPO}/contents/${path}`,{method:"PUT",body:JSON.stringify(body)});
-  if(!r.ok)throw Error("Upload echoue");treeCache=[];return r.json();
-}
-async function delFile(path,sha,msg){
-  const r=await gh(`/repos/${OWNER}/${REPO}/contents/${path}`,{method:"DELETE",body:JSON.stringify({message:msg,sha,branch:"main"})});
-  if(!r.ok)throw Error("Suppression echouee");treeCache=[];return r.json();
-}
+async function getTree(){if(treeCache.length)return treeCache;const r=await gh(`/repos/${OWNER}/${REPO}/git/trees/main?recursive=1`);const d=await r.json();treeCache=d.tree||[];return treeCache}
+async function getFile(p){const r=await gh(`/repos/${OWNER}/${REPO}/contents/${p}?ref=main`);if(!r.ok)throw Error("Not found");const d=await r.json();return{content:decB64(d.content),sha:d.sha,size:d.size}}
+function decB64(b){try{return decodeURIComponent(escape(atob(b.replace(/\n/g,""))))}catch(e){return atob(b.replace(/\n/g,""))}}
+async function putFile(p,c,m,s){const body={message:m,content:btoa(unescape(encodeURIComponent(c))),branch:"main"};if(s)body.sha=s;const r=await gh(`/repos/${OWNER}/${REPO}/contents/${p}`,{method:"PUT",body:JSON.stringify(body)});if(!r.ok){const e=await r.json();throw Error(e.message||"Erreur")}treeCache=[];return r.json()}
+async function putBin(p,b,m,s){const body={message:m,content:b,branch:"main"};if(s)body.sha=s;const r=await gh(`/repos/${OWNER}/${REPO}/contents/${p}`,{method:"PUT",body:JSON.stringify(body)});if(!r.ok)throw Error("Upload echoue");treeCache=[];return r.json()}
+async function delFile(p,s,m){const r=await gh(`/repos/${OWNER}/${REPO}/contents/${p}`,{method:"DELETE",body:JSON.stringify({message:m,sha:s,branch:"main"})});if(!r.ok)throw Error("Erreur");treeCache=[];return r.json()}
 
-// ─── NAVIGATION ───
-function nav(id,btn){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.getElementById("sec-"+id).classList.add("active");
-  document.querySelectorAll(".sidebar-nav button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-}
-
-// ─── TOAST ───
+// ─── NAV / TOAST / MODAL ───
+function nav(id,btn){document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));document.getElementById("sec-"+id).classList.add("active");document.querySelectorAll(".sidebar-nav button").forEach(b=>b.classList.remove("active"));btn.classList.add("active")}
 function toast(m,t="success"){const e=document.getElementById("toast");e.textContent=m;e.className="toast "+t;requestAnimationFrame(()=>e.classList.add("visible"));setTimeout(()=>e.classList.remove("visible"),3500)}
-
-// ─── MODAL ───
 function openModal(h){document.getElementById("modal-body").innerHTML=h;document.getElementById("modal").classList.add("visible")}
 function closeModal(){document.getElementById("modal").classList.remove("visible")}
 document.getElementById("modal").onclick=e=>{if(e.target===e.currentTarget)closeModal()};
@@ -441,53 +409,29 @@ document.getElementById("modal").onclick=e=>{if(e.target===e.currentTarget)close
 async function loadDashboard(){
   try{
     const tree=await getTree();
-    const pages=tree.filter(f=>f.type==="blob"&&f.path.endsWith(".html")&&!f.path.startsWith("admin/"));
-    const imgs=tree.filter(f=>f.type==="blob"&&f.path.startsWith("assets/img/"));
-    const arts=tree.filter(f=>f.type==="blob"&&f.path.endsWith("/index.html")&&(f.path.includes("actualites/")||f.path.includes("news/")||f.path.includes("noticias/")||f.path.includes("aktuelles/"))&&!/\/(actualites|news|noticias|aktuelles)\/index\.html$/.test(f.path));
-    document.getElementById("s-pages").textContent=pages.length;
-    document.getElementById("s-images").textContent=imgs.length;
-    document.getElementById("s-articles").textContent=arts.length;
-    const cr=await gh(`/repos/${OWNER}/${REPO}/commits?sha=main&per_page=6`);
-    const commits=await cr.json();
-    document.getElementById("commits-list").innerHTML=commits.map(c=>{
-      const d=new Date(c.commit.author.date);const ds=d.toLocaleDateString("fr")+" "+d.toLocaleTimeString("fr",{hour:"2-digit",minute:"2-digit"});
-      return`<div style="padding:.4rem 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:.8rem"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.commit.message.split("\n")[0])}</span><span style="flex-shrink:0;font-size:.72rem">${ds}</span></div>`;
-    }).join("");
-    const dr=await gh(`/repos/${OWNER}/${REPO}/actions/runs?per_page=1`);
-    const dd=await dr.json();
-    if(dd.workflow_runs&&dd.workflow_runs[0]){const s=dd.workflow_runs[0].conclusion||dd.workflow_runs[0].status;const c=s==="success"?"var(--success)":s==="failure"?"var(--danger)":"var(--warning)";document.getElementById("deploy-status").innerHTML=`<span style="color:${c}">&#9679;</span> Deploy: ${s}`}
+    document.getElementById("s-pages").textContent=tree.filter(f=>f.type==="blob"&&f.path.endsWith(".html")&&!f.path.startsWith("admin/")).length;
+    document.getElementById("s-images").textContent=tree.filter(f=>f.type==="blob"&&f.path.startsWith("assets/img/")).length;
+    const artDirs=["actualites/","en/news/","es/noticias/","de/aktuelles/"];
+    const listFiles=artDirs.map(d=>d+"index.html");
+    document.getElementById("s-articles").textContent=tree.filter(f=>f.type==="blob"&&f.path.endsWith("/index.html")&&artDirs.some(d=>f.path.startsWith(d))&&!listFiles.includes(f.path)).length;
+    const cr=await gh(`/repos/${OWNER}/${REPO}/commits?sha=main&per_page=6`);const commits=await cr.json();
+    document.getElementById("commits-list").innerHTML=commits.map(c=>{const d=new Date(c.commit.author.date);return`<div style="padding:.35rem 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:.7rem"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.commit.message.split("\n")[0])}</span><span style="flex-shrink:0;font-size:.7rem">${d.toLocaleDateString("fr")} ${d.toLocaleTimeString("fr",{hour:"2-digit",minute:"2-digit"})}</span></div>`}).join("");
+    const dr=await gh(`/repos/${OWNER}/${REPO}/actions/runs?per_page=1`);const dd=await dr.json();
+    if(dd.workflow_runs?.[0]){const s=dd.workflow_runs[0].conclusion||dd.workflow_runs[0].status;const c=s==="success"?"var(--success)":s==="failure"?"var(--danger)":"var(--warning)";document.getElementById("deploy-st").innerHTML=`<span style="color:${c}">&#9679;</span> Deploy: ${s}`}
   }catch(e){toast("Erreur: "+e.message,"error")}
 }
 
 // ─── PAGES ───
-let allPages=[];
 async function loadPages(){
-  const el=document.getElementById("pages-browse");el.innerHTML='<div class="spinner"></div>';
+  const el=document.getElementById("pages-browse");el.innerHTML='<div class="spinner"></div>';el.style.display="block";
   document.getElementById("page-edit").classList.remove("visible");
-  try{
-    const tree=await getTree();
-    allPages=tree.filter(f=>f.type==="blob"&&f.path.endsWith(".html")&&!f.path.startsWith("admin/")).sort((a,b)=>a.path.localeCompare(b.path));
-    renderPages(allPages);
-  }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
+  try{const tree=await getTree();allPages=tree.filter(f=>f.type==="blob"&&f.path.endsWith(".html")&&!f.path.startsWith("admin/")).sort((a,b)=>a.path.localeCompare(b.path));renderPages(allPages)}catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
 function renderPages(files){
   const el=document.getElementById("pages-browse");
-  const groups={FR:[],EN:[],ES:[],DE:[]};
-  files.forEach(f=>{let l="FR";if(f.path.startsWith("en/"))l="EN";else if(f.path.startsWith("es/"))l="ES";else if(f.path.startsWith("de/"))l="DE";groups[l].push(f)});
-  let h="";
-  for(const lang of["FR","EN","ES","DE"]){
-    if(!groups[lang].length)continue;
-    h+=`<div class="lang-group"><h3>${lang} (${groups[lang].length})</h3><div class="page-grid">`;
-    groups[lang].forEach(f=>{
-      const name=f.path.replace(/index\.html$/,"").replace(/\/$/,"")||"Accueil";
-      h+=`<div class="page-card" onclick="openPage('${f.path}')">
-        <span class="page-lang">${lang}</span>
-        <div class="page-title">${esc(name)}</div>
-        <div class="page-path">/${f.path}</div>
-      </div>`;
-    });
-    h+="</div></div>";
-  }
+  const g={FR:[],EN:[],ES:[],DE:[]};
+  files.forEach(f=>{let l="FR";if(f.path.startsWith("en/"))l="EN";else if(f.path.startsWith("es/"))l="ES";else if(f.path.startsWith("de/"))l="DE";g[l].push(f)});
+  let h="";for(const l of["FR","EN","ES","DE"]){if(!g[l].length)continue;h+=`<div class="lang-group"><h3>${l} (${g[l].length})</h3><div class="page-grid">`;g[l].forEach(f=>{const n=f.path.replace(/index\.html$/,"").replace(/\/$/,"")||"Accueil";h+=`<div class="page-card" onclick="openPage('${f.path}')"><span class="lang">${l}</span><div class="name">${esc(n)}</div><div class="path">/${f.path}</div></div>`});h+="</div></div>"}
   el.innerHTML=h;
 }
 function filterPages(q){const l=q.toLowerCase();renderPages(allPages.filter(f=>f.path.toLowerCase().includes(l)))}
@@ -495,303 +439,121 @@ function filterPages(q){const l=q.toLowerCase();renderPages(allPages.filter(f=>f
 async function openPage(path){
   document.getElementById("pages-browse").style.display="none";
   document.getElementById("page-edit").classList.add("visible");
-  document.getElementById("edit-page-path").textContent="/"+path;
-  document.getElementById("save-page-btn").disabled=true;
+  document.getElementById("ed-path").textContent="/"+path;
+  document.getElementById("save-pg").disabled=true;
   toast("Chargement...","info");
   try{
-    const{content,sha}=await getFile(path);
-    currentPagePath=path;currentPageSha=sha;currentPageHtml=content;
-    // Parse meta
+    const{content,sha}=await getFile(path);curPath=path;curSha=sha;curHtml=content;
     const doc=new DOMParser().parseFromString(content,"text/html");
-    document.getElementById("field-title").value=doc.querySelector("title")?.textContent||"";
-    document.getElementById("field-desc").value=doc.querySelector('meta[name="description"]')?.getAttribute("content")||"";
-    document.getElementById("field-og-title").value=doc.querySelector('meta[property="og:title"]')?.getAttribute("content")||"";
-    document.getElementById("field-og-desc").value=doc.querySelector('meta[property="og:description"]')?.getAttribute("content")||"";
-    document.getElementById("field-canonical").value=doc.querySelector('link[rel="canonical"]')?.getAttribute("href")||"";
-    document.getElementById("edit-page-title").textContent=doc.querySelector("title")?.textContent||path;
-    updateCharCount(document.getElementById("field-title"),70);
-    updateCharCount(document.getElementById("field-desc"),160);
-    // Extract main content for visual editor
-    const main=doc.querySelector("main")||doc.querySelector(".container")||doc.body;
-    let bodyContent="";
-    if(main){
-      const clone=main.cloneNode(true);
-      clone.querySelectorAll("script,style,nav,header,footer,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(el=>el.remove());
-      bodyContent=clone.innerHTML;
-    }
-    document.getElementById("visual-editor").innerHTML=bodyContent;
-    document.getElementById("save-page-btn").disabled=false;
-    editTab("seo",document.querySelector(".edit-tabs button"));
-    toast("Page chargee","success");
+    document.getElementById("f-title").value=doc.querySelector("title")?.textContent||"";
+    document.getElementById("f-desc").value=doc.querySelector('meta[name="description"]')?.getAttribute("content")||"";
+    document.getElementById("f-og-t").value=doc.querySelector('meta[property="og:title"]')?.getAttribute("content")||"";
+    document.getElementById("f-og-d").value=doc.querySelector('meta[property="og:description"]')?.getAttribute("content")||"";
+    document.getElementById("ed-title").textContent=doc.querySelector("title")?.textContent||path;
+    cc(document.getElementById("f-title"),70);cc(document.getElementById("f-desc"),160);
+    const main=doc.querySelector("main")||doc.body;const clone=main.cloneNode(true);
+    clone.querySelectorAll("script,style,nav,header,footer,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(e=>e.remove());
+    document.getElementById("ve").innerHTML=clone.innerHTML;
+    document.getElementById("save-pg").disabled=false;
+    etab("seo",document.querySelector(".edit-tabs button"));
+    toast("Page chargee");
   }catch(e){toast("Erreur: "+e.message,"error")}
 }
-
-function closePageEdit(){
-  document.getElementById("page-edit").classList.remove("visible");
-  document.getElementById("pages-browse").style.display="block";
-}
-
+function closePageEdit(){document.getElementById("page-edit").classList.remove("visible");document.getElementById("pages-browse").style.display="block"}
+function previewPage(){if(curPath){window.open("https://location-seignosse.fr/"+curPath.replace(/index\.html$/,""),"_blank")}}
 async function savePage(){
-  const btn=document.getElementById("save-page-btn");btn.disabled=true;btn.textContent="Sauvegarde...";
+  const btn=document.getElementById("save-pg");btn.disabled=true;btn.textContent="Sauvegarde...";
   try{
-    const doc=new DOMParser().parseFromString(currentPageHtml,"text/html");
-    // Update SEO fields
-    const title=document.getElementById("field-title").value;
-    const desc=document.getElementById("field-desc").value;
-    const ogTitle=document.getElementById("field-og-title").value;
-    const ogDesc=document.getElementById("field-og-desc").value;
-    if(doc.querySelector("title"))doc.querySelector("title").textContent=title;
-    if(doc.querySelector('meta[name="description"]'))doc.querySelector('meta[name="description"]').setAttribute("content",desc);
-    if(doc.querySelector('meta[property="og:title"]'))doc.querySelector('meta[property="og:title"]').setAttribute("content",ogTitle);
-    if(doc.querySelector('meta[property="og:description"]'))doc.querySelector('meta[property="og:description"]').setAttribute("content",ogDesc);
-    // Update body content
-    const editorContent=document.getElementById("visual-editor").innerHTML;
-    const main=doc.querySelector("main")||doc.querySelector(".container");
-    if(main){
-      const tempDoc=new DOMParser().parseFromString("<div>"+editorContent+"</div>","text/html");
-      const oldChildren=[...main.children];
-      const nonContent=["SCRIPT","STYLE","NAV","HEADER","FOOTER"];
-      const preserved=oldChildren.filter(el=>nonContent.includes(el.tagName)||el.classList.contains("site-header")||el.classList.contains("site-footer")||el.classList.contains("cookie-banner")||el.classList.contains("floating-widgets"));
-      main.innerHTML=editorContent;
-      preserved.forEach(el=>main.appendChild(el));
-    }
-    // Serialize back to HTML
-    let html="<!doctype html>\n"+doc.documentElement.outerHTML;
-    const result=await putFile(currentPagePath,html,"Update "+currentPagePath+" via admin",currentPageSha);
-    currentPageSha=result.content.sha;currentPageHtml=html;
-    toast("Sauvegarde et deploy lance !");
+    const doc=new DOMParser().parseFromString(curHtml,"text/html");
+    if(doc.querySelector("title"))doc.querySelector("title").textContent=document.getElementById("f-title").value;
+    if(doc.querySelector('meta[name="description"]'))doc.querySelector('meta[name="description"]').setAttribute("content",document.getElementById("f-desc").value);
+    if(doc.querySelector('meta[property="og:title"]'))doc.querySelector('meta[property="og:title"]').setAttribute("content",document.getElementById("f-og-t").value);
+    if(doc.querySelector('meta[property="og:description"]'))doc.querySelector('meta[property="og:description"]').setAttribute("content",document.getElementById("f-og-d").value);
+    const ec=document.getElementById("ve").innerHTML;const main=doc.querySelector("main")||doc.body;
+    if(main){const kept=[];main.querySelectorAll("script,style,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(e=>kept.push(e.cloneNode(true)));main.innerHTML=ec;kept.forEach(e=>main.appendChild(e))}
+    const html="<!doctype html>\n"+doc.documentElement.outerHTML;
+    const r=await putFile(curPath,html,"Update "+curPath+" via admin",curSha);curSha=r.content.sha;curHtml=html;
+    toast("Sauvegarde !");
   }catch(e){toast("Erreur: "+e.message,"error")}
   btn.disabled=false;btn.textContent="Sauvegarder";
 }
+function etab(n,btn){document.querySelectorAll(".edit-tabs button").forEach(b=>b.classList.remove("active"));btn.classList.add("active");document.querySelectorAll("#page-edit .tab").forEach(t=>t.classList.remove("active"));document.getElementById("tab-"+n).classList.add("active")}
+function cc(input,max){const id=input.id.replace("f-","cc-");const el=document.getElementById(id);if(el)el.textContent=input.value.length+"/"+max}
 
-function previewPage(){
-  if(currentPagePath){const p=currentPagePath.replace(/index\.html$/,"");window.open("https://location-seignosse.fr/"+p,"_blank")}
-}
-
-function editTab(name,btn){
-  document.querySelectorAll(".edit-tabs button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  document.querySelectorAll("#page-edit .tab-content").forEach(t=>t.classList.remove("active"));
-  document.getElementById("tab-"+name).classList.add("active");
-}
-
-function updateCharCount(input,max){
-  const id=input.id.replace("field-","cc-");
-  const el=document.getElementById(id);
-  if(el)el.textContent=input.value.length+"/"+max;
-}
-
-// ─── VISUAL EDITOR COMMANDS ───
-function execCmd(cmd,val){document.getElementById("visual-editor").focus();document.execCommand(cmd,false,val?("<"+val+">"):null)}
-function execCmdBlog(cmd,val){document.getElementById("blog-editor").focus();document.execCommand(cmd,false,val?("<"+val+">"):null)}
-
-function insertLink(){
-  const url=prompt("URL du lien :","https://");
-  if(url)document.execCommand("createLink",false,url);
-}
-function insertLinkBlog(){
-  const url=prompt("URL du lien :","https://");
-  if(url){document.getElementById("blog-editor").focus();document.execCommand("createLink",false,url)}
-}
-function insertImage(){showImagePicker("visual-editor")}
-function insertImageBlog(){showImagePicker("blog-editor")}
-
-function showImagePicker(targetId){
+// ─── EDITOR COMMANDS ───
+function cmd(c,v){document.getElementById("ve").focus();document.execCommand(c,false,v?"<"+v+">":null)}
+function cmd2(c,v){document.getElementById("be").focus();document.execCommand(c,false,v?"<"+v+">":null)}
+function addLink(){const u=prompt("URL :","https://");if(u)document.execCommand("createLink",false,u)}
+function addLink2(){const u=prompt("URL :","https://");if(u){document.getElementById("be").focus();document.execCommand("createLink",false,u)}}
+function addImg(target){
   getTree().then(tree=>{
     const imgs=tree.filter(f=>f.type==="blob"&&f.path.startsWith("assets/img/"));
-    let h='<h3>Inserer une image</h3><p class="modal-desc">Clique sur une image pour l\'inserer</p><div class="image-picker-grid">';
-    imgs.forEach(img=>{
-      const url=`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${img.path}`;
-      h+=`<div class="image-picker-item" onclick="pickImage('${targetId}','/${img.path}')"><img src="${url}" alt="${img.name}"/></div>`;
-    });
+    let h='<h3>Inserer une image</h3><div class="img-picker">';
+    imgs.forEach(i=>{const u=`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${i.path}`;h+=`<div onclick="pickImg('${target}','/${i.path}')"><img src="${u}"/></div>`});
     h+='</div><div class="modal-actions"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button></div>';
     openModal(h);
   });
 }
-function pickImage(targetId,src){
-  const el=document.getElementById(targetId);el.focus();
-  document.execCommand("insertImage",false,src);
-  closeModal();
-}
+function pickImg(tid,src){document.getElementById(tid).focus();document.execCommand("insertImage",false,src);closeModal()}
 
 // ─── IMAGES ───
 async function loadImages(){
-  const grid=document.getElementById("images-grid");grid.innerHTML='<div class="spinner"></div>';
+  const grid=document.getElementById("img-grid");grid.innerHTML='<div class="spinner"></div>';
   try{
-    const r=await gh(`/repos/${OWNER}/${REPO}/contents/assets/img?ref=main`);
-    const items=await r.json();
-    imagesCache=Array.isArray(items)?items.filter(f=>f.type==="file"):[];
-    document.getElementById("img-count").textContent=imagesCache.length+" images";
-    if(!imagesCache.length){grid.innerHTML='<p style="color:var(--muted)">Aucune image</p>';return}
-    grid.innerHTML=imagesCache.map(img=>{
-      const url=`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${img.path}`;
-      return`<div class="image-card">
-        <button class="image-copy" onclick="event.stopPropagation();copyPath('/${img.path}')" title="Copier le chemin">&#128203;</button>
-        <button class="image-delete" onclick="event.stopPropagation();removeImage('${img.path}','${img.sha}')" title="Supprimer">&#10005;</button>
-        <img src="${url}" alt="${img.name}" loading="lazy"/>
-        <div class="image-info"><div class="image-name">${img.name}</div><div class="image-size">${fmtBytes(img.size)}</div></div>
-      </div>`;
-    }).join("");
+    const r=await gh(`/repos/${OWNER}/${REPO}/contents/assets/img?ref=main`);const items=await r.json();
+    imgsCache=Array.isArray(items)?items.filter(f=>f.type==="file"):[];
+    document.getElementById("img-n").textContent=imgsCache.length+" images";
+    if(!imgsCache.length){grid.innerHTML='<p style="color:var(--muted)">Aucune image</p>';return}
+    grid.innerHTML=imgsCache.map(i=>{const u=`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${i.path}`;return`<div class="image-card"><button class="ibtn cp" onclick="event.stopPropagation();cpPath('/${i.path}')" title="Copier">&#128203;</button><button class="ibtn del" onclick="event.stopPropagation();rmImg('${i.path}','${i.sha}')" title="Supprimer">&#10005;</button><img src="${u}" loading="lazy"/><div class="iinfo"><div class="iname">${i.name}</div><div class="isize">${fmtB(i.size)}</div></div></div>`}).join("");
   }catch(e){grid.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
-
-function copyPath(p){navigator.clipboard.writeText(p);toast("Chemin copie : "+p)}
-
-async function removeImage(path,sha){
-  if(!confirm("Supprimer "+path.split("/").pop()+" ?"))return;
-  try{await delFile(path,sha,"Delete "+path+" via admin");toast("Supprimee");loadImages()}catch(e){toast(e.message,"error")}
-}
-
-// Upload
-(function(){
-  const z=document.getElementById("upload-zone"),inp=document.getElementById("file-input");
-  z.onclick=()=>inp.click();
-  z.ondragover=e=>{e.preventDefault();z.classList.add("dragover")};
-  z.ondragleave=()=>z.classList.remove("dragover");
-  z.ondrop=e=>{e.preventDefault();z.classList.remove("dragover");uploadFiles(e.dataTransfer.files)};
-  inp.onchange=()=>{uploadFiles(inp.files);inp.value=""};
-})();
-
-async function uploadFiles(files){
-  for(const f of files){
-    if(!f.type.startsWith("image/")){toast(f.name+" n'est pas une image","error");continue}
-    const name=f.name.toLowerCase().replace(/\s+/g,"-");
-    const path="assets/img/"+name;
-    const existing=imagesCache.find(i=>i.name===name);
-    if(existing&&!confirm(name+" existe deja. Remplacer ?"))continue;
-    toast("Upload "+name+"...","info");
-    try{
-      const b64=await toBase64(f);
-      await putBinary(path,b64,"Upload "+name+" via admin",existing?.sha);
-      toast(name+" uploade !");loadImages();
-    }catch(e){toast("Erreur: "+e.message,"error")}
-  }
-}
-function toBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file)})}
+function cpPath(p){navigator.clipboard.writeText(p);toast("Copie : "+p)}
+async function rmImg(p,s){if(!confirm("Supprimer "+p.split("/").pop()+" ?"))return;try{await delFile(p,s,"Delete "+p+" via admin");toast("Supprimee");loadImages()}catch(e){toast(e.message,"error")}}
+(function(){const z=document.getElementById("upload-zone"),inp=document.getElementById("file-input");z.onclick=()=>inp.click();z.ondragover=e=>{e.preventDefault();z.classList.add("dragover")};z.ondragleave=()=>z.classList.remove("dragover");z.ondrop=e=>{e.preventDefault();z.classList.remove("dragover");upFiles(e.dataTransfer.files)};inp.onchange=()=>{upFiles(inp.files);inp.value=""}})();
+async function upFiles(files){for(const f of files){if(!f.type.startsWith("image/")){toast(f.name+" n'est pas une image","error");continue}const n=f.name.toLowerCase().replace(/\s+/g,"-");const p="assets/img/"+n;const ex=imgsCache.find(i=>i.name===n);if(ex&&!confirm(n+" existe. Remplacer ?"))continue;toast("Upload "+n+"...","info");try{const b=await toB64(f);await putBin(p,b,"Upload "+n+" via admin",ex?.sha);toast(n+" uploade !");loadImages()}catch(e){toast("Erreur: "+e.message,"error")}}}
+function toB64(f){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(",")[1]);rd.onerror=j;rd.readAsDataURL(f)})}
 
 // ─── BLOG ───
 async function loadBlog(){
-  const el=document.getElementById("blog-browse");el.innerHTML='<div class="spinner"></div>';
+  const el=document.getElementById("blog-browse");el.innerHTML='<div class="spinner"></div>';el.style.display="block";
   document.getElementById("blog-edit").classList.remove("visible");
   try{
-    const tree=await getTree();
-    const dirs=["actualites","en/news","es/noticias","de/aktuelles"];
-    const lm={actualites:"FR","en/news":"EN","es/noticias":"ES","de/aktuelles":"DE"};
-    const listFiles=dirs.map(d=>d+"/index.html");
-    const arts=tree.filter(f=>f.type==="blob"&&f.path.endsWith("/index.html")&&dirs.some(d=>f.path.startsWith(d+"/"))&&!listFiles.includes(f.path));
+    const tree=await getTree();const dirs=["actualites/","en/news/","es/noticias/","de/aktuelles/"];const lm={"actualites/":"FR","en/news/":"EN","es/noticias/":"ES","de/aktuelles/":"DE"};const lf=dirs.map(d=>d+"index.html");
+    const arts=tree.filter(f=>f.type==="blob"&&f.path.endsWith("/index.html")&&dirs.some(d=>f.path.startsWith(d))&&!lf.includes(f.path));
     if(!arts.length){el.innerHTML='<p style="color:var(--muted)">Aucun article</p>';return}
-    let h='<div class="blog-grid">';
-    arts.sort((a,b)=>a.path.localeCompare(b.path)).forEach(a=>{
-      let lang="FR";for(const[d,l]of Object.entries(lm)){if(a.path.startsWith(d+"/")){lang=l;break}}
-      const slug=a.path.replace(/\/index\.html$/,"").split("/").pop();
-      h+=`<div class="blog-card">
-        <span class="blog-lang">${lang}</span>
-        <div class="blog-title">${slug}</div>
-        <div class="blog-slug">/${a.path.replace(/index\.html$/,"")}</div>
-        <div class="blog-card-actions">
-          <button class="btn btn-ghost btn-sm" onclick="editBlogArticle('${a.path}')">&#9998; Editer</button>
-          <button class="btn btn-danger btn-sm" onclick="deleteBlogArticle('${a.path}')">Supprimer</button>
-        </div>
-      </div>`;
-    });
-    h+="</div>";el.innerHTML=h;
+    let h='<div class="blog-grid">';arts.sort((a,b)=>a.path.localeCompare(b.path)).forEach(a=>{let lang="FR";for(const[d,l]of Object.entries(lm)){if(a.path.startsWith(d)){lang=l;break}}const slug=a.path.replace(/\/index\.html$/,"").split("/").pop();h+=`<div class="blog-card"><span class="blang">${lang}</span><div class="btitle">${slug}</div><div class="bslug">/${a.path.replace(/index\.html$/,"")}</div><div class="bactions"><button class="btn btn-ghost btn-sm" onclick="editBlog('${a.path}')">Editer</button><button class="btn btn-danger btn-sm" onclick="delBlog('${a.path}')">Supprimer</button></div></div>`});h+="</div>";el.innerHTML=h;
   }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
-
-function newArticleModal(){
-  document.getElementById("blog-browse").style.display="none";
-  document.getElementById("blog-edit").classList.add("visible");
-  document.getElementById("blog-edit-title").textContent="Nouvel article";
-  document.getElementById("blog-field-title").value="";
-  document.getElementById("blog-field-slug").value="";
-  document.getElementById("blog-field-desc").value="";
-  document.getElementById("blog-field-lang").value="fr";
-  document.getElementById("blog-editor").innerHTML="<h2>Titre de section</h2><p>Ecris ton contenu ici...</p>";
-  currentBlogPath="";currentBlogSha="";
-}
-
-async function editBlogArticle(path){
-  document.getElementById("blog-browse").style.display="none";
-  document.getElementById("blog-edit").classList.add("visible");
-  document.getElementById("blog-edit-title").textContent="Modifier l'article";
-  toast("Chargement...","info");
-  try{
-    const{content,sha}=await getFile(path);currentBlogPath=path;currentBlogSha=sha;
+function newArticle(){document.getElementById("blog-browse").style.display="none";document.getElementById("blog-edit").classList.add("visible");document.getElementById("be-title").textContent="Nouvel article";document.getElementById("b-title").value="";document.getElementById("b-slug").value="";document.getElementById("b-desc").value="";document.getElementById("b-lang").value="fr";document.getElementById("be").innerHTML="<h2>Titre</h2><p>Contenu...</p>";curBlogPath="";curBlogSha=""}
+async function editBlog(path){
+  document.getElementById("blog-browse").style.display="none";document.getElementById("blog-edit").classList.add("visible");
+  document.getElementById("be-title").textContent="Modifier";toast("Chargement...","info");
+  try{const{content,sha}=await getFile(path);curBlogPath=path;curBlogSha=sha;
     const doc=new DOMParser().parseFromString(content,"text/html");
-    document.getElementById("blog-field-title").value=doc.querySelector("title")?.textContent?.split("|")[0]?.trim()||"";
-    document.getElementById("blog-field-desc").value=doc.querySelector('meta[name="description"]')?.getAttribute("content")||"";
-    const slug=path.replace(/\/index\.html$/,"").split("/").pop();
-    document.getElementById("blog-field-slug").value=slug;
-    let lang="fr";if(path.startsWith("en/"))lang="en";else if(path.startsWith("es/"))lang="es";else if(path.startsWith("de/"))lang="de";
-    document.getElementById("blog-field-lang").value=lang;
-    // Extract article content
-    const article=doc.querySelector("article")||doc.querySelector("main")||doc.body;
-    const clone=article.cloneNode(true);
-    clone.querySelectorAll("script,style,nav,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(el=>el.remove());
-    document.getElementById("blog-editor").innerHTML=clone.innerHTML;
-    toast("Article charge","success");
+    document.getElementById("b-title").value=doc.querySelector("title")?.textContent?.split("|")[0]?.trim()||"";
+    document.getElementById("b-desc").value=doc.querySelector('meta[name="description"]')?.getAttribute("content")||"";
+    document.getElementById("b-slug").value=path.replace(/\/index\.html$/,"").split("/").pop();
+    let l="fr";if(path.startsWith("en/"))l="en";else if(path.startsWith("es/"))l="es";else if(path.startsWith("de/"))l="de";
+    document.getElementById("b-lang").value=l;
+    const art=doc.querySelector("article")||doc.querySelector("main")||doc.body;const cl=art.cloneNode(true);cl.querySelectorAll("script,style,nav,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(e=>e.remove());
+    document.getElementById("be").innerHTML=cl.innerHTML;toast("Charge")
   }catch(e){toast("Erreur: "+e.message,"error")}
 }
-
-function closeBlogEdit(){
-  document.getElementById("blog-edit").classList.remove("visible");
-  document.getElementById("blog-browse").style.display="block";
-}
-
-async function saveBlogArticle(){
-  const title=document.getElementById("blog-field-title").value.trim();
-  const slug=document.getElementById("blog-field-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g,"-");
-  const desc=document.getElementById("blog-field-desc").value.trim();
-  const lang=document.getElementById("blog-field-lang").value;
-  const body=document.getElementById("blog-editor").innerHTML;
+function closeBlogEdit(){document.getElementById("blog-edit").classList.remove("visible");document.getElementById("blog-browse").style.display="block"}
+async function saveBlog(){
+  const title=document.getElementById("b-title").value.trim();const slug=document.getElementById("b-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g,"-");
+  const desc=document.getElementById("b-desc").value.trim();const lang=document.getElementById("b-lang").value;const body=document.getElementById("be").innerHTML;
   if(!title||!slug){toast("Titre et slug requis","error");return}
-  const dm={fr:"actualites",en:"en/news",es:"es/noticias",de:"de/aktuelles"};
-  const path=currentBlogPath||(dm[lang]+"/"+slug+"/index.html");
-  const html=`<!doctype html>
-<html lang="${lang}">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>${esc(title)} | Uhaina House</title>
-  <meta name="description" content="${esc(desc)}"/>
-  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('index.html','')}"/>
-  <link rel="stylesheet" href="/assets/css/style.css"/>
-</head>
-<body>
-  <main class="container" style="padding:2rem 0">
-    <article>
-      ${body}
-    </article>
-  </main>
-  <script src="/assets/js/main.js" defer><\/script>
-</body>
-</html>`;
+  const dm={fr:"actualites",en:"en/news",es:"es/noticias",de:"de/aktuelles"};const path=curBlogPath||(dm[lang]+"/"+slug+"/index.html");
+  const html=`<!doctype html>\n<html lang="${lang}">\n<head>\n  <meta charset="utf-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1"/>\n  <title>${esc(title)} | Uhaina House</title>\n  <meta name="description" content="${esc(desc)}"/>\n  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('index.html','')}"/>\n  <link rel="stylesheet" href="/assets/css/style.css"/>\n</head>\n<body>\n  <main class="container" style="padding:2rem 0">\n    <article>\n      ${body}\n    </article>\n  </main>\n  <script src="/assets/js/main.js" defer><\/script>\n</body>\n</html>`;
   toast("Publication...","info");
-  try{
-    const r=await putFile(path,html,(currentBlogPath?"Update":"Create")+" article: "+title+" via admin",currentBlogSha||undefined);
-    currentBlogSha=r.content.sha;currentBlogPath=path;
-    toast("Article publie !");treeCache=[];
-  }catch(e){toast("Erreur: "+e.message,"error")}
+  try{const r=await putFile(path,html,(curBlogPath?"Update":"Create")+" "+title+" via admin",curBlogSha||undefined);curBlogSha=r.content.sha;curBlogPath=path;toast("Publie !")}catch(e){toast("Erreur: "+e.message,"error")}
 }
-
-async function deleteBlogArticle(path){
-  if(!confirm("Supprimer cet article ?"))return;
-  try{
-    const{sha}=await getFile(path);
-    await delFile(path,sha,"Delete article "+path+" via admin");
-    toast("Article supprime");treeCache=[];loadBlog();
-  }catch(e){toast("Erreur: "+e.message,"error")}
-}
+async function delBlog(path){if(!confirm("Supprimer ?"))return;try{const{sha}=await getFile(path);await delFile(path,sha,"Delete "+path);toast("Supprime");treeCache=[];loadBlog()}catch(e){toast(e.message,"error")}}
 
 // ─── UTILS ───
 function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
-function fmtBytes(b){if(b<1024)return b+" B";if(b<1048576)return(b/1024).toFixed(1)+" KB";return(b/1048576).toFixed(1)+" MB"}
-
-// ─── INIT ───
-(function(){
-  const t=localStorage.getItem("admin-t"),r=localStorage.getItem("admin-r");
-  if(t&&r){TOKEN=t;const p=r.split("/");OWNER=p[0];REPO=p[1];boot()}
-})();
+function fmtB(b){if(b<1024)return b+" B";if(b<1048576)return(b/1024).toFixed(1)+" KB";return(b/1048576).toFixed(1)+" MB"}
 </script>
 </body>
 </html>
