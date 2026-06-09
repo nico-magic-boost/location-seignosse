@@ -5,41 +5,36 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <meta name="robots" content="noindex,nofollow"/>
 <title>Admin — Uhaïna House</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/theme/dracula.min.css"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#0f172a;--sidebar:#1e293b;--card:#1e293b;--border:#334155;--text:#e2e8f0;--muted:#94a3b8;--accent:#3b82f6;--accent-hover:#2563eb;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--radius:8px}
+:root{--bg:#0f172a;--sidebar:#1e293b;--card:#1e293b;--card-hover:#263349;--border:#334155;--text:#e2e8f0;--muted:#94a3b8;--accent:#3b82f6;--accent-hover:#2563eb;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--radius:10px}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden}
 
-/* Auth screen */
+/* Auth */
 .auth-screen{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
-.auth-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2.5rem;width:400px;max-width:90vw}
-.auth-box h1{font-size:1.5rem;margin-bottom:.5rem}
-.auth-box p{color:var(--muted);font-size:.875rem;margin-bottom:1.5rem;line-height:1.5}
-.auth-box label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
-.auth-box input{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;margin-bottom:1rem}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2.5rem;width:420px;max-width:90vw;text-align:center}
+.auth-box h1{font-size:1.6rem;margin-bottom:.3rem}
+.auth-box .subtitle{color:var(--muted);font-size:.9rem;margin-bottom:2rem}
+.auth-box input{width:100%;padding:.75rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;margin-bottom:.8rem;text-align:center}
 .auth-box input:focus{outline:none;border-color:var(--accent)}
-.auth-box .btn{width:100%}
-.auth-error{color:var(--danger);font-size:.85rem;margin-bottom:1rem;display:none}
+.auth-error{color:var(--danger);font-size:.85rem;margin-bottom:.8rem;display:none}
 
 /* Sidebar */
-.sidebar{width:240px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
-.sidebar-logo{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:.6rem}
+.sidebar{width:220px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-logo{padding:1.3rem 1.2rem;border-bottom:1px solid var(--border);font-weight:700;font-size:1rem}
 .sidebar-logo span{color:var(--accent)}
-.sidebar-nav{flex:1;padding:.8rem 0}
-.sidebar-nav button{display:flex;align-items:center;gap:.7rem;width:100%;padding:.7rem 1.5rem;border:none;background:none;color:var(--muted);font-size:.9rem;cursor:pointer;text-align:left;transition:all .15s}
-.sidebar-nav button:hover{color:var(--text);background:rgba(255,255,255,.05)}
-.sidebar-nav button.active{color:var(--accent);background:rgba(59,130,246,.1);border-right:3px solid var(--accent)}
-.sidebar-nav button svg{width:18px;height:18px;flex-shrink:0}
-.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted)}
+.sidebar-nav{flex:1;padding:.6rem 0}
+.sidebar-nav button{display:flex;align-items:center;gap:.6rem;width:100%;padding:.65rem 1.2rem;border:none;background:none;color:var(--muted);font-size:.88rem;cursor:pointer;text-align:left;transition:all .15s}
+.sidebar-nav button:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.sidebar-nav button.active{color:var(--accent);background:rgba(59,130,246,.08);border-right:3px solid var(--accent)}
+.sidebar-nav button .icon{font-size:1.1rem;width:22px;text-align:center}
+.sidebar-footer{padding:.8rem 1.2rem;border-top:1px solid var(--border);font-size:.78rem;color:var(--muted)}
 .sidebar-footer a{color:var(--accent);cursor:pointer}
 
 /* Main */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden}
-.topbar{padding:.8rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.topbar h2{font-size:1.15rem}
-.topbar-actions{display:flex;gap:.5rem;align-items:center}
+.topbar{padding:.7rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;min-height:52px}
+.topbar h2{font-size:1.1rem;font-weight:600}
 .content{flex:1;overflow-y:auto;padding:1.5rem}
 
 /* Buttons */
@@ -47,831 +42,755 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .btn-primary{background:var(--accent);color:#fff}
 .btn-primary:hover{background:var(--accent-hover)}
 .btn-danger{background:var(--danger);color:#fff}
-.btn-danger:hover{background:#dc2626}
 .btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
 .btn-ghost:hover{color:var(--text);border-color:var(--muted)}
-.btn-sm{padding:.35rem .7rem;font-size:.8rem}
+.btn-sm{padding:.4rem .8rem;font-size:.8rem}
 .btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-icon{background:none;border:none;color:var(--muted);cursor:pointer;padding:.3rem;border-radius:6px;font-size:1rem}
+.btn-icon:hover{color:var(--text);background:rgba(255,255,255,.08)}
 
-/* Cards & Grid */
-.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem}
-.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
-.stat-card{text-align:center;padding:1.5rem}
-.stat-card .stat-value{font-size:2rem;font-weight:700;color:var(--accent)}
-.stat-card .stat-label{font-size:.8rem;color:var(--muted);margin-top:.3rem;text-transform:uppercase;letter-spacing:.05em}
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.3rem;text-align:center}
+.stat-card .val{font-size:1.8rem;font-weight:700;color:var(--accent)}
+.stat-card .lbl{font-size:.75rem;color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.06em}
 
-/* File list */
-.file-list{display:flex;flex-direction:column;gap:.3rem}
-.file-item{display:flex;align-items:center;gap:.8rem;padding:.6rem .8rem;border-radius:var(--radius);cursor:pointer;transition:background .15s}
-.file-item:hover{background:rgba(255,255,255,.05)}
-.file-item.active{background:rgba(59,130,246,.15)}
-.file-icon{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0}
-.file-name{flex:1;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.file-size{font-size:.75rem;color:var(--muted)}
-.file-actions{display:flex;gap:.3rem;opacity:0;transition:opacity .15s}
-.file-item:hover .file-actions{opacity:1}
+/* Page cards */
+.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+.page-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.2rem;cursor:pointer;transition:all .15s}
+.page-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.page-card .page-lang{font-size:.65rem;padding:.15rem .45rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:700;display:inline-block;margin-bottom:.5rem}
+.page-card .page-title{font-size:.95rem;font-weight:600;margin-bottom:.3rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.page-card .page-path{font-size:.75rem;color:var(--muted)}
+.page-card .page-meta{font-size:.72rem;color:var(--muted);margin-top:.4rem;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.lang-group{margin-bottom:1.5rem}
+.lang-group h3{font-size:.85rem;color:var(--accent);margin-bottom:.8rem;text-transform:uppercase;letter-spacing:.08em}
 
-/* Editor layout */
-.editor-wrap{display:flex;gap:1rem;height:calc(100vh - 130px)}
-.editor-sidebar{width:280px;flex-shrink:0;overflow-y:auto}
-.editor-main{flex:1;display:flex;flex-direction:column;min-width:0}
-.editor-main .CodeMirror{flex:1;height:auto !important;font-size:.85rem;border-radius:var(--radius);border:1px solid var(--border)}
-.editor-toolbar{display:flex;gap:.5rem;margin-bottom:.8rem;align-items:center}
-.editor-toolbar .file-path{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.editor-status{font-size:.8rem;color:var(--muted);margin-top:.5rem;display:flex;align-items:center;gap:.5rem}
-.editor-status .saved{color:var(--success)}
+/* Edit panel */
+.edit-panel{display:none;height:100%}
+.edit-panel.visible{display:flex;flex-direction:column}
+.edit-header{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem}
+.edit-header .back-btn{font-size:1.3rem;cursor:pointer;color:var(--muted);background:none;border:none;padding:.2rem .5rem;border-radius:6px}
+.edit-header .back-btn:hover{color:var(--text);background:rgba(255,255,255,.06)}
+.edit-tabs{display:flex;gap:.3rem;margin-bottom:1rem;border-bottom:1px solid var(--border);padding-bottom:.3rem}
+.edit-tabs button{padding:.45rem .9rem;border:none;background:none;color:var(--muted);font-size:.85rem;cursor:pointer;border-radius:6px 6px 0 0;transition:all .15s}
+.edit-tabs button.active{color:var(--accent);background:rgba(59,130,246,.1);border-bottom:2px solid var(--accent)}
+.tab-content{display:none}
+.tab-content.active{display:block}
 
-/* Image grid */
-.image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
-.image-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .15s}
-.image-card:hover{border-color:var(--accent)}
-.image-card img{width:100%;height:140px;object-fit:cover;display:block}
-.image-card .image-info{padding:.6rem .8rem}
-.image-card .image-name{font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.image-card .image-meta{font-size:.7rem;color:var(--muted);margin-top:.2rem}
+/* Form */
+.form-group{margin-bottom:1.2rem}
+.form-group label{display:block;font-size:.78rem;color:var(--muted);margin-bottom:.35rem;text-transform:uppercase;letter-spacing:.04em}
+.form-group input,.form-group textarea,.form-group select{width:100%;padding:.6rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.88rem}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--accent)}
+.form-group textarea{min-height:80px;resize:vertical;font-family:inherit}
+.form-group .char-count{font-size:.7rem;color:var(--muted);text-align:right;margin-top:.2rem}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+
+/* Visual editor */
+.visual-editor-wrap{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1rem}
+.visual-editor-toolbar{display:flex;gap:.2rem;padding:.4rem .6rem;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.visual-editor-toolbar button{padding:.3rem .5rem;border:none;background:none;color:var(--muted);cursor:pointer;border-radius:4px;font-size:.85rem;font-weight:600}
+.visual-editor-toolbar button:hover{background:rgba(255,255,255,.08);color:var(--text)}
+.visual-editor-toolbar button.active{background:var(--accent);color:#fff}
+.visual-editor-toolbar .sep{width:1px;background:var(--border);margin:0 .3rem}
+.visual-editor{min-height:350px;padding:1.2rem;color:var(--text);font-size:.9rem;line-height:1.7;outline:none;overflow-y:auto;max-height:50vh}
+.visual-editor h1,.visual-editor h2,.visual-editor h3{margin:1rem 0 .5rem;color:var(--text)}
+.visual-editor p{margin-bottom:.8rem}
+.visual-editor a{color:var(--accent)}
+.visual-editor img{max-width:100%;border-radius:6px;margin:.5rem 0}
+.visual-editor ul,.visual-editor ol{margin:0 0 .8rem 1.5rem}
+.visual-editor blockquote{border-left:3px solid var(--accent);padding-left:1rem;color:var(--muted);margin:.8rem 0}
 
 /* Upload zone */
-.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:2.5rem;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:1.5rem}
-.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(59,130,246,.05)}
-.upload-zone p{color:var(--muted);font-size:.9rem;margin-top:.5rem}
-.upload-zone .upload-icon{font-size:2rem}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:1.5rem}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(59,130,246,.04)}
+.upload-zone .upload-icon{font-size:2.5rem;margin-bottom:.3rem}
+.upload-zone p{color:var(--muted);font-size:.88rem}
 
-/* Blog list */
-.blog-list{display:flex;flex-direction:column;gap:.5rem}
-.blog-item{display:flex;align-items:center;gap:1rem;padding:.8rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);transition:border-color .15s}
-.blog-item:hover{border-color:var(--accent)}
-.blog-lang{font-size:.7rem;padding:.15rem .4rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:600}
-.blog-title{flex:1;font-size:.9rem}
-.blog-path{font-size:.75rem;color:var(--muted)}
+/* Image grid */
+.image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:1rem}
+.image-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .15s;position:relative}
+.image-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.image-card img{width:100%;height:120px;object-fit:cover;display:block}
+.image-card .image-info{padding:.5rem .7rem}
+.image-card .image-name{font-size:.75rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.image-card .image-size{font-size:.65rem;color:var(--muted);margin-top:.15rem}
+.image-card .image-delete{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:.75rem;cursor:pointer;opacity:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center}
+.image-card:hover .image-delete{opacity:1}
+.image-card .image-copy{position:absolute;top:6px;left:6px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:24px;height:24px;font-size:.7rem;cursor:pointer;opacity:0;transition:opacity .15s;display:flex;align-items:center;justify-content:center}
+.image-card:hover .image-copy{opacity:1}
+
+/* Blog */
+.blog-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.blog-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;cursor:pointer;transition:all .15s}
+.blog-card:hover{border-color:var(--accent);background:var(--card-hover)}
+.blog-card .blog-lang{font-size:.65rem;padding:.15rem .45rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:700;display:inline-block}
+.blog-card .blog-title{font-size:1rem;font-weight:600;margin:.5rem 0 .3rem}
+.blog-card .blog-slug{font-size:.75rem;color:var(--muted)}
+.blog-card-actions{display:flex;gap:.4rem;margin-top:.7rem}
 
 /* Modal */
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:1000;display:none}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.visible{display:flex}
-.modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;width:500px;max-width:90vw;max-height:80vh;overflow-y:auto}
-.modal h3{margin-bottom:1rem}
-.modal label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:.4rem;margin-top:.8rem}
-.modal input,.modal select,.modal textarea{width:100%;padding:.6rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem}
-.modal textarea{min-height:100px;resize:vertical;font-family:monospace}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:2rem;width:550px;max-width:92vw;max-height:85vh;overflow-y:auto}
+.modal h3{margin-bottom:.3rem;font-size:1.1rem}
+.modal .modal-desc{color:var(--muted);font-size:.85rem;margin-bottom:1.2rem}
 .modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.5rem}
 
 /* Toast */
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.8rem 1.2rem;border-radius:var(--radius);font-size:.85rem;z-index:2000;transform:translateY(100px);opacity:0;transition:all .3s}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.75rem 1.2rem;border-radius:var(--radius);font-size:.85rem;z-index:2000;transform:translateY(80px);opacity:0;transition:all .3s;display:flex;align-items:center;gap:.5rem}
 .toast.visible{transform:translateY(0);opacity:1}
-.toast.success{background:var(--success);color:#fff}
-.toast.error{background:var(--danger);color:#fff}
-.toast.info{background:var(--accent);color:#fff}
+.toast.success{background:#166534;color:#bbf7d0;border:1px solid #22c55e}
+.toast.error{background:#7f1d1d;color:#fecaca;border:1px solid #ef4444}
+.toast.info{background:#1e3a5f;color:#bfdbfe;border:1px solid #3b82f6}
 
-/* Loading */
-.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+.spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
-.loading-overlay{position:absolute;inset:0;background:rgba(15,23,42,.8);display:flex;align-items:center;justify-content:center;z-index:100;border-radius:var(--radius)}
 
-/* Section visibility */
-.section{display:none}
-.section.active{display:block}
-
-/* Search */
-.search-input{padding:.5rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;width:250px}
+.section{display:none}.section.active{display:block}
+.search-input{padding:.45rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;width:220px}
 .search-input:focus{outline:none;border-color:var(--accent)}
 
-/* Responsive */
-@media(max-width:768px){
-  .sidebar{width:60px}
-  .sidebar-nav button span{display:none}
-  .sidebar-logo span{display:none}
-  .sidebar-nav button{justify-content:center;padding:.7rem}
-  .editor-wrap{flex-direction:column;height:auto}
-  .editor-sidebar{width:100%;max-height:200px}
-  .image-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
-}
+/* Image picker modal */
+.image-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:.5rem;max-height:300px;overflow-y:auto;margin-top:.8rem}
+.image-picker-item{border:2px solid transparent;border-radius:6px;overflow:hidden;cursor:pointer;transition:border-color .15s}
+.image-picker-item:hover,.image-picker-item.selected{border-color:var(--accent)}
+.image-picker-item img{width:100%;height:80px;object-fit:cover;display:block}
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- AUTH -->
 <div class="auth-screen" id="auth-screen">
-  <div class="auth-box">
-    <h1>Admin Uhaïna House</h1>
-    <p>Connecte-toi avec un <strong>GitHub Personal Access Token</strong> ayant les permissions <code>repo</code> (ou <code>public_repo</code>).</p>
-    <div class="auth-error" id="auth-error"></div>
-    <label for="pat-input">Personal Access Token</label>
-    <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxxx"/>
-    <label for="repo-input">Repository (owner/repo)</label>
-    <input type="text" id="repo-input" value="nico-magic-boost/location-seignosse"/>
-    <button class="btn btn-primary" id="auth-btn" onclick="authenticate()">Se connecter</button>
-  </div>
+<div class="auth-box">
+  <h1>Uhaina House</h1>
+  <p class="subtitle">Panneau d'administration</p>
+  <div class="auth-error" id="auth-error"></div>
+  <input type="password" id="pat-input" placeholder="GitHub Personal Access Token"/>
+  <input type="text" id="repo-input" value="nico-magic-boost/location-seignosse" style="display:none"/>
+  <button class="btn btn-primary" style="width:100%" onclick="authenticate()">Connexion</button>
+</div>
 </div>
 
-<!-- ADMIN PANEL -->
+<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar" style="display:none">
-  <div class="sidebar-logo"><span>U</span> Admin</div>
-  <nav class="sidebar-nav">
-    <button class="active" onclick="showSection('dashboard',this)" title="Dashboard">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-      <span>Dashboard</span>
-    </button>
-    <button onclick="showSection('pages',this);loadPages()" title="Pages">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-      <span>Pages</span>
-    </button>
-    <button onclick="showSection('images',this);loadImages()" title="Images">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      <span>Images</span>
-    </button>
-    <button onclick="showSection('blog',this);loadBlog()" title="Blog">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      <span>Blog</span>
-    </button>
-  </nav>
-  <div class="sidebar-footer">
-    <a onclick="logout()">Deconnexion</a>
-  </div>
+<div class="sidebar-logo"><span>U</span> Uhaina Admin</div>
+<nav class="sidebar-nav">
+  <button class="active" onclick="nav('dashboard',this)"><span class="icon">&#9638;</span> Dashboard</button>
+  <button onclick="nav('pages',this);loadPages()"><span class="icon">&#128196;</span> Pages</button>
+  <button onclick="nav('images',this);loadImages()"><span class="icon">&#128247;</span> Images</button>
+  <button onclick="nav('blog',this);loadBlog()"><span class="icon">&#9998;</span> Blog</button>
+</nav>
+<div class="sidebar-footer"><a onclick="logout()">Deconnexion</a></div>
 </div>
 
 <div class="main" id="main-panel" style="display:none">
 
-  <!-- DASHBOARD -->
-  <div class="section active" id="sec-dashboard">
-    <div class="topbar"><h2>Dashboard</h2><div class="topbar-actions"><span class="btn btn-ghost btn-sm" id="last-deploy">...</span></div></div>
-    <div class="content">
-      <div class="stats-grid">
-        <div class="card stat-card"><div class="stat-value" id="stat-pages">-</div><div class="stat-label">Pages HTML</div></div>
-        <div class="card stat-card"><div class="stat-value" id="stat-images">-</div><div class="stat-label">Images</div></div>
-        <div class="card stat-card"><div class="stat-value" id="stat-articles">-</div><div class="stat-label">Articles</div></div>
-        <div class="card stat-card"><div class="stat-value" id="stat-langs">4</div><div class="stat-label">Langues</div></div>
-      </div>
-      <div class="card" id="recent-commits" style="margin-top:1rem">
-        <h3 style="margin-bottom:1rem;font-size:1rem">Derniers commits</h3>
-        <div id="commits-list" style="font-size:.85rem;color:var(--muted)">Chargement...</div>
-      </div>
+<!-- DASHBOARD -->
+<div class="section active" id="sec-dashboard">
+  <div class="topbar"><h2>Dashboard</h2><div id="deploy-status" style="font-size:.82rem;color:var(--muted)"></div></div>
+  <div class="content">
+    <div class="stats-grid">
+      <div class="stat-card"><div class="val" id="s-pages">-</div><div class="lbl">Pages</div></div>
+      <div class="stat-card"><div class="val" id="s-images">-</div><div class="lbl">Images</div></div>
+      <div class="stat-card"><div class="val" id="s-articles">-</div><div class="lbl">Articles</div></div>
+      <div class="stat-card"><div class="val" id="s-langs">4</div><div class="lbl">Langues</div></div>
+    </div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem">
+      <h3 style="font-size:.95rem;margin-bottom:.8rem">Derniers changements</h3>
+      <div id="commits-list" style="font-size:.83rem;color:var(--muted)"><div class="spinner"></div></div>
     </div>
   </div>
+</div>
 
-  <!-- PAGES -->
-  <div class="section" id="sec-pages">
-    <div class="topbar">
-      <h2>Pages</h2>
-      <div class="topbar-actions">
-        <input type="text" class="search-input" placeholder="Filtrer..." oninput="filterPages(this.value)"/>
-      </div>
-    </div>
-    <div class="content">
-      <div class="editor-wrap">
-        <div class="editor-sidebar card">
-          <div class="file-list" id="pages-list">Chargement...</div>
+<!-- PAGES -->
+<div class="section" id="sec-pages">
+  <div class="topbar"><h2>Pages</h2><div><input type="text" class="search-input" placeholder="Rechercher..." oninput="filterPages(this.value)"/></div></div>
+  <div class="content">
+    <div id="pages-browse"></div>
+    <div class="edit-panel" id="page-edit">
+      <div class="edit-header">
+        <button class="back-btn" onclick="closePageEdit()">&#8592;</button>
+        <div>
+          <h2 id="edit-page-title" style="font-size:1rem"></h2>
+          <span id="edit-page-path" style="font-size:.78rem;color:var(--muted)"></span>
         </div>
-        <div class="editor-main">
-          <div class="editor-toolbar">
-            <span class="file-path" id="editor-path">Selectionne un fichier</span>
-            <button class="btn btn-primary btn-sm" id="save-btn" onclick="saveCurrentFile()" disabled>Sauvegarder</button>
-            <button class="btn btn-ghost btn-sm" id="preview-btn" onclick="previewFile()" disabled>Apercu</button>
+        <div style="margin-left:auto;display:flex;gap:.4rem">
+          <button class="btn btn-ghost btn-sm" onclick="previewPage()">&#128065; Apercu</button>
+          <button class="btn btn-primary btn-sm" id="save-page-btn" onclick="savePage()">Sauvegarder</button>
+        </div>
+      </div>
+      <div class="edit-tabs">
+        <button class="active" onclick="editTab('seo',this)">SEO</button>
+        <button onclick="editTab('content',this)">Contenu</button>
+      </div>
+      <div class="tab-content active" id="tab-seo">
+        <div class="form-group">
+          <label>Titre de la page (balise title)</label>
+          <input type="text" id="field-title" oninput="updateCharCount(this,70)"/>
+          <div class="char-count" id="cc-title">0/70</div>
+        </div>
+        <div class="form-group">
+          <label>Meta description</label>
+          <textarea id="field-desc" rows="3" oninput="updateCharCount(this,160)"></textarea>
+          <div class="char-count" id="cc-desc">0/160</div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>OG Title (reseaux sociaux)</label>
+            <input type="text" id="field-og-title"/>
           </div>
-          <textarea id="code-editor"></textarea>
-          <div class="editor-status"><span id="editor-status-text"></span></div>
+          <div class="form-group">
+            <label>OG Description</label>
+            <input type="text" id="field-og-desc"/>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>URL canonique</label>
+          <input type="text" id="field-canonical" disabled style="opacity:.6"/>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-content">
+        <div class="visual-editor-wrap">
+          <div class="visual-editor-toolbar">
+            <button onclick="execCmd('bold')" title="Gras"><b>G</b></button>
+            <button onclick="execCmd('italic')" title="Italique"><i>I</i></button>
+            <button onclick="execCmd('underline')" title="Souligne"><u>S</u></button>
+            <div class="sep"></div>
+            <button onclick="execCmd('formatBlock','H2')" title="Titre H2">H2</button>
+            <button onclick="execCmd('formatBlock','H3')" title="Titre H3">H3</button>
+            <button onclick="execCmd('formatBlock','P')" title="Paragraphe">P</button>
+            <div class="sep"></div>
+            <button onclick="execCmd('insertUnorderedList')" title="Liste">&#8226; Liste</button>
+            <button onclick="execCmd('insertOrderedList')" title="Liste numerotee">1. Liste</button>
+            <div class="sep"></div>
+            <button onclick="insertLink()" title="Lien">&#128279; Lien</button>
+            <button onclick="insertImage()" title="Image">&#128247; Image</button>
+            <div class="sep"></div>
+            <button onclick="execCmd('removeFormat')" title="Supprimer formatage">&#10005;</button>
+          </div>
+          <div class="visual-editor" id="visual-editor" contenteditable="true"></div>
         </div>
       </div>
     </div>
   </div>
+</div>
 
-  <!-- IMAGES -->
-  <div class="section" id="sec-images">
-    <div class="topbar">
-      <h2>Images</h2>
-      <div class="topbar-actions">
-        <span id="images-count" style="font-size:.85rem;color:var(--muted)"></span>
-      </div>
+<!-- IMAGES -->
+<div class="section" id="sec-images">
+  <div class="topbar"><h2>Images</h2><div id="img-count" style="font-size:.82rem;color:var(--muted)"></div></div>
+  <div class="content">
+    <div class="upload-zone" id="upload-zone">
+      <div class="upload-icon">&#128247;</div>
+      <p>Glisse tes images ici ou clique pour uploader</p>
+      <input type="file" id="file-input" multiple accept="image/*" style="display:none"/>
     </div>
-    <div class="content">
-      <div class="upload-zone" id="upload-zone">
-        <div class="upload-icon">+</div>
-        <p>Glisse des images ici ou clique pour uploader</p>
-        <input type="file" id="file-input" multiple accept="image/*" style="display:none"/>
+    <div class="image-grid" id="images-grid"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- BLOG -->
+<div class="section" id="sec-blog">
+  <div class="topbar"><h2>Blog / Actualites</h2><div><button class="btn btn-primary btn-sm" onclick="newArticleModal()">+ Nouvel article</button></div></div>
+  <div class="content">
+    <div id="blog-browse"></div>
+    <div class="edit-panel" id="blog-edit">
+      <div class="edit-header">
+        <button class="back-btn" onclick="closeBlogEdit()">&#8592;</button>
+        <h2 style="font-size:1rem" id="blog-edit-title">Nouvel article</h2>
+        <div style="margin-left:auto;display:flex;gap:.4rem">
+          <button class="btn btn-primary btn-sm" onclick="saveBlogArticle()">Publier</button>
+        </div>
       </div>
-      <div class="image-grid" id="images-grid">Chargement...</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Titre</label>
+          <input type="text" id="blog-field-title"/>
+        </div>
+        <div class="form-group">
+          <label>Slug (URL)</label>
+          <input type="text" id="blog-field-slug" placeholder="mon-article"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Langue</label>
+          <select id="blog-field-lang">
+            <option value="fr">Francais</option>
+            <option value="en">English</option>
+            <option value="es">Espanol</option>
+            <option value="de">Deutsch</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Meta description</label>
+          <input type="text" id="blog-field-desc"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Contenu de l'article</label>
+        <div class="visual-editor-wrap">
+          <div class="visual-editor-toolbar">
+            <button onclick="execCmdBlog('bold')"><b>G</b></button>
+            <button onclick="execCmdBlog('italic')"><i>I</i></button>
+            <button onclick="execCmdBlog('underline')"><u>S</u></button>
+            <div class="sep"></div>
+            <button onclick="execCmdBlog('formatBlock','H2')">H2</button>
+            <button onclick="execCmdBlog('formatBlock','H3')">H3</button>
+            <button onclick="execCmdBlog('formatBlock','P')">P</button>
+            <div class="sep"></div>
+            <button onclick="execCmdBlog('insertUnorderedList')">&#8226;</button>
+            <button onclick="execCmdBlog('insertOrderedList')">1.</button>
+            <div class="sep"></div>
+            <button onclick="insertLinkBlog()">&#128279;</button>
+            <button onclick="insertImageBlog()">&#128247;</button>
+          </div>
+          <div class="visual-editor" id="blog-editor" contenteditable="true" style="min-height:300px"></div>
+        </div>
+      </div>
     </div>
   </div>
-
-  <!-- BLOG -->
-  <div class="section" id="sec-blog">
-    <div class="topbar">
-      <h2>Blog / Actualites</h2>
-      <div class="topbar-actions">
-        <button class="btn btn-primary btn-sm" onclick="showNewArticleModal()">+ Nouvel article</button>
-      </div>
-    </div>
-    <div class="content">
-      <div class="blog-list" id="blog-list">Chargement...</div>
-    </div>
-  </div>
+</div>
 
 </div>
 
 <!-- MODAL -->
-<div class="modal-overlay" id="modal-overlay">
-  <div class="modal" id="modal-content"></div>
-</div>
+<div class="modal-overlay" id="modal"><div class="modal" id="modal-body"></div></div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/htmlmixed/htmlmixed.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/xml/xml.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/css/css.min.js"></script>
 <script>
-const API = "https://api.github.com";
-let TOKEN = "";
-let REPO = "";
-let OWNER = "";
-let editor = null;
-let currentFile = null;
-let currentSha = null;
-let pagesCache = [];
-let imagesCache = [];
+const API="https://api.github.com";
+let TOKEN="",OWNER="",REPO="";
+let treeCache=[];
+let currentPagePath="",currentPageSha="",currentPageHtml="";
+let currentBlogPath="",currentBlogSha="";
+let imagesCache=[];
 
-// --- AUTH ---
-function authenticate() {
-  TOKEN = document.getElementById("pat-input").value.trim();
-  const repo = document.getElementById("repo-input").value.trim();
-  const parts = repo.split("/");
-  if (parts.length !== 2 || !TOKEN) {
-    showAuthError("Token et repo requis (format: owner/repo)");
-    return;
-  }
-  OWNER = parts[0];
-  REPO = parts[1];
-  document.getElementById("auth-btn").disabled = true;
-  document.getElementById("auth-btn").textContent = "Connexion...";
-
-  ghFetch(`/repos/${OWNER}/${REPO}`)
-    .then(r => {
-      if (!r.ok) throw new Error("Acces refuse");
-      return r.json();
-    })
-    .then(() => {
-      localStorage.setItem("gh-admin-token", TOKEN);
-      localStorage.setItem("gh-admin-repo", `${OWNER}/${REPO}`);
-      showAdmin();
-    })
-    .catch(e => {
-      showAuthError("Echec: " + e.message);
-      document.getElementById("auth-btn").disabled = false;
-      document.getElementById("auth-btn").textContent = "Se connecter";
-    });
+// ─── AUTH ───
+function authenticate(){
+  TOKEN=document.getElementById("pat-input").value.trim();
+  const r=document.getElementById("repo-input").value.trim().split("/");
+  if(r.length!==2||!TOKEN){showErr("Token requis");return}
+  OWNER=r[0];REPO=r[1];
+  gh(`/repos/${OWNER}/${REPO}`).then(r=>{if(!r.ok)throw Error("Acces refuse");return r.json()}).then(()=>{
+    localStorage.setItem("admin-t",TOKEN);localStorage.setItem("admin-r",OWNER+"/"+REPO);
+    boot();
+  }).catch(e=>showErr(e.message));
 }
-
-function showAuthError(msg) {
-  const el = document.getElementById("auth-error");
-  el.textContent = msg;
-  el.style.display = "block";
-}
-
-function logout() {
-  localStorage.removeItem("gh-admin-token");
-  localStorage.removeItem("gh-admin-repo");
-  location.reload();
-}
-
-function showAdmin() {
-  document.getElementById("auth-screen").style.display = "none";
-  document.getElementById("sidebar").style.display = "flex";
-  document.getElementById("main-panel").style.display = "flex";
-  initEditor();
+function showErr(m){const e=document.getElementById("auth-error");e.textContent=m;e.style.display="block"}
+function logout(){localStorage.removeItem("admin-t");localStorage.removeItem("admin-r");location.reload()}
+function boot(){
+  document.getElementById("auth-screen").style.display="none";
+  document.getElementById("sidebar").style.display="flex";
+  document.getElementById("main-panel").style.display="flex";
   loadDashboard();
 }
 
-// --- GITHUB API ---
-function ghFetch(path, opts = {}) {
-  return fetch(API + path, {
-    ...opts,
-    headers: {
-      "Authorization": "Bearer " + TOKEN,
-      "Accept": "application/vnd.github.v3+json",
-      ...(opts.headers || {}),
-      ...(opts.body ? {"Content-Type": "application/json"} : {})
-    }
-  });
+// ─── GITHUB API ───
+function gh(path,opts={}){
+  return fetch(API+path,{...opts,headers:{"Authorization":"Bearer "+TOKEN,"Accept":"application/vnd.github.v3+json",...(opts.headers||{}),...(opts.body?{"Content-Type":"application/json"}:{})}});
+}
+async function getTree(){
+  if(treeCache.length)return treeCache;
+  const r=await gh(`/repos/${OWNER}/${REPO}/git/trees/main?recursive=1`);
+  const d=await r.json();treeCache=d.tree||[];return treeCache;
+}
+async function getFile(path){
+  const r=await gh(`/repos/${OWNER}/${REPO}/contents/${path}?ref=main`);
+  if(!r.ok)throw Error("Not found");const d=await r.json();
+  return{content:decodeBase64(d.content),sha:d.sha,size:d.size};
+}
+function decodeBase64(b){try{return decodeURIComponent(escape(atob(b.replace(/\n/g,""))))}catch(e){return atob(b.replace(/\n/g,""))}}
+async function putFile(path,content,msg,sha){
+  const body={message:msg,content:btoa(unescape(encodeURIComponent(content))),branch:"main"};
+  if(sha)body.sha=sha;
+  const r=await gh(`/repos/${OWNER}/${REPO}/contents/${path}`,{method:"PUT",body:JSON.stringify(body)});
+  if(!r.ok){const e=await r.json();throw Error(e.message||"Erreur")}
+  treeCache=[];return r.json();
+}
+async function putBinary(path,b64,msg,sha){
+  const body={message:msg,content:b64,branch:"main"};if(sha)body.sha=sha;
+  const r=await gh(`/repos/${OWNER}/${REPO}/contents/${path}`,{method:"PUT",body:JSON.stringify(body)});
+  if(!r.ok)throw Error("Upload echoue");treeCache=[];return r.json();
+}
+async function delFile(path,sha,msg){
+  const r=await gh(`/repos/${OWNER}/${REPO}/contents/${path}`,{method:"DELETE",body:JSON.stringify({message:msg,sha,branch:"main"})});
+  if(!r.ok)throw Error("Suppression echouee");treeCache=[];return r.json();
 }
 
-async function getFileContent(path) {
-  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}?ref=main`);
-  if (!r.ok) throw new Error("Fichier non trouve: " + path);
-  const data = await r.json();
-  return { content: atob(data.content.replace(/\n/g, "")), sha: data.sha, size: data.size };
+// ─── NAVIGATION ───
+function nav(id,btn){
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById("sec-"+id).classList.add("active");
+  document.querySelectorAll(".sidebar-nav button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
 }
 
-async function putFile(path, content, message, sha) {
-  const body = {
-    message,
-    content: btoa(unescape(encodeURIComponent(content))),
-    branch: "main"
-  };
-  if (sha) body.sha = sha;
-  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}`, {
-    method: "PUT",
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) {
-    const err = await r.json();
-    throw new Error(err.message || "Erreur sauvegarde");
-  }
-  return r.json();
-}
+// ─── TOAST ───
+function toast(m,t="success"){const e=document.getElementById("toast");e.textContent=m;e.className="toast "+t;requestAnimationFrame(()=>e.classList.add("visible"));setTimeout(()=>e.classList.remove("visible"),3500)}
 
-async function putFileBinary(path, base64Content, message, sha) {
-  const body = {
-    message,
-    content: base64Content,
-    branch: "main"
-  };
-  if (sha) body.sha = sha;
-  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}`, {
-    method: "PUT",
-    body: JSON.stringify(body)
-  });
-  if (!r.ok) throw new Error("Erreur upload");
-  return r.json();
-}
+// ─── MODAL ───
+function openModal(h){document.getElementById("modal-body").innerHTML=h;document.getElementById("modal").classList.add("visible")}
+function closeModal(){document.getElementById("modal").classList.remove("visible")}
+document.getElementById("modal").onclick=e=>{if(e.target===e.currentTarget)closeModal()};
 
-async function deleteFile(path, sha, message) {
-  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}`, {
-    method: "DELETE",
-    body: JSON.stringify({ message, sha, branch: "main" })
-  });
-  if (!r.ok) throw new Error("Erreur suppression");
-  return r.json();
-}
-
-async function getTree(path) {
-  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}?ref=main`);
-  if (!r.ok) return [];
-  return r.json();
-}
-
-async function getTreeRecursive() {
-  const r = await ghFetch(`/repos/${OWNER}/${REPO}/git/trees/main?recursive=1`);
-  if (!r.ok) return [];
-  const data = await r.json();
-  return data.tree || [];
-}
-
-// --- TOAST ---
-function toast(msg, type = "success") {
-  const el = document.getElementById("toast");
-  el.textContent = msg;
-  el.className = "toast " + type;
-  requestAnimationFrame(() => el.classList.add("visible"));
-  setTimeout(() => el.classList.remove("visible"), 3000);
-}
-
-// --- MODAL ---
-function showModal(html) {
-  document.getElementById("modal-content").innerHTML = html;
-  document.getElementById("modal-overlay").classList.add("visible");
-}
-function closeModal() {
-  document.getElementById("modal-overlay").classList.remove("visible");
-}
-document.getElementById("modal-overlay").addEventListener("click", e => {
-  if (e.target === e.currentTarget) closeModal();
-});
-
-// --- SECTIONS ---
-function showSection(name, btn) {
-  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
-  document.getElementById("sec-" + name).classList.add("active");
-  document.querySelectorAll(".sidebar-nav button").forEach(b => b.classList.remove("active"));
-  if (btn) btn.classList.add("active");
-}
-
-// --- DASHBOARD ---
-async function loadDashboard() {
-  try {
-    const tree = await getTreeRecursive();
-    const htmlFiles = tree.filter(f => f.type === "blob" && f.path.endsWith(".html") && !f.path.startsWith("admin/"));
-    const imgFiles = tree.filter(f => f.type === "blob" && f.path.startsWith("assets/img/"));
-    const articles = tree.filter(f => f.type === "blob" && f.path.includes("actualites/") && f.path.endsWith("index.html") && !f.path.endsWith("actualites/index.html"));
-    const articlesDe = tree.filter(f => f.type === "blob" && f.path.includes("aktuelles/") && f.path.endsWith("index.html") && !f.path.endsWith("aktuelles/index.html"));
-    const articlesEn = tree.filter(f => f.type === "blob" && f.path.includes("news/") && f.path.endsWith("index.html") && !f.path.endsWith("news/index.html"));
-    const articlesEs = tree.filter(f => f.type === "blob" && f.path.includes("noticias/") && f.path.endsWith("index.html") && !f.path.endsWith("noticias/index.html"));
-
-    document.getElementById("stat-pages").textContent = htmlFiles.length;
-    document.getElementById("stat-images").textContent = imgFiles.length;
-    document.getElementById("stat-articles").textContent = articles.length + articlesDe.length + articlesEn.length + articlesEs.length;
-
-    const commitsR = await ghFetch(`/repos/${OWNER}/${REPO}/commits?sha=main&per_page=8`);
-    const commits = await commitsR.json();
-    const commitsList = document.getElementById("commits-list");
-    commitsList.innerHTML = commits.map(c => {
-      const d = new Date(c.commit.author.date);
-      const dateStr = d.toLocaleDateString("fr-FR") + " " + d.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"});
-      const msg = c.commit.message.split("\n")[0];
-      return `<div style="padding:.4rem 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:1rem">
-        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(msg)}</span>
-        <span style="flex-shrink:0;font-size:.75rem">${dateStr}</span>
-      </div>`;
+// ─── DASHBOARD ───
+async function loadDashboard(){
+  try{
+    const tree=await getTree();
+    const pages=tree.filter(f=>f.type==="blob"&&f.path.endsWith(".html")&&!f.path.startsWith("admin/"));
+    const imgs=tree.filter(f=>f.type==="blob"&&f.path.startsWith("assets/img/"));
+    const arts=tree.filter(f=>f.type==="blob"&&f.path.endsWith("/index.html")&&(f.path.includes("actualites/")||f.path.includes("news/")||f.path.includes("noticias/")||f.path.includes("aktuelles/"))&&!/\/(actualites|news|noticias|aktuelles)\/index\.html$/.test(f.path));
+    document.getElementById("s-pages").textContent=pages.length;
+    document.getElementById("s-images").textContent=imgs.length;
+    document.getElementById("s-articles").textContent=arts.length;
+    const cr=await gh(`/repos/${OWNER}/${REPO}/commits?sha=main&per_page=6`);
+    const commits=await cr.json();
+    document.getElementById("commits-list").innerHTML=commits.map(c=>{
+      const d=new Date(c.commit.author.date);const ds=d.toLocaleDateString("fr")+" "+d.toLocaleTimeString("fr",{hour:"2-digit",minute:"2-digit"});
+      return`<div style="padding:.4rem 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:.8rem"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(c.commit.message.split("\n")[0])}</span><span style="flex-shrink:0;font-size:.72rem">${ds}</span></div>`;
     }).join("");
-
-    const deployR = await ghFetch(`/repos/${OWNER}/${REPO}/actions/runs?per_page=1`);
-    const deployData = await deployR.json();
-    if (deployData.workflow_runs && deployData.workflow_runs[0]) {
-      const run = deployData.workflow_runs[0];
-      const status = run.conclusion || run.status;
-      const color = status === "success" ? "var(--success)" : status === "failure" ? "var(--danger)" : "var(--warning)";
-      document.getElementById("last-deploy").innerHTML = `<span style="color:${color}">●</span> Deploy: ${status}`;
-    }
-  } catch (e) {
-    toast("Erreur chargement dashboard: " + e.message, "error");
-  }
+    const dr=await gh(`/repos/${OWNER}/${REPO}/actions/runs?per_page=1`);
+    const dd=await dr.json();
+    if(dd.workflow_runs&&dd.workflow_runs[0]){const s=dd.workflow_runs[0].conclusion||dd.workflow_runs[0].status;const c=s==="success"?"var(--success)":s==="failure"?"var(--danger)":"var(--warning)";document.getElementById("deploy-status").innerHTML=`<span style="color:${c}">&#9679;</span> Deploy: ${s}`}
+  }catch(e){toast("Erreur: "+e.message,"error")}
 }
 
-// --- PAGES ---
-async function loadPages() {
-  const list = document.getElementById("pages-list");
-  try {
-    const tree = await getTreeRecursive();
-    pagesCache = tree
-      .filter(f => f.type === "blob" && f.path.endsWith(".html") && !f.path.startsWith("admin/"))
-      .sort((a, b) => a.path.localeCompare(b.path));
-
-    renderPagesList(pagesCache);
-  } catch (e) {
-    list.innerHTML = `<p style="color:var(--danger)">Erreur: ${e.message}</p>`;
-  }
+// ─── PAGES ───
+let allPages=[];
+async function loadPages(){
+  const el=document.getElementById("pages-browse");el.innerHTML='<div class="spinner"></div>';
+  document.getElementById("page-edit").classList.remove("visible");
+  try{
+    const tree=await getTree();
+    allPages=tree.filter(f=>f.type==="blob"&&f.path.endsWith(".html")&&!f.path.startsWith("admin/")).sort((a,b)=>a.path.localeCompare(b.path));
+    renderPages(allPages);
+  }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
-
-function renderPagesList(files) {
-  const list = document.getElementById("pages-list");
-  const grouped = {};
-  files.forEach(f => {
-    let lang = "FR";
-    if (f.path.startsWith("en/")) lang = "EN";
-    else if (f.path.startsWith("es/")) lang = "ES";
-    else if (f.path.startsWith("de/")) lang = "DE";
-    if (!grouped[lang]) grouped[lang] = [];
-    grouped[lang].push(f);
-  });
-
-  let html = "";
-  for (const lang of ["FR","EN","ES","DE"]) {
-    if (!grouped[lang]) continue;
-    html += `<div style="font-size:.7rem;color:var(--accent);padding:.5rem .3rem .2rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-top:.5rem">${lang}</div>`;
-    grouped[lang].forEach(f => {
-      const name = f.path.replace(/index\.html$/, "").replace(/\/$/, "") || "/";
-      html += `<div class="file-item" onclick="openFile('${f.path}')" data-path="${f.path}">
-        <span class="file-icon">📄</span>
-        <span class="file-name" title="${f.path}">${name || "/"}</span>
-        <span class="file-size">${formatBytes(f.size)}</span>
+function renderPages(files){
+  const el=document.getElementById("pages-browse");
+  const groups={FR:[],EN:[],ES:[],DE:[]};
+  files.forEach(f=>{let l="FR";if(f.path.startsWith("en/"))l="EN";else if(f.path.startsWith("es/"))l="ES";else if(f.path.startsWith("de/"))l="DE";groups[l].push(f)});
+  let h="";
+  for(const lang of["FR","EN","ES","DE"]){
+    if(!groups[lang].length)continue;
+    h+=`<div class="lang-group"><h3>${lang} (${groups[lang].length})</h3><div class="page-grid">`;
+    groups[lang].forEach(f=>{
+      const name=f.path.replace(/index\.html$/,"").replace(/\/$/,"")||"Accueil";
+      h+=`<div class="page-card" onclick="openPage('${f.path}')">
+        <span class="page-lang">${lang}</span>
+        <div class="page-title">${esc(name)}</div>
+        <div class="page-path">/${f.path}</div>
       </div>`;
     });
+    h+="</div></div>";
   }
-
-  const cssFiles = files.filter(f => f.path.endsWith(".css"));
-  const jsFiles = files.filter(f => f.path.endsWith(".js"));
-  list.innerHTML = html;
+  el.innerHTML=h;
 }
+function filterPages(q){const l=q.toLowerCase();renderPages(allPages.filter(f=>f.path.toLowerCase().includes(l)))}
 
-function filterPages(q) {
-  const lower = q.toLowerCase();
-  const filtered = pagesCache.filter(f => f.path.toLowerCase().includes(lower));
-  renderPagesList(filtered);
-}
-
-// --- EDITOR ---
-function initEditor() {
-  editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
-    mode: "htmlmixed",
-    theme: "dracula",
-    lineNumbers: true,
-    lineWrapping: true,
-    indentUnit: 2,
-    tabSize: 2,
-    matchBrackets: true,
-    autoCloseTags: true
-  });
-  editor.on("changes", () => {
-    document.getElementById("editor-status-text").textContent = "Modifie (non sauvegarde)";
-    document.getElementById("editor-status-text").className = "";
-  });
-}
-
-async function openFile(path) {
-  document.querySelectorAll(".file-item").forEach(el => el.classList.remove("active"));
-  const item = document.querySelector(`[data-path="${path}"]`);
-  if (item) item.classList.add("active");
-
-  document.getElementById("editor-path").textContent = path;
-  document.getElementById("editor-status-text").textContent = "Chargement...";
-  document.getElementById("save-btn").disabled = true;
-  document.getElementById("preview-btn").disabled = true;
-
-  try {
-    const { content, sha } = await getFileContent(path);
-    currentFile = path;
-    currentSha = sha;
-    editor.setValue(content);
-    editor.clearHistory();
-    document.getElementById("save-btn").disabled = false;
-    document.getElementById("preview-btn").disabled = false;
-    document.getElementById("editor-status-text").textContent = "Charge";
-    document.getElementById("editor-status-text").className = "";
-
-    if (path.endsWith(".css")) editor.setOption("mode", "css");
-    else if (path.endsWith(".js")) editor.setOption("mode", "javascript");
-    else editor.setOption("mode", "htmlmixed");
-
-    setTimeout(() => editor.refresh(), 50);
-  } catch (e) {
-    document.getElementById("editor-status-text").textContent = "Erreur: " + e.message;
-    toast("Erreur ouverture: " + e.message, "error");
-  }
-}
-
-async function saveCurrentFile() {
-  if (!currentFile) return;
-  const btn = document.getElementById("save-btn");
-  btn.disabled = true;
-  btn.textContent = "Sauvegarde...";
-  document.getElementById("editor-status-text").textContent = "Sauvegarde en cours...";
-
-  try {
-    const content = editor.getValue();
-    const result = await putFile(currentFile, content, `Update ${currentFile} via admin`, currentSha);
-    currentSha = result.content.sha;
-    document.getElementById("editor-status-text").textContent = "Sauvegarde !";
-    document.getElementById("editor-status-text").className = "saved";
-    toast("Fichier sauvegarde et deploy lance");
-  } catch (e) {
-    document.getElementById("editor-status-text").textContent = "Erreur: " + e.message;
-    toast("Erreur: " + e.message, "error");
-  }
-  btn.disabled = false;
-  btn.textContent = "Sauvegarder";
-}
-
-function previewFile() {
-  if (!currentFile) return;
-  const path = currentFile.replace(/index\.html$/, "");
-  window.open(`https://location-seignosse.fr/${path}`, "_blank");
-}
-
-// --- IMAGES ---
-async function loadImages() {
-  const grid = document.getElementById("images-grid");
-  grid.innerHTML = '<div class="spinner"></div>';
-  try {
-    const items = await getTree("assets/img");
-    imagesCache = Array.isArray(items) ? items.filter(f => f.type === "file") : [];
-
-    document.getElementById("images-count").textContent = imagesCache.length + " images";
-
-    if (imagesCache.length === 0) {
-      grid.innerHTML = '<p style="color:var(--muted)">Aucune image</p>';
-      return;
+async function openPage(path){
+  document.getElementById("pages-browse").style.display="none";
+  document.getElementById("page-edit").classList.add("visible");
+  document.getElementById("edit-page-path").textContent="/"+path;
+  document.getElementById("save-page-btn").disabled=true;
+  toast("Chargement...","info");
+  try{
+    const{content,sha}=await getFile(path);
+    currentPagePath=path;currentPageSha=sha;currentPageHtml=content;
+    // Parse meta
+    const doc=new DOMParser().parseFromString(content,"text/html");
+    document.getElementById("field-title").value=doc.querySelector("title")?.textContent||"";
+    document.getElementById("field-desc").value=doc.querySelector('meta[name="description"]')?.getAttribute("content")||"";
+    document.getElementById("field-og-title").value=doc.querySelector('meta[property="og:title"]')?.getAttribute("content")||"";
+    document.getElementById("field-og-desc").value=doc.querySelector('meta[property="og:description"]')?.getAttribute("content")||"";
+    document.getElementById("field-canonical").value=doc.querySelector('link[rel="canonical"]')?.getAttribute("href")||"";
+    document.getElementById("edit-page-title").textContent=doc.querySelector("title")?.textContent||path;
+    updateCharCount(document.getElementById("field-title"),70);
+    updateCharCount(document.getElementById("field-desc"),160);
+    // Extract main content for visual editor
+    const main=doc.querySelector("main")||doc.querySelector(".container")||doc.body;
+    let bodyContent="";
+    if(main){
+      const clone=main.cloneNode(true);
+      clone.querySelectorAll("script,style,nav,header,footer,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(el=>el.remove());
+      bodyContent=clone.innerHTML;
     }
+    document.getElementById("visual-editor").innerHTML=bodyContent;
+    document.getElementById("save-page-btn").disabled=false;
+    editTab("seo",document.querySelector(".edit-tabs button"));
+    toast("Page chargee","success");
+  }catch(e){toast("Erreur: "+e.message,"error")}
+}
 
-    grid.innerHTML = imagesCache.map(img => {
-      const rawUrl = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${img.path}`;
-      return `<div class="image-card" onclick="showImageModal('${img.path}','${img.sha}','${rawUrl}')">
-        <img src="${rawUrl}" alt="${img.name}" loading="lazy"/>
-        <div class="image-info">
-          <div class="image-name" title="${img.name}">${img.name}</div>
-          <div class="image-meta">${formatBytes(img.size)}</div>
-        </div>
+function closePageEdit(){
+  document.getElementById("page-edit").classList.remove("visible");
+  document.getElementById("pages-browse").style.display="block";
+}
+
+async function savePage(){
+  const btn=document.getElementById("save-page-btn");btn.disabled=true;btn.textContent="Sauvegarde...";
+  try{
+    const doc=new DOMParser().parseFromString(currentPageHtml,"text/html");
+    // Update SEO fields
+    const title=document.getElementById("field-title").value;
+    const desc=document.getElementById("field-desc").value;
+    const ogTitle=document.getElementById("field-og-title").value;
+    const ogDesc=document.getElementById("field-og-desc").value;
+    if(doc.querySelector("title"))doc.querySelector("title").textContent=title;
+    if(doc.querySelector('meta[name="description"]'))doc.querySelector('meta[name="description"]').setAttribute("content",desc);
+    if(doc.querySelector('meta[property="og:title"]'))doc.querySelector('meta[property="og:title"]').setAttribute("content",ogTitle);
+    if(doc.querySelector('meta[property="og:description"]'))doc.querySelector('meta[property="og:description"]').setAttribute("content",ogDesc);
+    // Update body content
+    const editorContent=document.getElementById("visual-editor").innerHTML;
+    const main=doc.querySelector("main")||doc.querySelector(".container");
+    if(main){
+      const tempDoc=new DOMParser().parseFromString("<div>"+editorContent+"</div>","text/html");
+      const oldChildren=[...main.children];
+      const nonContent=["SCRIPT","STYLE","NAV","HEADER","FOOTER"];
+      const preserved=oldChildren.filter(el=>nonContent.includes(el.tagName)||el.classList.contains("site-header")||el.classList.contains("site-footer")||el.classList.contains("cookie-banner")||el.classList.contains("floating-widgets"));
+      main.innerHTML=editorContent;
+      preserved.forEach(el=>main.appendChild(el));
+    }
+    // Serialize back to HTML
+    let html="<!doctype html>\n"+doc.documentElement.outerHTML;
+    const result=await putFile(currentPagePath,html,"Update "+currentPagePath+" via admin",currentPageSha);
+    currentPageSha=result.content.sha;currentPageHtml=html;
+    toast("Sauvegarde et deploy lance !");
+  }catch(e){toast("Erreur: "+e.message,"error")}
+  btn.disabled=false;btn.textContent="Sauvegarder";
+}
+
+function previewPage(){
+  if(currentPagePath){const p=currentPagePath.replace(/index\.html$/,"");window.open("https://location-seignosse.fr/"+p,"_blank")}
+}
+
+function editTab(name,btn){
+  document.querySelectorAll(".edit-tabs button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.querySelectorAll("#page-edit .tab-content").forEach(t=>t.classList.remove("active"));
+  document.getElementById("tab-"+name).classList.add("active");
+}
+
+function updateCharCount(input,max){
+  const id=input.id.replace("field-","cc-");
+  const el=document.getElementById(id);
+  if(el)el.textContent=input.value.length+"/"+max;
+}
+
+// ─── VISUAL EDITOR COMMANDS ───
+function execCmd(cmd,val){document.getElementById("visual-editor").focus();document.execCommand(cmd,false,val?("<"+val+">"):null)}
+function execCmdBlog(cmd,val){document.getElementById("blog-editor").focus();document.execCommand(cmd,false,val?("<"+val+">"):null)}
+
+function insertLink(){
+  const url=prompt("URL du lien :","https://");
+  if(url)document.execCommand("createLink",false,url);
+}
+function insertLinkBlog(){
+  const url=prompt("URL du lien :","https://");
+  if(url){document.getElementById("blog-editor").focus();document.execCommand("createLink",false,url)}
+}
+function insertImage(){showImagePicker("visual-editor")}
+function insertImageBlog(){showImagePicker("blog-editor")}
+
+function showImagePicker(targetId){
+  getTree().then(tree=>{
+    const imgs=tree.filter(f=>f.type==="blob"&&f.path.startsWith("assets/img/"));
+    let h='<h3>Inserer une image</h3><p class="modal-desc">Clique sur une image pour l\'inserer</p><div class="image-picker-grid">';
+    imgs.forEach(img=>{
+      const url=`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${img.path}`;
+      h+=`<div class="image-picker-item" onclick="pickImage('${targetId}','/${img.path}')"><img src="${url}" alt="${img.name}"/></div>`;
+    });
+    h+='</div><div class="modal-actions"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button></div>';
+    openModal(h);
+  });
+}
+function pickImage(targetId,src){
+  const el=document.getElementById(targetId);el.focus();
+  document.execCommand("insertImage",false,src);
+  closeModal();
+}
+
+// ─── IMAGES ───
+async function loadImages(){
+  const grid=document.getElementById("images-grid");grid.innerHTML='<div class="spinner"></div>';
+  try{
+    const r=await gh(`/repos/${OWNER}/${REPO}/contents/assets/img?ref=main`);
+    const items=await r.json();
+    imagesCache=Array.isArray(items)?items.filter(f=>f.type==="file"):[];
+    document.getElementById("img-count").textContent=imagesCache.length+" images";
+    if(!imagesCache.length){grid.innerHTML='<p style="color:var(--muted)">Aucune image</p>';return}
+    grid.innerHTML=imagesCache.map(img=>{
+      const url=`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${img.path}`;
+      return`<div class="image-card">
+        <button class="image-copy" onclick="event.stopPropagation();copyPath('/${img.path}')" title="Copier le chemin">&#128203;</button>
+        <button class="image-delete" onclick="event.stopPropagation();removeImage('${img.path}','${img.sha}')" title="Supprimer">&#10005;</button>
+        <img src="${url}" alt="${img.name}" loading="lazy"/>
+        <div class="image-info"><div class="image-name">${img.name}</div><div class="image-size">${fmtBytes(img.size)}</div></div>
       </div>`;
     }).join("");
-  } catch (e) {
-    grid.innerHTML = `<p style="color:var(--danger)">Erreur: ${e.message}</p>`;
-  }
+  }catch(e){grid.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
 
-function showImageModal(path, sha, url) {
-  showModal(`
-    <h3>${path.split("/").pop()}</h3>
-    <img src="${url}" style="width:100%;border-radius:var(--radius);margin:.8rem 0"/>
-    <p style="font-size:.8rem;color:var(--muted)">Chemin: ${path}</p>
-    <p style="font-size:.8rem;color:var(--muted);margin-top:.3rem">Utilisation HTML: <code>&lt;img src="/${path}" alt=""/&gt;</code></p>
-    <div class="modal-actions">
-      <button class="btn btn-danger btn-sm" onclick="deleteImage('${path}','${sha}')">Supprimer</button>
-      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Fermer</button>
-    </div>
-  `);
+function copyPath(p){navigator.clipboard.writeText(p);toast("Chemin copie : "+p)}
+
+async function removeImage(path,sha){
+  if(!confirm("Supprimer "+path.split("/").pop()+" ?"))return;
+  try{await delFile(path,sha,"Delete "+path+" via admin");toast("Supprimee");loadImages()}catch(e){toast(e.message,"error")}
 }
 
-async function deleteImage(path, sha) {
-  if (!confirm("Supprimer " + path + " ?")) return;
-  try {
-    await deleteFile(path, sha, `Delete image ${path} via admin`);
-    toast("Image supprimee");
-    closeModal();
-    loadImages();
-  } catch (e) {
-    toast("Erreur: " + e.message, "error");
-  }
-}
-
-// Upload zone
-(function initUpload() {
-  const zone = document.getElementById("upload-zone");
-  const input = document.getElementById("file-input");
-  zone.addEventListener("click", () => input.click());
-  zone.addEventListener("dragover", e => { e.preventDefault(); zone.classList.add("dragover"); });
-  zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
-  zone.addEventListener("drop", e => {
-    e.preventDefault();
-    zone.classList.remove("dragover");
-    handleFiles(e.dataTransfer.files);
-  });
-  input.addEventListener("change", () => {
-    handleFiles(input.files);
-    input.value = "";
-  });
+// Upload
+(function(){
+  const z=document.getElementById("upload-zone"),inp=document.getElementById("file-input");
+  z.onclick=()=>inp.click();
+  z.ondragover=e=>{e.preventDefault();z.classList.add("dragover")};
+  z.ondragleave=()=>z.classList.remove("dragover");
+  z.ondrop=e=>{e.preventDefault();z.classList.remove("dragover");uploadFiles(e.dataTransfer.files)};
+  inp.onchange=()=>{uploadFiles(inp.files);inp.value=""};
 })();
 
-async function handleFiles(files) {
-  for (const file of files) {
-    if (!file.type.startsWith("image/")) { toast(file.name + " n'est pas une image", "error"); continue; }
-    const name = file.name.toLowerCase().replace(/\s+/g, "-");
-    const path = "assets/img/" + name;
-
-    const existing = imagesCache.find(i => i.name === name);
-    if (existing && !confirm(`${name} existe deja. Remplacer ?`)) continue;
-
-    toast("Upload " + name + "...", "info");
-    try {
-      const base64 = await fileToBase64(file);
-      await putFileBinary(path, base64, `Upload image ${name} via admin`, existing?.sha);
-      toast(name + " uploade !");
-      loadImages();
-    } catch (e) {
-      toast("Erreur upload " + name + ": " + e.message, "error");
-    }
+async function uploadFiles(files){
+  for(const f of files){
+    if(!f.type.startsWith("image/")){toast(f.name+" n'est pas une image","error");continue}
+    const name=f.name.toLowerCase().replace(/\s+/g,"-");
+    const path="assets/img/"+name;
+    const existing=imagesCache.find(i=>i.name===name);
+    if(existing&&!confirm(name+" existe deja. Remplacer ?"))continue;
+    toast("Upload "+name+"...","info");
+    try{
+      const b64=await toBase64(f);
+      await putBinary(path,b64,"Upload "+name+" via admin",existing?.sha);
+      toast(name+" uploade !");loadImages();
+    }catch(e){toast("Erreur: "+e.message,"error")}
   }
 }
+function toBase64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(",")[1]);r.onerror=rej;r.readAsDataURL(file)})}
 
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(",")[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
-// --- BLOG ---
-async function loadBlog() {
-  const list = document.getElementById("blog-list");
-  list.innerHTML = '<div class="spinner"></div>';
-
-  try {
-    const tree = await getTreeRecursive();
-    const blogDirs = ["actualites", "en/news", "es/noticias", "de/aktuelles"];
-    const langMap = { "actualites": "FR", "en/news": "EN", "es/noticias": "ES", "de/aktuelles": "DE" };
-    const listDirs = ["actualites/index.html", "en/news/index.html", "es/noticias/index.html", "de/aktuelles/index.html"];
-
-    const articles = tree.filter(f =>
-      f.type === "blob" &&
-      f.path.endsWith("/index.html") &&
-      blogDirs.some(d => f.path.startsWith(d + "/")) &&
-      !listDirs.includes(f.path)
-    ).sort((a, b) => a.path.localeCompare(b.path));
-
-    if (articles.length === 0) {
-      list.innerHTML = '<p style="color:var(--muted)">Aucun article</p>';
-      return;
-    }
-
-    list.innerHTML = articles.map(a => {
-      let lang = "FR";
-      for (const [dir, l] of Object.entries(langMap)) {
-        if (a.path.startsWith(dir + "/")) { lang = l; break; }
-      }
-      const slug = a.path.replace(/\/index\.html$/, "").split("/").pop();
-      return `<div class="blog-item">
+// ─── BLOG ───
+async function loadBlog(){
+  const el=document.getElementById("blog-browse");el.innerHTML='<div class="spinner"></div>';
+  document.getElementById("blog-edit").classList.remove("visible");
+  try{
+    const tree=await getTree();
+    const dirs=["actualites","en/news","es/noticias","de/aktuelles"];
+    const lm={actualites:"FR","en/news":"EN","es/noticias":"ES","de/aktuelles":"DE"};
+    const listFiles=dirs.map(d=>d+"/index.html");
+    const arts=tree.filter(f=>f.type==="blob"&&f.path.endsWith("/index.html")&&dirs.some(d=>f.path.startsWith(d+"/"))&&!listFiles.includes(f.path));
+    if(!arts.length){el.innerHTML='<p style="color:var(--muted)">Aucun article</p>';return}
+    let h='<div class="blog-grid">';
+    arts.sort((a,b)=>a.path.localeCompare(b.path)).forEach(a=>{
+      let lang="FR";for(const[d,l]of Object.entries(lm)){if(a.path.startsWith(d+"/")){lang=l;break}}
+      const slug=a.path.replace(/\/index\.html$/,"").split("/").pop();
+      h+=`<div class="blog-card">
         <span class="blog-lang">${lang}</span>
-        <span class="blog-title">${slug}</span>
-        <span class="blog-path">${a.path}</span>
-        <button class="btn btn-ghost btn-sm" onclick="editArticle('${a.path}')">Editer</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteArticle('${a.path}','${a.sha}')">X</button>
+        <div class="blog-title">${slug}</div>
+        <div class="blog-slug">/${a.path.replace(/index\.html$/,"")}</div>
+        <div class="blog-card-actions">
+          <button class="btn btn-ghost btn-sm" onclick="editBlogArticle('${a.path}')">&#9998; Editer</button>
+          <button class="btn btn-danger btn-sm" onclick="deleteBlogArticle('${a.path}')">Supprimer</button>
+        </div>
       </div>`;
-    }).join("");
-  } catch (e) {
-    list.innerHTML = `<p style="color:var(--danger)">Erreur: ${e.message}</p>`;
-  }
+    });
+    h+="</div>";el.innerHTML=h;
+  }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
 
-function editArticle(path) {
-  showSection("pages", document.querySelectorAll(".sidebar-nav button")[1]);
-  loadPages().then(() => {
-    setTimeout(() => openFile(path), 500);
-  });
+function newArticleModal(){
+  document.getElementById("blog-browse").style.display="none";
+  document.getElementById("blog-edit").classList.add("visible");
+  document.getElementById("blog-edit-title").textContent="Nouvel article";
+  document.getElementById("blog-field-title").value="";
+  document.getElementById("blog-field-slug").value="";
+  document.getElementById("blog-field-desc").value="";
+  document.getElementById("blog-field-lang").value="fr";
+  document.getElementById("blog-editor").innerHTML="<h2>Titre de section</h2><p>Ecris ton contenu ici...</p>";
+  currentBlogPath="";currentBlogSha="";
 }
 
-async function deleteArticle(path, sha) {
-  if (!confirm("Supprimer l'article " + path + " ?")) return;
-  try {
-    const fileData = await getFileContent(path);
-    await deleteFile(path, fileData.sha, `Delete article ${path} via admin`);
-    toast("Article supprime");
-    loadBlog();
-  } catch (e) {
-    toast("Erreur: " + e.message, "error");
-  }
+async function editBlogArticle(path){
+  document.getElementById("blog-browse").style.display="none";
+  document.getElementById("blog-edit").classList.add("visible");
+  document.getElementById("blog-edit-title").textContent="Modifier l'article";
+  toast("Chargement...","info");
+  try{
+    const{content,sha}=await getFile(path);currentBlogPath=path;currentBlogSha=sha;
+    const doc=new DOMParser().parseFromString(content,"text/html");
+    document.getElementById("blog-field-title").value=doc.querySelector("title")?.textContent?.split("|")[0]?.trim()||"";
+    document.getElementById("blog-field-desc").value=doc.querySelector('meta[name="description"]')?.getAttribute("content")||"";
+    const slug=path.replace(/\/index\.html$/,"").split("/").pop();
+    document.getElementById("blog-field-slug").value=slug;
+    let lang="fr";if(path.startsWith("en/"))lang="en";else if(path.startsWith("es/"))lang="es";else if(path.startsWith("de/"))lang="de";
+    document.getElementById("blog-field-lang").value=lang;
+    // Extract article content
+    const article=doc.querySelector("article")||doc.querySelector("main")||doc.body;
+    const clone=article.cloneNode(true);
+    clone.querySelectorAll("script,style,nav,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(el=>el.remove());
+    document.getElementById("blog-editor").innerHTML=clone.innerHTML;
+    toast("Article charge","success");
+  }catch(e){toast("Erreur: "+e.message,"error")}
 }
 
-function showNewArticleModal() {
-  showModal(`
-    <h3>Nouvel article</h3>
-    <label>Langue</label>
-    <select id="new-lang">
-      <option value="fr">Francais (FR)</option>
-      <option value="en">English (EN)</option>
-      <option value="es">Espanol (ES)</option>
-      <option value="de">Deutsch (DE)</option>
-    </select>
-    <label>Slug (URL)</label>
-    <input type="text" id="new-slug" placeholder="mon-nouvel-article"/>
-    <label>Titre</label>
-    <input type="text" id="new-title" placeholder="Titre de l'article"/>
-    <label>Description meta</label>
-    <textarea id="new-desc" rows="2" placeholder="Description pour le SEO..."></textarea>
-    <div class="modal-actions">
-      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button>
-      <button class="btn btn-primary btn-sm" onclick="createArticle()">Creer</button>
-    </div>
-  `);
+function closeBlogEdit(){
+  document.getElementById("blog-edit").classList.remove("visible");
+  document.getElementById("blog-browse").style.display="block";
 }
 
-async function createArticle() {
-  const lang = document.getElementById("new-lang").value;
-  const slug = document.getElementById("new-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-");
-  const title = document.getElementById("new-title").value.trim();
-  const desc = document.getElementById("new-desc").value.trim();
-
-  if (!slug || !title) { toast("Slug et titre requis", "error"); return; }
-
-  const dirMap = { fr: "actualites", en: "en/news", es: "es/noticias", de: "de/aktuelles" };
-  const path = `${dirMap[lang]}/${slug}/index.html`;
-
-  const template = `<!doctype html>
+async function saveBlogArticle(){
+  const title=document.getElementById("blog-field-title").value.trim();
+  const slug=document.getElementById("blog-field-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g,"-");
+  const desc=document.getElementById("blog-field-desc").value.trim();
+  const lang=document.getElementById("blog-field-lang").value;
+  const body=document.getElementById("blog-editor").innerHTML;
+  if(!title||!slug){toast("Titre et slug requis","error");return}
+  const dm={fr:"actualites",en:"en/news",es:"es/noticias",de:"de/aktuelles"};
+  const path=currentBlogPath||(dm[lang]+"/"+slug+"/index.html");
+  const html=`<!doctype html>
 <html lang="${lang}">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>${escHtml(title)} | Uhaina House</title>
-  <meta name="description" content="${escHtml(desc)}"/>
-  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('/index.html','/')}"/>
+  <title>${esc(title)} | Uhaina House</title>
+  <meta name="description" content="${esc(desc)}"/>
+  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('index.html','')}"/>
   <link rel="stylesheet" href="/assets/css/style.css"/>
 </head>
 <body>
   <main class="container" style="padding:2rem 0">
     <article>
-      <h1>${escHtml(title)}</h1>
-      <p>Contenu de l'article...</p>
+      ${body}
     </article>
   </main>
   <script src="/assets/js/main.js" defer><\/script>
 </body>
 </html>`;
-
-  try {
-    toast("Creation...", "info");
-    await putFile(path, template, `Create article: ${title} via admin`);
-    toast("Article cree !");
-    closeModal();
-    loadBlog();
-  } catch (e) {
-    toast("Erreur: " + e.message, "error");
-  }
+  toast("Publication...","info");
+  try{
+    const r=await putFile(path,html,(currentBlogPath?"Update":"Create")+" article: "+title+" via admin",currentBlogSha||undefined);
+    currentBlogSha=r.content.sha;currentBlogPath=path;
+    toast("Article publie !");treeCache=[];
+  }catch(e){toast("Erreur: "+e.message,"error")}
 }
 
-// --- UTILS ---
-function formatBytes(bytes) {
-  if (bytes < 1024) return bytes + " B";
-  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+async function deleteBlogArticle(path){
+  if(!confirm("Supprimer cet article ?"))return;
+  try{
+    const{sha}=await getFile(path);
+    await delFile(path,sha,"Delete article "+path+" via admin");
+    toast("Article supprime");treeCache=[];loadBlog();
+  }catch(e){toast("Erreur: "+e.message,"error")}
 }
 
-function escHtml(str) {
-  const d = document.createElement("div");
-  d.textContent = str;
-  return d.innerHTML;
-}
+// ─── UTILS ───
+function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function fmtBytes(b){if(b<1024)return b+" B";if(b<1048576)return(b/1024).toFixed(1)+" KB";return(b/1048576).toFixed(1)+" MB"}
 
-// --- AUTO LOGIN ---
-(function init() {
-  const savedToken = localStorage.getItem("gh-admin-token");
-  const savedRepo = localStorage.getItem("gh-admin-repo");
-  if (savedToken && savedRepo) {
-    TOKEN = savedToken;
-    const parts = savedRepo.split("/");
-    OWNER = parts[0];
-    REPO = parts[1];
-    document.getElementById("pat-input").value = savedToken;
-    document.getElementById("repo-input").value = savedRepo;
-    showAdmin();
-  }
+// ─── INIT ───
+(function(){
+  const t=localStorage.getItem("admin-t"),r=localStorage.getItem("admin-r");
+  if(t&&r){TOKEN=t;const p=r.split("/");OWNER=p[0];REPO=p[1];boot()}
 })();
 </script>
 </body>
