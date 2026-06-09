@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Admin — Uhaïna House</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/theme/dracula.min.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0f172a;--sidebar:#1e293b;--card:#1e293b;--border:#334155;--text:#e2e8f0;--muted:#94a3b8;--accent:#3b82f6;--accent-hover:#2563eb;--success:#22c55e;--danger:#ef4444;--warning:#f59e0b;--radius:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);display:flex;height:100vh;overflow:hidden}
+
+/* Auth screen */
+.auth-screen{display:flex;align-items:center;justify-content:center;width:100%;height:100%}
+.auth-box{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2.5rem;width:400px;max-width:90vw}
+.auth-box h1{font-size:1.5rem;margin-bottom:.5rem}
+.auth-box p{color:var(--muted);font-size:.875rem;margin-bottom:1.5rem;line-height:1.5}
+.auth-box label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:.4rem;text-transform:uppercase;letter-spacing:.05em}
+.auth-box input{width:100%;padding:.7rem .9rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.9rem;margin-bottom:1rem}
+.auth-box input:focus{outline:none;border-color:var(--accent)}
+.auth-box .btn{width:100%}
+.auth-error{color:var(--danger);font-size:.85rem;margin-bottom:1rem;display:none}
+
+/* Sidebar */
+.sidebar{width:240px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0}
+.sidebar-logo{padding:1.2rem 1.5rem;border-bottom:1px solid var(--border);font-weight:700;font-size:1.1rem;display:flex;align-items:center;gap:.6rem}
+.sidebar-logo span{color:var(--accent)}
+.sidebar-nav{flex:1;padding:.8rem 0}
+.sidebar-nav button{display:flex;align-items:center;gap:.7rem;width:100%;padding:.7rem 1.5rem;border:none;background:none;color:var(--muted);font-size:.9rem;cursor:pointer;text-align:left;transition:all .15s}
+.sidebar-nav button:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.sidebar-nav button.active{color:var(--accent);background:rgba(59,130,246,.1);border-right:3px solid var(--accent)}
+.sidebar-nav button svg{width:18px;height:18px;flex-shrink:0}
+.sidebar-footer{padding:1rem 1.5rem;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted)}
+.sidebar-footer a{color:var(--accent);cursor:pointer}
+
+/* Main */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:.8rem 1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.topbar h2{font-size:1.15rem}
+.topbar-actions{display:flex;gap:.5rem;align-items:center}
+.content{flex:1;overflow-y:auto;padding:1.5rem}
+
+/* Buttons */
+.btn{padding:.55rem 1.1rem;border:none;border-radius:var(--radius);font-size:.85rem;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#dc2626}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--muted)}
+.btn-sm{padding:.35rem .7rem;font-size:.8rem}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Cards & Grid */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat-card{text-align:center;padding:1.5rem}
+.stat-card .stat-value{font-size:2rem;font-weight:700;color:var(--accent)}
+.stat-card .stat-label{font-size:.8rem;color:var(--muted);margin-top:.3rem;text-transform:uppercase;letter-spacing:.05em}
+
+/* File list */
+.file-list{display:flex;flex-direction:column;gap:.3rem}
+.file-item{display:flex;align-items:center;gap:.8rem;padding:.6rem .8rem;border-radius:var(--radius);cursor:pointer;transition:background .15s}
+.file-item:hover{background:rgba(255,255,255,.05)}
+.file-item.active{background:rgba(59,130,246,.15)}
+.file-icon{font-size:1.1rem;width:24px;text-align:center;flex-shrink:0}
+.file-name{flex:1;font-size:.9rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-size{font-size:.75rem;color:var(--muted)}
+.file-actions{display:flex;gap:.3rem;opacity:0;transition:opacity .15s}
+.file-item:hover .file-actions{opacity:1}
+
+/* Editor layout */
+.editor-wrap{display:flex;gap:1rem;height:calc(100vh - 130px)}
+.editor-sidebar{width:280px;flex-shrink:0;overflow-y:auto}
+.editor-main{flex:1;display:flex;flex-direction:column;min-width:0}
+.editor-main .CodeMirror{flex:1;height:auto !important;font-size:.85rem;border-radius:var(--radius);border:1px solid var(--border)}
+.editor-toolbar{display:flex;gap:.5rem;margin-bottom:.8rem;align-items:center}
+.editor-toolbar .file-path{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.editor-status{font-size:.8rem;color:var(--muted);margin-top:.5rem;display:flex;align-items:center;gap:.5rem}
+.editor-status .saved{color:var(--success)}
+
+/* Image grid */
+.image-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem}
+.image-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.image-card:hover{border-color:var(--accent)}
+.image-card img{width:100%;height:140px;object-fit:cover;display:block}
+.image-card .image-info{padding:.6rem .8rem}
+.image-card .image-name{font-size:.8rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.image-card .image-meta{font-size:.7rem;color:var(--muted);margin-top:.2rem}
+
+/* Upload zone */
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:2.5rem;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:1.5rem}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--accent);background:rgba(59,130,246,.05)}
+.upload-zone p{color:var(--muted);font-size:.9rem;margin-top:.5rem}
+.upload-zone .upload-icon{font-size:2rem}
+
+/* Blog list */
+.blog-list{display:flex;flex-direction:column;gap:.5rem}
+.blog-item{display:flex;align-items:center;gap:1rem;padding:.8rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);transition:border-color .15s}
+.blog-item:hover{border-color:var(--accent)}
+.blog-lang{font-size:.7rem;padding:.15rem .4rem;background:var(--accent);color:#fff;border-radius:4px;text-transform:uppercase;font-weight:600}
+.blog-title{flex:1;font-size:.9rem}
+.blog-path{font-size:.75rem;color:var(--muted)}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:1000;display:none}
+.modal-overlay.visible{display:flex}
+.modal{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:2rem;width:500px;max-width:90vw;max-height:80vh;overflow-y:auto}
+.modal h3{margin-bottom:1rem}
+.modal label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:.4rem;margin-top:.8rem}
+.modal input,.modal select,.modal textarea{width:100%;padding:.6rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem}
+.modal textarea{min-height:100px;resize:vertical;font-family:monospace}
+.modal-actions{display:flex;gap:.5rem;justify-content:flex-end;margin-top:1.5rem}
+
+/* Toast */
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;padding:.8rem 1.2rem;border-radius:var(--radius);font-size:.85rem;z-index:2000;transform:translateY(100px);opacity:0;transition:all .3s}
+.toast.visible{transform:translateY(0);opacity:1}
+.toast.success{background:var(--success);color:#fff}
+.toast.error{background:var(--danger);color:#fff}
+.toast.info{background:var(--accent);color:#fff}
+
+/* Loading */
+.spinner{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-overlay{position:absolute;inset:0;background:rgba(15,23,42,.8);display:flex;align-items:center;justify-content:center;z-index:100;border-radius:var(--radius)}
+
+/* Section visibility */
+.section{display:none}
+.section.active{display:block}
+
+/* Search */
+.search-input{padding:.5rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-size:.85rem;width:250px}
+.search-input:focus{outline:none;border-color:var(--accent)}
+
+/* Responsive */
+@media(max-width:768px){
+  .sidebar{width:60px}
+  .sidebar-nav button span{display:none}
+  .sidebar-logo span{display:none}
+  .sidebar-nav button{justify-content:center;padding:.7rem}
+  .editor-wrap{flex-direction:column;height:auto}
+  .editor-sidebar{width:100%;max-height:200px}
+  .image-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-box">
+    <h1>Admin Uhaïna House</h1>
+    <p>Connecte-toi avec un <strong>GitHub Personal Access Token</strong> ayant les permissions <code>repo</code> (ou <code>public_repo</code>).</p>
+    <div class="auth-error" id="auth-error"></div>
+    <label for="pat-input">Personal Access Token</label>
+    <input type="password" id="pat-input" placeholder="ghp_xxxxxxxxxxxxx"/>
+    <label for="repo-input">Repository (owner/repo)</label>
+    <input type="text" id="repo-input" value="nico-magic-boost/location-seignosse"/>
+    <button class="btn btn-primary" id="auth-btn" onclick="authenticate()">Se connecter</button>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="sidebar" id="sidebar" style="display:none">
+  <div class="sidebar-logo"><span>U</span> Admin</div>
+  <nav class="sidebar-nav">
+    <button class="active" onclick="showSection('dashboard',this)" title="Dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      <span>Dashboard</span>
+    </button>
+    <button onclick="showSection('pages',this);loadPages()" title="Pages">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      <span>Pages</span>
+    </button>
+    <button onclick="showSection('images',this);loadImages()" title="Images">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      <span>Images</span>
+    </button>
+    <button onclick="showSection('blog',this);loadBlog()" title="Blog">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      <span>Blog</span>
+    </button>
+  </nav>
+  <div class="sidebar-footer">
+    <a onclick="logout()">Deconnexion</a>
+  </div>
+</div>
+
+<div class="main" id="main-panel" style="display:none">
+
+  <!-- DASHBOARD -->
+  <div class="section active" id="sec-dashboard">
+    <div class="topbar"><h2>Dashboard</h2><div class="topbar-actions"><span class="btn btn-ghost btn-sm" id="last-deploy">...</span></div></div>
+    <div class="content">
+      <div class="stats-grid">
+        <div class="card stat-card"><div class="stat-value" id="stat-pages">-</div><div class="stat-label">Pages HTML</div></div>
+        <div class="card stat-card"><div class="stat-value" id="stat-images">-</div><div class="stat-label">Images</div></div>
+        <div class="card stat-card"><div class="stat-value" id="stat-articles">-</div><div class="stat-label">Articles</div></div>
+        <div class="card stat-card"><div class="stat-value" id="stat-langs">4</div><div class="stat-label">Langues</div></div>
+      </div>
+      <div class="card" id="recent-commits" style="margin-top:1rem">
+        <h3 style="margin-bottom:1rem;font-size:1rem">Derniers commits</h3>
+        <div id="commits-list" style="font-size:.85rem;color:var(--muted)">Chargement...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGES -->
+  <div class="section" id="sec-pages">
+    <div class="topbar">
+      <h2>Pages</h2>
+      <div class="topbar-actions">
+        <input type="text" class="search-input" placeholder="Filtrer..." oninput="filterPages(this.value)"/>
+      </div>
+    </div>
+    <div class="content">
+      <div class="editor-wrap">
+        <div class="editor-sidebar card">
+          <div class="file-list" id="pages-list">Chargement...</div>
+        </div>
+        <div class="editor-main">
+          <div class="editor-toolbar">
+            <span class="file-path" id="editor-path">Selectionne un fichier</span>
+            <button class="btn btn-primary btn-sm" id="save-btn" onclick="saveCurrentFile()" disabled>Sauvegarder</button>
+            <button class="btn btn-ghost btn-sm" id="preview-btn" onclick="previewFile()" disabled>Apercu</button>
+          </div>
+          <textarea id="code-editor"></textarea>
+          <div class="editor-status"><span id="editor-status-text"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IMAGES -->
+  <div class="section" id="sec-images">
+    <div class="topbar">
+      <h2>Images</h2>
+      <div class="topbar-actions">
+        <span id="images-count" style="font-size:.85rem;color:var(--muted)"></span>
+      </div>
+    </div>
+    <div class="content">
+      <div class="upload-zone" id="upload-zone">
+        <div class="upload-icon">+</div>
+        <p>Glisse des images ici ou clique pour uploader</p>
+        <input type="file" id="file-input" multiple accept="image/*" style="display:none"/>
+      </div>
+      <div class="image-grid" id="images-grid">Chargement...</div>
+    </div>
+  </div>
+
+  <!-- BLOG -->
+  <div class="section" id="sec-blog">
+    <div class="topbar">
+      <h2>Blog / Actualites</h2>
+      <div class="topbar-actions">
+        <button class="btn btn-primary btn-sm" onclick="showNewArticleModal()">+ Nouvel article</button>
+      </div>
+    </div>
+    <div class="content">
+      <div class="blog-list" id="blog-list">Chargement...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/htmlmixed/htmlmixed.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/xml/xml.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.18/mode/css/css.min.js"></script>
+<script>
+const API = "https://api.github.com";
+let TOKEN = "";
+let REPO = "";
+let OWNER = "";
+let editor = null;
+let currentFile = null;
+let currentSha = null;
+let pagesCache = [];
+let imagesCache = [];
+
+// --- AUTH ---
+function authenticate() {
+  TOKEN = document.getElementById("pat-input").value.trim();
+  const repo = document.getElementById("repo-input").value.trim();
+  const parts = repo.split("/");
+  if (parts.length !== 2 || !TOKEN) {
+    showAuthError("Token et repo requis (format: owner/repo)");
+    return;
+  }
+  OWNER = parts[0];
+  REPO = parts[1];
+  document.getElementById("auth-btn").disabled = true;
+  document.getElementById("auth-btn").textContent = "Connexion...";
+
+  ghFetch(`/repos/${OWNER}/${REPO}`)
+    .then(r => {
+      if (!r.ok) throw new Error("Acces refuse");
+      return r.json();
+    })
+    .then(() => {
+      localStorage.setItem("gh-admin-token", TOKEN);
+      localStorage.setItem("gh-admin-repo", `${OWNER}/${REPO}`);
+      showAdmin();
+    })
+    .catch(e => {
+      showAuthError("Echec: " + e.message);
+      document.getElementById("auth-btn").disabled = false;
+      document.getElementById("auth-btn").textContent = "Se connecter";
+    });
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById("auth-error");
+  el.textContent = msg;
+  el.style.display = "block";
+}
+
+function logout() {
+  localStorage.removeItem("gh-admin-token");
+  localStorage.removeItem("gh-admin-repo");
+  location.reload();
+}
+
+function showAdmin() {
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("sidebar").style.display = "flex";
+  document.getElementById("main-panel").style.display = "flex";
+  initEditor();
+  loadDashboard();
+}
+
+// --- GITHUB API ---
+function ghFetch(path, opts = {}) {
+  return fetch(API + path, {
+    ...opts,
+    headers: {
+      "Authorization": "Bearer " + TOKEN,
+      "Accept": "application/vnd.github.v3+json",
+      ...(opts.headers || {}),
+      ...(opts.body ? {"Content-Type": "application/json"} : {})
+    }
+  });
+}
+
+async function getFileContent(path) {
+  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}?ref=main`);
+  if (!r.ok) throw new Error("Fichier non trouve: " + path);
+  const data = await r.json();
+  return { content: atob(data.content.replace(/\n/g, "")), sha: data.sha, size: data.size };
+}
+
+async function putFile(path, content, message, sha) {
+  const body = {
+    message,
+    content: btoa(unescape(encodeURIComponent(content))),
+    branch: "main"
+  };
+  if (sha) body.sha = sha;
+  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: "PUT",
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) {
+    const err = await r.json();
+    throw new Error(err.message || "Erreur sauvegarde");
+  }
+  return r.json();
+}
+
+async function putFileBinary(path, base64Content, message, sha) {
+  const body = {
+    message,
+    content: base64Content,
+    branch: "main"
+  };
+  if (sha) body.sha = sha;
+  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: "PUT",
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error("Erreur upload");
+  return r.json();
+}
+
+async function deleteFile(path, sha, message) {
+  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}`, {
+    method: "DELETE",
+    body: JSON.stringify({ message, sha, branch: "main" })
+  });
+  if (!r.ok) throw new Error("Erreur suppression");
+  return r.json();
+}
+
+async function getTree(path) {
+  const r = await ghFetch(`/repos/${OWNER}/${REPO}/contents/${path}?ref=main`);
+  if (!r.ok) return [];
+  return r.json();
+}
+
+async function getTreeRecursive() {
+  const r = await ghFetch(`/repos/${OWNER}/${REPO}/git/trees/main?recursive=1`);
+  if (!r.ok) return [];
+  const data = await r.json();
+  return data.tree || [];
+}
+
+// --- TOAST ---
+function toast(msg, type = "success") {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.className = "toast " + type;
+  requestAnimationFrame(() => el.classList.add("visible"));
+  setTimeout(() => el.classList.remove("visible"), 3000);
+}
+
+// --- MODAL ---
+function showModal(html) {
+  document.getElementById("modal-content").innerHTML = html;
+  document.getElementById("modal-overlay").classList.add("visible");
+}
+function closeModal() {
+  document.getElementById("modal-overlay").classList.remove("visible");
+}
+document.getElementById("modal-overlay").addEventListener("click", e => {
+  if (e.target === e.currentTarget) closeModal();
+});
+
+// --- SECTIONS ---
+function showSection(name, btn) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.getElementById("sec-" + name).classList.add("active");
+  document.querySelectorAll(".sidebar-nav button").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+}
+
+// --- DASHBOARD ---
+async function loadDashboard() {
+  try {
+    const tree = await getTreeRecursive();
+    const htmlFiles = tree.filter(f => f.type === "blob" && f.path.endsWith(".html") && !f.path.startsWith("admin/"));
+    const imgFiles = tree.filter(f => f.type === "blob" && f.path.startsWith("assets/img/"));
+    const articles = tree.filter(f => f.type === "blob" && f.path.includes("actualites/") && f.path.endsWith("index.html") && !f.path.endsWith("actualites/index.html"));
+    const articlesDe = tree.filter(f => f.type === "blob" && f.path.includes("aktuelles/") && f.path.endsWith("index.html") && !f.path.endsWith("aktuelles/index.html"));
+    const articlesEn = tree.filter(f => f.type === "blob" && f.path.includes("news/") && f.path.endsWith("index.html") && !f.path.endsWith("news/index.html"));
+    const articlesEs = tree.filter(f => f.type === "blob" && f.path.includes("noticias/") && f.path.endsWith("index.html") && !f.path.endsWith("noticias/index.html"));
+
+    document.getElementById("stat-pages").textContent = htmlFiles.length;
+    document.getElementById("stat-images").textContent = imgFiles.length;
+    document.getElementById("stat-articles").textContent = articles.length + articlesDe.length + articlesEn.length + articlesEs.length;
+
+    const commitsR = await ghFetch(`/repos/${OWNER}/${REPO}/commits?sha=main&per_page=8`);
+    const commits = await commitsR.json();
+    const commitsList = document.getElementById("commits-list");
+    commitsList.innerHTML = commits.map(c => {
+      const d = new Date(c.commit.author.date);
+      const dateStr = d.toLocaleDateString("fr-FR") + " " + d.toLocaleTimeString("fr-FR", {hour:"2-digit",minute:"2-digit"});
+      const msg = c.commit.message.split("\n")[0];
+      return `<div style="padding:.4rem 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:1rem">
+        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escHtml(msg)}</span>
+        <span style="flex-shrink:0;font-size:.75rem">${dateStr}</span>
+      </div>`;
+    }).join("");
+
+    const deployR = await ghFetch(`/repos/${OWNER}/${REPO}/actions/runs?per_page=1`);
+    const deployData = await deployR.json();
+    if (deployData.workflow_runs && deployData.workflow_runs[0]) {
+      const run = deployData.workflow_runs[0];
+      const status = run.conclusion || run.status;
+      const color = status === "success" ? "var(--success)" : status === "failure" ? "var(--danger)" : "var(--warning)";
+      document.getElementById("last-deploy").innerHTML = `<span style="color:${color}">●</span> Deploy: ${status}`;
+    }
+  } catch (e) {
+    toast("Erreur chargement dashboard: " + e.message, "error");
+  }
+}
+
+// --- PAGES ---
+async function loadPages() {
+  const list = document.getElementById("pages-list");
+  try {
+    const tree = await getTreeRecursive();
+    pagesCache = tree
+      .filter(f => f.type === "blob" && f.path.endsWith(".html") && !f.path.startsWith("admin/"))
+      .sort((a, b) => a.path.localeCompare(b.path));
+
+    renderPagesList(pagesCache);
+  } catch (e) {
+    list.innerHTML = `<p style="color:var(--danger)">Erreur: ${e.message}</p>`;
+  }
+}
+
+function renderPagesList(files) {
+  const list = document.getElementById("pages-list");
+  const grouped = {};
+  files.forEach(f => {
+    let lang = "FR";
+    if (f.path.startsWith("en/")) lang = "EN";
+    else if (f.path.startsWith("es/")) lang = "ES";
+    else if (f.path.startsWith("de/")) lang = "DE";
+    if (!grouped[lang]) grouped[lang] = [];
+    grouped[lang].push(f);
+  });
+
+  let html = "";
+  for (const lang of ["FR","EN","ES","DE"]) {
+    if (!grouped[lang]) continue;
+    html += `<div style="font-size:.7rem;color:var(--accent);padding:.5rem .3rem .2rem;text-transform:uppercase;letter-spacing:.1em;font-weight:600;margin-top:.5rem">${lang}</div>`;
+    grouped[lang].forEach(f => {
+      const name = f.path.replace(/index\.html$/, "").replace(/\/$/, "") || "/";
+      html += `<div class="file-item" onclick="openFile('${f.path}')" data-path="${f.path}">
+        <span class="file-icon">📄</span>
+        <span class="file-name" title="${f.path}">${name || "/"}</span>
+        <span class="file-size">${formatBytes(f.size)}</span>
+      </div>`;
+    });
+  }
+
+  const cssFiles = files.filter(f => f.path.endsWith(".css"));
+  const jsFiles = files.filter(f => f.path.endsWith(".js"));
+  list.innerHTML = html;
+}
+
+function filterPages(q) {
+  const lower = q.toLowerCase();
+  const filtered = pagesCache.filter(f => f.path.toLowerCase().includes(lower));
+  renderPagesList(filtered);
+}
+
+// --- EDITOR ---
+function initEditor() {
+  editor = CodeMirror.fromTextArea(document.getElementById("code-editor"), {
+    mode: "htmlmixed",
+    theme: "dracula",
+    lineNumbers: true,
+    lineWrapping: true,
+    indentUnit: 2,
+    tabSize: 2,
+    matchBrackets: true,
+    autoCloseTags: true
+  });
+  editor.on("changes", () => {
+    document.getElementById("editor-status-text").textContent = "Modifie (non sauvegarde)";
+    document.getElementById("editor-status-text").className = "";
+  });
+}
+
+async function openFile(path) {
+  document.querySelectorAll(".file-item").forEach(el => el.classList.remove("active"));
+  const item = document.querySelector(`[data-path="${path}"]`);
+  if (item) item.classList.add("active");
+
+  document.getElementById("editor-path").textContent = path;
+  document.getElementById("editor-status-text").textContent = "Chargement...";
+  document.getElementById("save-btn").disabled = true;
+  document.getElementById("preview-btn").disabled = true;
+
+  try {
+    const { content, sha } = await getFileContent(path);
+    currentFile = path;
+    currentSha = sha;
+    editor.setValue(content);
+    editor.clearHistory();
+    document.getElementById("save-btn").disabled = false;
+    document.getElementById("preview-btn").disabled = false;
+    document.getElementById("editor-status-text").textContent = "Charge";
+    document.getElementById("editor-status-text").className = "";
+
+    if (path.endsWith(".css")) editor.setOption("mode", "css");
+    else if (path.endsWith(".js")) editor.setOption("mode", "javascript");
+    else editor.setOption("mode", "htmlmixed");
+
+    setTimeout(() => editor.refresh(), 50);
+  } catch (e) {
+    document.getElementById("editor-status-text").textContent = "Erreur: " + e.message;
+    toast("Erreur ouverture: " + e.message, "error");
+  }
+}
+
+async function saveCurrentFile() {
+  if (!currentFile) return;
+  const btn = document.getElementById("save-btn");
+  btn.disabled = true;
+  btn.textContent = "Sauvegarde...";
+  document.getElementById("editor-status-text").textContent = "Sauvegarde en cours...";
+
+  try {
+    const content = editor.getValue();
+    const result = await putFile(currentFile, content, `Update ${currentFile} via admin`, currentSha);
+    currentSha = result.content.sha;
+    document.getElementById("editor-status-text").textContent = "Sauvegarde !";
+    document.getElementById("editor-status-text").className = "saved";
+    toast("Fichier sauvegarde et deploy lance");
+  } catch (e) {
+    document.getElementById("editor-status-text").textContent = "Erreur: " + e.message;
+    toast("Erreur: " + e.message, "error");
+  }
+  btn.disabled = false;
+  btn.textContent = "Sauvegarder";
+}
+
+function previewFile() {
+  if (!currentFile) return;
+  const path = currentFile.replace(/index\.html$/, "");
+  window.open(`https://location-seignosse.fr/${path}`, "_blank");
+}
+
+// --- IMAGES ---
+async function loadImages() {
+  const grid = document.getElementById("images-grid");
+  grid.innerHTML = '<div class="spinner"></div>';
+  try {
+    const items = await getTree("assets/img");
+    imagesCache = Array.isArray(items) ? items.filter(f => f.type === "file") : [];
+
+    document.getElementById("images-count").textContent = imagesCache.length + " images";
+
+    if (imagesCache.length === 0) {
+      grid.innerHTML = '<p style="color:var(--muted)">Aucune image</p>';
+      return;
+    }
+
+    grid.innerHTML = imagesCache.map(img => {
+      const rawUrl = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${img.path}`;
+      return `<div class="image-card" onclick="showImageModal('${img.path}','${img.sha}','${rawUrl}')">
+        <img src="${rawUrl}" alt="${img.name}" loading="lazy"/>
+        <div class="image-info">
+          <div class="image-name" title="${img.name}">${img.name}</div>
+          <div class="image-meta">${formatBytes(img.size)}</div>
+        </div>
+      </div>`;
+    }).join("");
+  } catch (e) {
+    grid.innerHTML = `<p style="color:var(--danger)">Erreur: ${e.message}</p>`;
+  }
+}
+
+function showImageModal(path, sha, url) {
+  showModal(`
+    <h3>${path.split("/").pop()}</h3>
+    <img src="${url}" style="width:100%;border-radius:var(--radius);margin:.8rem 0"/>
+    <p style="font-size:.8rem;color:var(--muted)">Chemin: ${path}</p>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:.3rem">Utilisation HTML: <code>&lt;img src="/${path}" alt=""/&gt;</code></p>
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" onclick="deleteImage('${path}','${sha}')">Supprimer</button>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Fermer</button>
+    </div>
+  `);
+}
+
+async function deleteImage(path, sha) {
+  if (!confirm("Supprimer " + path + " ?")) return;
+  try {
+    await deleteFile(path, sha, `Delete image ${path} via admin`);
+    toast("Image supprimee");
+    closeModal();
+    loadImages();
+  } catch (e) {
+    toast("Erreur: " + e.message, "error");
+  }
+}
+
+// Upload zone
+(function initUpload() {
+  const zone = document.getElementById("upload-zone");
+  const input = document.getElementById("file-input");
+  zone.addEventListener("click", () => input.click());
+  zone.addEventListener("dragover", e => { e.preventDefault(); zone.classList.add("dragover"); });
+  zone.addEventListener("dragleave", () => zone.classList.remove("dragover"));
+  zone.addEventListener("drop", e => {
+    e.preventDefault();
+    zone.classList.remove("dragover");
+    handleFiles(e.dataTransfer.files);
+  });
+  input.addEventListener("change", () => {
+    handleFiles(input.files);
+    input.value = "";
+  });
+})();
+
+async function handleFiles(files) {
+  for (const file of files) {
+    if (!file.type.startsWith("image/")) { toast(file.name + " n'est pas une image", "error"); continue; }
+    const name = file.name.toLowerCase().replace(/\s+/g, "-");
+    const path = "assets/img/" + name;
+
+    const existing = imagesCache.find(i => i.name === name);
+    if (existing && !confirm(`${name} existe deja. Remplacer ?`)) continue;
+
+    toast("Upload " + name + "...", "info");
+    try {
+      const base64 = await fileToBase64(file);
+      await putFileBinary(path, base64, `Upload image ${name} via admin`, existing?.sha);
+      toast(name + " uploade !");
+      loadImages();
+    } catch (e) {
+      toast("Erreur upload " + name + ": " + e.message, "error");
+    }
+  }
+}
+
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// --- BLOG ---
+async function loadBlog() {
+  const list = document.getElementById("blog-list");
+  list.innerHTML = '<div class="spinner"></div>';
+
+  try {
+    const tree = await getTreeRecursive();
+    const blogDirs = ["actualites", "en/news", "es/noticias", "de/aktuelles"];
+    const langMap = { "actualites": "FR", "en/news": "EN", "es/noticias": "ES", "de/aktuelles": "DE" };
+    const listDirs = ["actualites/index.html", "en/news/index.html", "es/noticias/index.html", "de/aktuelles/index.html"];
+
+    const articles = tree.filter(f =>
+      f.type === "blob" &&
+      f.path.endsWith("/index.html") &&
+      blogDirs.some(d => f.path.startsWith(d + "/")) &&
+      !listDirs.includes(f.path)
+    ).sort((a, b) => a.path.localeCompare(b.path));
+
+    if (articles.length === 0) {
+      list.innerHTML = '<p style="color:var(--muted)">Aucun article</p>';
+      return;
+    }
+
+    list.innerHTML = articles.map(a => {
+      let lang = "FR";
+      for (const [dir, l] of Object.entries(langMap)) {
+        if (a.path.startsWith(dir + "/")) { lang = l; break; }
+      }
+      const slug = a.path.replace(/\/index\.html$/, "").split("/").pop();
+      return `<div class="blog-item">
+        <span class="blog-lang">${lang}</span>
+        <span class="blog-title">${slug}</span>
+        <span class="blog-path">${a.path}</span>
+        <button class="btn btn-ghost btn-sm" onclick="editArticle('${a.path}')">Editer</button>
+        <button class="btn btn-danger btn-sm" onclick="deleteArticle('${a.path}','${a.sha}')">X</button>
+      </div>`;
+    }).join("");
+  } catch (e) {
+    list.innerHTML = `<p style="color:var(--danger)">Erreur: ${e.message}</p>`;
+  }
+}
+
+function editArticle(path) {
+  showSection("pages", document.querySelectorAll(".sidebar-nav button")[1]);
+  loadPages().then(() => {
+    setTimeout(() => openFile(path), 500);
+  });
+}
+
+async function deleteArticle(path, sha) {
+  if (!confirm("Supprimer l'article " + path + " ?")) return;
+  try {
+    const fileData = await getFileContent(path);
+    await deleteFile(path, fileData.sha, `Delete article ${path} via admin`);
+    toast("Article supprime");
+    loadBlog();
+  } catch (e) {
+    toast("Erreur: " + e.message, "error");
+  }
+}
+
+function showNewArticleModal() {
+  showModal(`
+    <h3>Nouvel article</h3>
+    <label>Langue</label>
+    <select id="new-lang">
+      <option value="fr">Francais (FR)</option>
+      <option value="en">English (EN)</option>
+      <option value="es">Espanol (ES)</option>
+      <option value="de">Deutsch (DE)</option>
+    </select>
+    <label>Slug (URL)</label>
+    <input type="text" id="new-slug" placeholder="mon-nouvel-article"/>
+    <label>Titre</label>
+    <input type="text" id="new-title" placeholder="Titre de l'article"/>
+    <label>Description meta</label>
+    <textarea id="new-desc" rows="2" placeholder="Description pour le SEO..."></textarea>
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button>
+      <button class="btn btn-primary btn-sm" onclick="createArticle()">Creer</button>
+    </div>
+  `);
+}
+
+async function createArticle() {
+  const lang = document.getElementById("new-lang").value;
+  const slug = document.getElementById("new-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g, "-");
+  const title = document.getElementById("new-title").value.trim();
+  const desc = document.getElementById("new-desc").value.trim();
+
+  if (!slug || !title) { toast("Slug et titre requis", "error"); return; }
+
+  const dirMap = { fr: "actualites", en: "en/news", es: "es/noticias", de: "de/aktuelles" };
+  const path = `${dirMap[lang]}/${slug}/index.html`;
+
+  const template = `<!doctype html>
+<html lang="${lang}">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>${escHtml(title)} | Uhaina House</title>
+  <meta name="description" content="${escHtml(desc)}"/>
+  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('/index.html','/')}"/>
+  <link rel="stylesheet" href="/assets/css/style.css"/>
+</head>
+<body>
+  <main class="container" style="padding:2rem 0">
+    <article>
+      <h1>${escHtml(title)}</h1>
+      <p>Contenu de l'article...</p>
+    </article>
+  </main>
+  <script src="/assets/js/main.js" defer><\/script>
+</body>
+</html>`;
+
+  try {
+    toast("Creation...", "info");
+    await putFile(path, template, `Create article: ${title} via admin`);
+    toast("Article cree !");
+    closeModal();
+    loadBlog();
+  } catch (e) {
+    toast("Erreur: " + e.message, "error");
+  }
+}
+
+// --- UTILS ---
+function formatBytes(bytes) {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+}
+
+function escHtml(str) {
+  const d = document.createElement("div");
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// --- AUTO LOGIN ---
+(function init() {
+  const savedToken = localStorage.getItem("gh-admin-token");
+  const savedRepo = localStorage.getItem("gh-admin-repo");
+  if (savedToken && savedRepo) {
+    TOKEN = savedToken;
+    const parts = savedRepo.split("/");
+    OWNER = parts[0];
+    REPO = parts[1];
+    document.getElementById("pat-input").value = savedToken;
+    document.getElementById("repo-input").value = savedRepo;
+    showAdmin();
+  }
+})();
+</script>
+</body>
+</html>
