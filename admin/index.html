@@ -566,20 +566,22 @@ async function loadBlog(){
 async function loadDrafts(){
   const el=document.getElementById("blog-tab-drafts");el.innerHTML='<div class="spinner"></div>';
   try{
-    const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").where("status","==","draft").orderBy("updatedAt","desc").get();
+    const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").where("status","==","draft").get();
     document.getElementById("n-drafts").textContent=snap.size;
     if(snap.empty){el.innerHTML='<p style="color:var(--muted)">Aucun brouillon</p>';return}
-    let h="";snap.forEach(d=>{const v=d.data();h+=blogCardHtml(d.id,v,"draft")});el.innerHTML=h;
+    const docs=[...snap.docs].sort((a,b)=>(b.data().updatedAt?.seconds||0)-(a.data().updatedAt?.seconds||0));
+    let h="";docs.forEach(d=>{const v=d.data();h+=blogCardHtml(d.id,v,"draft")});el.innerHTML=h;
   }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
 
 async function loadScheduledDrafts(){
   const el=document.getElementById("blog-tab-scheduled");el.innerHTML='<div class="spinner"></div>';
   try{
-    const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").where("status","==","scheduled").orderBy("publishAt","asc").get();
+    const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").where("status","==","scheduled").get();
     document.getElementById("n-scheduled").textContent=snap.size;
     if(snap.empty){el.innerHTML='<p style="color:var(--muted)">Aucun article programme</p>';return}
-    let h="";snap.forEach(d=>{const v=d.data();h+=blogCardHtml(d.id,v,"scheduled")});el.innerHTML=h;
+    const docs=[...snap.docs].sort((a,b)=>(a.data().publishAt?.seconds||0)-(b.data().publishAt?.seconds||0));
+    let h="";docs.forEach(d=>{const v=d.data();h+=blogCardHtml(d.id,v,"scheduled")});el.innerHTML=h;
   }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
 
