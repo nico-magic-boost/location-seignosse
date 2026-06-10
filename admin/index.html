@@ -126,6 +126,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .template-card .tname{font-size:.85rem;font-weight:600}
 .template-card .tdesc{font-size:.72rem;color:var(--muted);margin-top:.2rem}
 
+.blog-editor-tabs{display:flex;gap:0}
+.blog-editor-tabs button{padding:.45rem 1rem;border:1px solid var(--border);border-bottom:none;background:var(--bg);color:var(--muted);font-size:.8rem;cursor:pointer;transition:all .15s}
+.blog-editor-tabs button:first-child{border-radius:var(--radius) 0 0 0}
+.blog-editor-tabs button:last-child{border-radius:0 var(--radius) 0 0}
+.blog-editor-tabs button.active{background:var(--card);color:var(--accent);border-bottom-color:var(--card)}
+#be-preview h1{font-size:1.8rem;margin:0 0 .8rem;color:#111;font-weight:800}
+#be-preview h2{font-size:1.3rem;margin:1.5rem 0 .6rem;color:#222;font-weight:700}
+#be-preview h3{font-size:1.1rem;margin:1.2rem 0 .4rem;color:#333;font-weight:600}
+#be-preview p{margin-bottom:.8rem}
+#be-preview a{color:#E97A3C;text-decoration:underline}
+#be-preview ul,#be-preview ol{margin:0 0 1rem 1.5rem}
+#be-preview li{margin-bottom:.3rem}
+#be-preview img{max-width:100%;border-radius:8px;margin:.8rem 0}
+
 .gen-bar{display:flex;gap:.6rem;align-items:flex-end;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem;margin-bottom:1rem}
 .gen-bar .form-group{flex:1;margin-bottom:0}
 .gen-btn{background:linear-gradient(135deg,var(--accent),#d35400);color:#fff;border:none;padding:.55rem 1.1rem;border-radius:var(--radius);font-size:.85rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
@@ -340,7 +354,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       </div>
       <div class="form-group"><label>Meta description</label><input type="text" id="b-desc" placeholder="150-160 caracteres"/></div>
       <div class="form-group"><label>Contenu</label>
-        <div class="ve-wrap">
+        <div class="blog-editor-tabs">
+          <button class="active" onclick="blogEditorTab('visual',this)">Visuel</button>
+          <button onclick="blogEditorTab('code',this)">&lt;/&gt; Code</button>
+          <button onclick="blogEditorTab('preview',this)">Apercu</button>
+        </div>
+        <div id="bet-visual" class="ve-wrap" style="border-top-left-radius:0">
           <div class="ve-toolbar">
             <button onclick="cmd2('bold')"><b>G</b></button><button onclick="cmd2('italic')"><i>I</i></button><button onclick="cmd2('underline')"><u>S</u></button>
             <div class="sep"></div><button onclick="cmd2('formatBlock','H2')">H2</button><button onclick="cmd2('formatBlock','H3')">H3</button><button onclick="cmd2('formatBlock','P')">P</button>
@@ -348,6 +367,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
             <div class="sep"></div><button onclick="addLink2()">&#128279;</button><button onclick="addImg('be')">&#128247;</button>
           </div>
           <div class="ve" id="be" contenteditable="true" style="min-height:280px"></div>
+        </div>
+        <div id="bet-code" style="display:none">
+          <textarea id="be-code" style="width:100%;min-height:350px;padding:1rem;background:var(--bg);border:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);color:#93c5fd;font-family:'Courier New',monospace;font-size:.82rem;line-height:1.6;resize:vertical;tab-size:2"></textarea>
+        </div>
+        <div id="bet-preview" style="display:none">
+          <div id="be-preview" style="min-height:350px;padding:1.5rem 2rem;background:#fff;color:#1a1a1a;border:1px solid var(--border);border-radius:0 0 var(--radius) var(--radius);font-family:Georgia,serif;font-size:.95rem;line-height:1.8;overflow-y:auto;max-height:60vh"></div>
         </div>
       </div>
       <div style="height:60px"></div>
@@ -571,8 +596,36 @@ function etab(n,btn){document.querySelectorAll(".edit-tabs button").forEach(b=>b
 function cc(input,max){const id=input.id.replace("f-","cc-");const el=document.getElementById(id);if(el)el.textContent=input.value.length+"/"+max}
 
 // ─── EDITOR COMMANDS ───
+let activeEditorTab="visual";
 function cmd(c,v){document.getElementById("ve").focus();document.execCommand(c,false,v?"<"+v+">":null)}
 function cmd2(c,v){document.getElementById("be").focus();document.execCommand(c,false,v?"<"+v+">":null)}
+
+function blogEditorTab(name,btn){
+  const prev=activeEditorTab;
+  if(prev==="visual"&&name!=="visual"){document.getElementById("be-code").value=formatHtml(document.getElementById("be").innerHTML)}
+  if(prev==="code"&&name!=="code"){document.getElementById("be").innerHTML=document.getElementById("be-code").value}
+  activeEditorTab=name;
+  document.querySelectorAll(".blog-editor-tabs button").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  document.getElementById("bet-visual").style.display=name==="visual"?"":"none";
+  document.getElementById("bet-code").style.display=name==="code"?"":"none";
+  document.getElementById("bet-preview").style.display=name==="preview"?"":"none";
+  if(name==="preview"){
+    const src=prev==="code"?document.getElementById("be-code").value:document.getElementById("be").innerHTML;
+    document.getElementById("be-preview").innerHTML=src;
+  }
+}
+
+function formatHtml(html){
+  let out="",indent=0;
+  html.replace(/>\s*</g,">\n<").split("\n").forEach(line=>{
+    line=line.trim();if(!line)return;
+    if(line.match(/^<\/(h[1-6]|p|div|ul|ol|li|section|article|blockquote|table|tr|thead|tbody)/i))indent=Math.max(0,indent-1);
+    out+="  ".repeat(indent)+line+"\n";
+    if(line.match(/^<(h[1-6]|div|ul|ol|section|article|blockquote|table|thead|tbody)/i)&&!line.match(/\/\s*>$/))indent++;
+  });
+  return out.trim();
+}
 function addLink(){const u=prompt("URL :","https://");if(u)document.execCommand("createLink",false,u)}
 function addLink2(){const u=prompt("URL :","https://");if(u){document.getElementById("be").focus();document.execCommand("createLink",false,u)}}
 function addImg(target){
@@ -814,6 +867,7 @@ function getArticleData(){
   const slug=document.getElementById("b-slug").value.trim().toLowerCase().replace(/[^a-z0-9-]/g,"-");
   const desc=document.getElementById("b-desc").value.trim();
   const lang=document.getElementById("b-lang").value;
+  if(activeEditorTab==="code")document.getElementById("be").innerHTML=document.getElementById("be-code").value;
   const content=document.getElementById("be").innerHTML;
   const keywords=document.getElementById("b-keywords").value.trim();
   const author=document.getElementById("b-author").value;
