@@ -125,9 +125,25 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .template-card .ticon{font-size:1.8rem;margin-bottom:.4rem}
 .template-card .tname{font-size:.85rem;font-weight:600}
 .template-card .tdesc{font-size:.72rem;color:var(--muted);margin-top:.2rem}
-.schedule-row{display:flex;gap:.8rem;align-items:flex-end;margin-top:.8rem;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius)}
-.schedule-row .form-group{margin-bottom:0;flex:1}
-.blog-actions{display:flex;gap:.5rem;margin-top:1rem;justify-content:flex-end;flex-wrap:wrap}
+
+.gen-bar{display:flex;gap:.6rem;align-items:flex-end;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:.8rem;margin-bottom:1rem}
+.gen-bar .form-group{flex:1;margin-bottom:0}
+.gen-btn{background:linear-gradient(135deg,var(--accent),#d35400);color:#fff;border:none;padding:.55rem 1.1rem;border-radius:var(--radius);font-size:.85rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
+.gen-btn:hover{filter:brightness(1.1)}.gen-btn:disabled{opacity:.6;cursor:wait}
+.status-bar{display:flex;gap:.8rem;align-items:center;margin-top:1rem;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);flex-wrap:wrap}
+.status-bar .form-group{margin-bottom:0}
+.status-bar select{min-width:140px}
+.author-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
+.author-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem}
+.author-card h3{font-size:.95rem;margin-bottom:.2rem}.author-card .arole{font-size:.78rem;color:var(--accent);margin-bottom:.5rem}
+.author-card .atone{font-size:.8rem;color:var(--text);opacity:.8;margin-bottom:.7rem;line-height:1.4;font-style:italic}
+.author-card .aactions{display:flex;gap:.4rem}
+.setting-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.2rem;margin-bottom:1rem}
+.setting-card h3{font-size:.92rem;margin-bottom:.2rem}.setting-card p{font-size:.8rem;color:var(--muted);margin-bottom:.7rem}
+.setting-card .sinline{display:flex;gap:.5rem;align-items:flex-end}
+.setting-card .sinline input{flex:1}
+.sdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.4rem}
+.sdot.ok{background:var(--success)}.sdot.miss{background:var(--danger)}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:1000}
 .modal-overlay.visible{display:flex}
@@ -211,6 +227,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <button onclick="nav('pages',this);loadPages()"><span class="ico">&#128196;</span> Pages</button>
   <button onclick="nav('images',this);loadImages()"><span class="ico">&#128247;</span> Images</button>
   <button onclick="nav('blog',this);loadBlog()"><span class="ico">&#9998;</span> Blog</button>
+  <button onclick="nav('authors',this);loadAuthors()"><span class="ico">&#128100;</span> Auteurs</button>
+  <button onclick="nav('settings',this);loadSettings()"><span class="ico">&#9881;</span> Reglages</button>
 </nav>
 <div class="sidebar-footer"><span id="user-email"></span> <a onclick="doLogout()">Sortir</a></div>
 </div>
@@ -309,13 +327,18 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <h2 style="font-size:1rem" id="be-title">Nouvel article</h2>
       </div>
       <div class="form-row">
+        <div class="form-group"><label>Auteur</label><select id="b-author"></select></div>
+        <div class="form-group"><label>Langue</label><select id="b-lang"><option value="fr">Francais</option><option value="en">English</option><option value="es">Espanol</option><option value="de">Deutsch</option></select></div>
+      </div>
+      <div class="gen-bar">
+        <div class="form-group"><label>Mots-cles cibles (SEO)</label><input type="text" id="b-keywords" placeholder="ex: surf seignosse, plage des estagnots, cours de surf landes"/></div>
+        <button class="gen-btn" id="gen-btn" onclick="generateArticle()">&#9733; Generer avec l'IA</button>
+      </div>
+      <div class="form-row">
         <div class="form-group"><label>Titre</label><input type="text" id="b-title" oninput="autoSlug()"/></div>
         <div class="form-group"><label>Slug (URL)</label><input type="text" id="b-slug" placeholder="mon-article"/></div>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label>Langue</label><select id="b-lang"><option value="fr">Francais</option><option value="en">English</option><option value="es">Espanol</option><option value="de">Deutsch</option></select></div>
-        <div class="form-group"><label>Meta description</label><input type="text" id="b-desc"/></div>
-      </div>
+      <div class="form-group"><label>Meta description</label><input type="text" id="b-desc" placeholder="150-160 caracteres"/></div>
       <div class="form-group"><label>Contenu</label>
         <div class="ve-wrap">
           <div class="ve-toolbar">
@@ -327,15 +350,46 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
           <div class="ve" id="be" contenteditable="true" style="min-height:280px"></div>
         </div>
       </div>
-      <div class="schedule-row" id="schedule-row" style="display:none">
-        <div class="form-group"><label>Date de publication</label><input type="date" id="sched-date"/></div>
-        <div class="form-group"><label>Heure</label><input type="time" id="sched-time" value="08:00"/></div>
-        <button class="btn btn-ghost btn-sm" onclick="document.getElementById('schedule-row').style.display='none'">Annuler</button>
+      <div class="status-bar">
+        <div class="form-group"><label>Statut</label>
+          <select id="b-status" onchange="onStatusChange()">
+            <option value="draft">Brouillon</option>
+            <option value="scheduled">Programme</option>
+            <option value="published">Publier maintenant</option>
+          </select>
+        </div>
+        <div class="form-group" id="sched-fields" style="display:none"><label>Date</label><input type="date" id="sched-date"/></div>
+        <div class="form-group" id="sched-time-field" style="display:none"><label>Heure</label><input type="time" id="sched-time" value="08:00"/></div>
+        <button class="btn btn-primary" id="blog-save-btn" onclick="saveBlog()" style="margin-left:auto">Sauvegarder</button>
       </div>
-      <div class="blog-actions">
-        <button class="btn btn-ghost" onclick="saveDraft()">Sauvegarder le brouillon</button>
-        <button class="btn btn-ghost" onclick="showSchedule()">Programmer</button>
-        <button class="btn btn-primary" onclick="publishNow()">Publier maintenant</button>
+    </div>
+  </div>
+</div>
+<!-- AUTHORS -->
+<div class="section" id="sec-authors">
+  <div class="topbar"><h2>Auteurs</h2><div><button class="btn btn-primary btn-sm" onclick="showAuthorForm()">+ Ajouter un auteur</button></div></div>
+  <div class="content">
+    <div class="author-grid" id="authors-grid"><div class="spinner"></div></div>
+  </div>
+</div>
+<!-- SETTINGS -->
+<div class="section" id="sec-settings">
+  <div class="topbar"><h2>Reglages</h2></div>
+  <div class="content">
+    <div class="setting-card">
+      <h3><span class="sdot" id="claude-dot"></span> Cle API Claude (generation IA)</h3>
+      <p>Necessaire pour generer des articles avec l'IA. <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--accent)">Obtenir une cle sur console.anthropic.com</a></p>
+      <div class="sinline">
+        <input type="password" id="set-claude-key" placeholder="sk-ant-..."/>
+        <button class="btn btn-primary btn-sm" onclick="saveClaudeKey()">Sauvegarder</button>
+      </div>
+    </div>
+    <div class="setting-card">
+      <h3><span class="sdot" id="gh-dot"></span> Token GitHub</h3>
+      <p>Permet a l'admin de modifier les fichiers du site.</p>
+      <div class="sinline">
+        <input type="password" id="set-gh-token" placeholder="ghp_..."/>
+        <button class="btn btn-primary btn-sm" onclick="saveGhToken()">Sauvegarder</button>
       </div>
     </div>
   </div>
@@ -413,7 +467,7 @@ async function savePat(){
   try{
     const r=await fetch(GH+`/repos/${OWNER}/${REPO}`,{headers:{"Authorization":"Bearer "+pat}});
     if(!r.ok)throw Error("Token invalide ou pas d'acces au repo");
-    await db.collection("admin").doc(auth.currentUser.uid).set({token:pat});
+    await db.collection("admin").doc(auth.currentUser.uid).set({token:pat},{merge:true});
     TOKEN=pat;
     showAdmin();
     toast("Configuration terminee !");
@@ -555,12 +609,67 @@ const TEMPLATES=[
   {id:"compare",icon:"&#9878;",name:"Comparatif",desc:"Seignosse vs Hossegor, etc.",body:"<h1>[A] vs [B] : ou louer pour ses vacances ?</h1><p class='lead'>Comparatif complet pour vous aider a choisir.</p><h2>Presentation de [A]</h2><p>Points forts, ambiance, plages...</p><h2>Presentation de [B]</h2><p>Points forts, ambiance, plages...</p><h2>Tableau comparatif</h2><p>Critere par critere...</p><h2>Notre avis</h2><p>Recommandation et lien vers Uhaina House.</p>"},
   {id:"pratique",icon:"&#128218;",name:"Guide pratique",desc:"Comment faire, conseils, FAQ",body:"<h1>[Titre du guide]</h1><p class='lead'>Ce guide vous explique tout sur...</p><h2>Avant de partir</h2><p>Preparation, equipement...</p><h2>Sur place</h2><p>Conseils pratiques...</p><h2>Nos recommandations</h2><p>Coups de coeur et bonnes adresses...</p><h2>FAQ</h2><p><strong>Question ?</strong><br/>Reponse.</p>"}
 ];
-let curDraftId="",blogTabActive="drafts";
+
+const SITE_LINKS={
+  fr:[
+    {url:"/la-maison/",anchors:["notre maison de vacances a Seignosse","Uhaina House","decouvrir la maison"]},
+    {url:"/seignosse/",anchors:["guide de Seignosse","decouvrir Seignosse","tout savoir sur Seignosse"]},
+    {url:"/reserver/",anchors:["reserver votre sejour","reserver maintenant","louer la maison"]},
+    {url:"/avis/",anchors:["avis de nos voyageurs","temoignages clients","ce que disent nos hotes"]},
+    {url:"/a-propos/",anchors:["en savoir plus sur nous","notre histoire"]},
+    {url:"/actualites/",anchors:["nos actualites","blog Seignosse"]}
+  ],
+  en:[
+    {url:"/en/house/",anchors:["our vacation home in Seignosse","Uhaina House","discover the house"]},
+    {url:"/en/seignosse/",anchors:["Seignosse guide","discover Seignosse"]},
+    {url:"/en/book/",anchors:["book your stay","reserve now"]},
+    {url:"/en/reviews/",anchors:["guest reviews","what our guests say"]},
+    {url:"/en/about/",anchors:["about us","our story"]},
+    {url:"/en/news/",anchors:["our latest news","Seignosse blog"]}
+  ],
+  es:[
+    {url:"/es/casa/",anchors:["nuestra casa de vacaciones en Seignosse","Uhaina House"]},
+    {url:"/es/seignosse/",anchors:["guia de Seignosse","descubrir Seignosse"]},
+    {url:"/es/reservar/",anchors:["reservar tu estancia","reserva ahora"]},
+    {url:"/es/opiniones/",anchors:["opiniones de huespedes"]},
+    {url:"/es/nosotros/",anchors:["sobre nosotros","nuestra historia"]},
+    {url:"/es/noticias/",anchors:["nuestras noticias","blog Seignosse"]}
+  ],
+  de:[
+    {url:"/de/haus/",anchors:["unser Ferienhaus in Seignosse","Uhaina House"]},
+    {url:"/de/seignosse/",anchors:["Seignosse entdecken","Reisefuhrer Seignosse"]},
+    {url:"/de/buchen/",anchors:["Aufenthalt buchen","jetzt reservieren"]},
+    {url:"/de/bewertungen/",anchors:["Gastebewertungen","was unsere Gaste sagen"]},
+    {url:"/de/ueber-uns/",anchors:["uber uns","unsere Geschichte"]},
+    {url:"/de/aktuelles/",anchors:["aktuelle Neuigkeiten","Seignosse Blog"]}
+  ]
+};
+
+let curDraftId="",blogTabActive="drafts",currentTemplateId="";
 
 async function loadBlog(){
   document.getElementById("blog-edit").classList.remove("visible");
   document.getElementById("blog-browse").style.display="block";
+  await populateAuthorSelect();
   await Promise.all([loadDrafts(),loadScheduledDrafts(),loadPublished()]);
+}
+
+async function populateAuthorSelect(){
+  const sel=document.getElementById("b-author");
+  try{
+    const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("authors").get();
+    if(snap.empty){
+      await db.collection("admin").doc(auth.currentUser.uid).collection("authors").doc("nicolas").set({
+        name:"Nicolas",role:"Fondateur & proprietaire",
+        tone:"Ton chaleureux, authentique et passionne. Parle en connaissance de cause comme un local. Style conversationnel avec des recommandations personnelles. Tutoie le lecteur.",
+        profileUrl:"/a-propos/nicolas/"
+      });
+      sel.innerHTML='<option value="nicolas">Nicolas</option>';
+    }else{
+      sel.innerHTML="";
+      snap.forEach(d=>{sel.innerHTML+=`<option value="${d.id}">${esc(d.data().name)}</option>`});
+    }
+  }catch(e){sel.innerHTML='<option value="">Erreur chargement</option>'}
 }
 
 async function loadDrafts(){
@@ -618,14 +727,17 @@ function showTemplates(){
 
 function newFromTemplate(id){
   closeModal();
+  currentTemplateId=id;
   const tpl=TEMPLATES.find(t=>t.id===id);
   document.getElementById("blog-browse").style.display="none";
   document.getElementById("blog-edit").classList.add("visible");
   document.getElementById("be-title").textContent="Nouvel article";
   document.getElementById("b-title").value="";document.getElementById("b-slug").value="";
   document.getElementById("b-desc").value="";document.getElementById("b-lang").value="fr";
+  document.getElementById("b-keywords").value="";
+  document.getElementById("b-status").value="draft";
   document.getElementById("be").innerHTML=tpl?tpl.body:"<h1>Titre</h1><p>Contenu...</p>";
-  document.getElementById("schedule-row").style.display="none";
+  onStatusChange();
   curDraftId="";curBlogPath="";curBlogSha="";
 }
 
@@ -634,6 +746,19 @@ function autoSlug(){
   if(!curDraftId&&!curBlogPath){
     document.getElementById("b-slug").value=title.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").substring(0,60);
   }
+}
+
+function onStatusChange(){
+  const st=document.getElementById("b-status").value;
+  const show=st==="scheduled";
+  document.getElementById("sched-fields").style.display=show?"block":"none";
+  document.getElementById("sched-time-field").style.display=show?"block":"none";
+  if(show&&!document.getElementById("sched-date").value){
+    const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
+    document.getElementById("sched-date").value=tomorrow.toISOString().split("T")[0];
+  }
+  const btn=document.getElementById("blog-save-btn");
+  btn.textContent=st==="published"?"Publier":"Sauvegarder";
 }
 
 async function editDraft(id){
@@ -649,13 +774,16 @@ async function editDraft(id){
     document.getElementById("b-slug").value=v.slug||"";
     document.getElementById("b-desc").value=v.description||"";
     document.getElementById("b-lang").value=v.lang||"fr";
+    document.getElementById("b-keywords").value=v.keywords||"";
+    if(v.author)document.getElementById("b-author").value=v.author;
     document.getElementById("be").innerHTML=v.content||"";
+    document.getElementById("b-status").value=v.status||"draft";
     if(v.status==="scheduled"&&v.publishAt){
       const d=new Date(v.publishAt.seconds?v.publishAt.seconds*1000:v.publishAt);
       document.getElementById("sched-date").value=d.toISOString().split("T")[0];
       document.getElementById("sched-time").value=d.toTimeString().substring(0,5);
-      document.getElementById("schedule-row").style.display="flex";
-    }else{document.getElementById("schedule-row").style.display="none"}
+    }
+    onStatusChange();
     curBlogPath="";curBlogSha="";toast("Charge");
   }catch(e){toast("Erreur: "+e.message,"error")}
 }
@@ -670,9 +798,11 @@ async function editPublished(path){
     document.getElementById("b-slug").value=path.replace(/\/index\.html$/,"").split("/").pop();
     let l="fr";if(path.startsWith("en/"))l="en";else if(path.startsWith("es/"))l="es";else if(path.startsWith("de/"))l="de";
     document.getElementById("b-lang").value=l;
+    document.getElementById("b-keywords").value="";
+    document.getElementById("b-status").value="published";
     const art=doc.querySelector("article")||doc.querySelector("main")||doc.body;const cl=art.cloneNode(true);cl.querySelectorAll("script,style,nav,.site-header,.site-footer,.cookie-banner,.floating-widgets").forEach(e=>e.remove());
     document.getElementById("be").innerHTML=cl.innerHTML;
-    document.getElementById("schedule-row").style.display="none";toast("Charge");
+    onStatusChange();toast("Charge");
   }catch(e){toast("Erreur: "+e.message,"error")}
 }
 
@@ -684,8 +814,10 @@ function getArticleData(){
   const desc=document.getElementById("b-desc").value.trim();
   const lang=document.getElementById("b-lang").value;
   const content=document.getElementById("be").innerHTML;
+  const keywords=document.getElementById("b-keywords").value.trim();
+  const author=document.getElementById("b-author").value;
   if(!title||!slug){toast("Titre et slug requis","error");return null}
-  return{title,slug,description:desc,lang,content};
+  return{title,slug,description:desc,lang,content,keywords,author};
 }
 
 function buildHtml(data){
@@ -693,6 +825,13 @@ function buildHtml(data){
   const path=dm[data.lang]+"/"+data.slug+"/index.html";
   const html=`<!doctype html>\n<html lang="${data.lang}">\n<head>\n  <meta charset="utf-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1"/>\n  <title>${esc(data.title)} | Uhaina House</title>\n  <meta name="description" content="${esc(data.description)}"/>\n  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('index.html','')}"/>\n  <link rel="stylesheet" href="/assets/css/style.css"/>\n</head>\n<body>\n  <main class="container" style="padding:2rem 0">\n    <article>\n      ${data.content}\n    </article>\n  </main>\n  <script src="/assets/js/main.js" defer><\/script>\n</body>\n</html>`;
   return{path,html};
+}
+
+async function saveBlog(){
+  const status=document.getElementById("b-status").value;
+  if(status==="published")return publishNow();
+  if(status==="scheduled")return scheduleArticle();
+  return saveDraft();
 }
 
 async function saveDraft(){
@@ -705,15 +844,6 @@ async function saveDraft(){
     else{const d=await ref.add({...payload,createdAt:firebase.firestore.FieldValue.serverTimestamp()});curDraftId=d.id}
     toast("Brouillon sauvegarde !");loadDrafts();
   }catch(e){toast("Erreur: "+e.message,"error")}
-}
-
-function showSchedule(){
-  const row=document.getElementById("schedule-row");
-  if(row.style.display==="none"){
-    row.style.display="flex";
-    const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);
-    document.getElementById("sched-date").value=tomorrow.toISOString().split("T")[0];
-  }else{scheduleArticle()}
 }
 
 async function scheduleArticle(){
@@ -766,6 +896,240 @@ async function delDraft(id){
   }catch(e){toast(e.message,"error")}
 }
 async function delPublished(path){if(!confirm("Supprimer ?"))return;try{const{sha}=await getFile(path);await delFile(path,sha,"Delete "+path);toast("Supprime");treeCache=[];loadPublished()}catch(e){toast(e.message,"error")}}
+
+// ─── AI GENERATION ───
+async function generateArticle(){
+  const keywords=document.getElementById("b-keywords").value.trim();
+  if(!keywords){toast("Saisis des mots-cles pour generer l'article","error");return}
+
+  const settingsDoc=await db.collection("admin").doc(auth.currentUser.uid).get();
+  const claudeKey=settingsDoc.data()?.claudeKey;
+  if(!claudeKey){toast("Configure ta cle API Claude dans Reglages","error");return}
+
+  const authorId=document.getElementById("b-author").value;
+  let author={name:"Nicolas",tone:"Chaleureux et authentique, comme un local."};
+  if(authorId){
+    try{
+      const aDoc=await db.collection("admin").doc(auth.currentUser.uid).collection("authors").doc(authorId).get();
+      if(aDoc.exists)author=aDoc.data();
+    }catch(e){}
+  }
+
+  const lang=document.getElementById("b-lang").value;
+  const langNames={fr:"Francais",en:"English",es:"Espanol",de:"Deutsch"};
+  const tpl=TEMPLATES.find(t=>t.id===currentTemplateId);
+  const tplName=tpl?tpl.name:"Article libre";
+  const links=(SITE_LINKS[lang]||SITE_LINKS.fr).map(l=>`- ${l.url} (ancres : ${l.anchors.join(", ")})`).join("\n");
+
+  const prompt=`Tu es un redacteur web SEO expert, specialise dans le tourisme balneaire et la location saisonniere dans les Landes (sud-ouest de la France).
+
+Tu rediges pour le site Uhaina House (https://location-seignosse.fr), une maison de vacances a Seignosse, entre foret des Landes et ocean Atlantique.
+
+AUTEUR : ${author.name} — ${author.role||""}
+PROFIL & TON : ${author.tone}
+
+EXPRESSION(S) CLE(S) CIBLE(S) : ${keywords}
+
+LANGUE DE REDACTION : ${langNames[lang]||"Francais"}
+
+TYPE D'ARTICLE : ${tplName}
+
+--- CONSIGNES SEO ---
+- Place l'expression cle principale dans le H1, le premier paragraphe, et au moins 2 H2.
+- Densite du mot-cle principal : 1-2%.
+- Utilise des variantes semantiques (LSI) naturellement dans le texte.
+- Ecris une meta description de 150-160 caracteres. Place-la dans un commentaire HTML au tout debut : <!-- META: ta description ici -->
+
+--- CRITERES E-E-A-T ---
+- Experience : Integre des anecdotes ou recommandations personnelles credibles de l'auteur.
+- Expertise : Montre une connaissance pointue du sujet et de la region.
+- Authoritativeness : Cite des references locales (Office de tourisme, evenements reels, lieux connus).
+- Trustworthiness : Informations exactes, dates realistes, pas de sur-promesses.
+
+--- MAILLAGE INTERNE ---
+Insere 3 a 5 liens internes vers les pages du site avec des ancres optimisees. Utilise la balise <a href="URL">ancre</a> :
+${links}
+
+--- STRUCTURE ---
+- H1 contenant le mot-cle principal (1 seul H1).
+- Introduction engageante de 2-3 phrases.
+- 3-6 sections H2, certaines avec H3 si necessaire.
+- Paragraphes courts (2-4 phrases).
+- Au moins une liste a puces ou numerotee.
+- Conclusion avec appel a l'action vers la reservation.
+- Longueur : 1200-1800 mots.
+
+--- FORMAT DE SORTIE ---
+Retourne UNIQUEMENT le contenu HTML de l'article (de <h1> a la fin).
+Pas de bloc html, head, body, article.
+Commence par le commentaire META puis directement le <h1>.`;
+
+  const btn=document.getElementById("gen-btn");
+  btn.disabled=true;
+  btn.innerHTML='<span class="spinner" style="width:14px;height:14px"></span> Generation en cours...';
+  document.getElementById("be").innerHTML='<p style="color:var(--muted);text-align:center;padding:2rem">Generation de l\'article en cours...</p>';
+
+  try{
+    const response=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json",
+        "x-api-key":claudeKey,
+        "anthropic-version":"2023-06-01",
+        "anthropic-dangerous-direct-browser-access":"true"
+      },
+      body:JSON.stringify({
+        model:"claude-sonnet-4-6",
+        max_tokens:4096,
+        stream:true,
+        messages:[{role:"user",content:prompt}]
+      })
+    });
+
+    if(!response.ok){
+      const err=await response.json();
+      throw new Error(err.error?.message||"Erreur API ("+response.status+")");
+    }
+
+    const reader=response.body.getReader();
+    const decoder=new TextDecoder();
+    let fullText="",buffer="";
+
+    while(true){
+      const{done,value}=await reader.read();
+      if(done)break;
+      buffer+=decoder.decode(value,{stream:true});
+      const lines=buffer.split("\n");
+      buffer=lines.pop();
+      for(const line of lines){
+        if(line.startsWith("data: ")){
+          const jsonStr=line.slice(6).trim();
+          if(jsonStr==="[DONE]")continue;
+          try{
+            const data=JSON.parse(jsonStr);
+            if(data.type==="content_block_delta"&&data.delta?.text){
+              fullText+=data.delta.text;
+              document.getElementById("be").innerHTML=fullText;
+            }
+          }catch(e){}
+        }
+      }
+    }
+
+    const metaMatch=fullText.match(/<!--\s*META:\s*(.*?)\s*-->/);
+    if(metaMatch){
+      document.getElementById("b-desc").value=metaMatch[1];
+      fullText=fullText.replace(metaMatch[0],"").trim();
+      document.getElementById("be").innerHTML=fullText;
+    }
+
+    const h1Match=fullText.match(/<h1[^>]*>(.*?)<\/h1>/i);
+    if(h1Match&&!document.getElementById("b-title").value){
+      document.getElementById("b-title").value=h1Match[1].replace(/<[^>]*>/g,"");
+      autoSlug();
+    }
+
+    toast("Article genere avec succes !");
+  }catch(e){
+    toast("Erreur IA: "+e.message,"error");
+    document.getElementById("be").innerHTML="<p>Erreur lors de la generation. Verifie ta cle API dans les Reglages.</p>";
+  }
+
+  btn.disabled=false;
+  btn.innerHTML="&#9733; Generer avec l'IA";
+}
+
+// ─── AUTHORS ───
+async function loadAuthors(){
+  const grid=document.getElementById("authors-grid");grid.innerHTML='<div class="spinner"></div>';
+  try{
+    const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("authors").get();
+    if(snap.empty){
+      await db.collection("admin").doc(auth.currentUser.uid).collection("authors").doc("nicolas").set({
+        name:"Nicolas",role:"Fondateur & proprietaire",
+        tone:"Ton chaleureux, authentique et passionne. Parle en connaissance de cause comme un local. Style conversationnel avec des recommandations personnelles. Tutoie le lecteur.",
+        profileUrl:"/a-propos/nicolas/"
+      });
+      return loadAuthors();
+    }
+    let h="";
+    snap.forEach(d=>{const v=d.data();h+=`<div class="author-card"><h3>${esc(v.name)}</h3><div class="arole">${esc(v.role||"")}</div><div class="atone">"${esc(v.tone||"")}"</div><div class="aactions"><button class="btn btn-ghost btn-sm" onclick="showAuthorForm('${d.id}')">Modifier</button><button class="btn btn-danger btn-sm" onclick="deleteAuthor('${d.id}')">Supprimer</button></div></div>`});
+    grid.innerHTML=h;
+  }catch(e){grid.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
+}
+
+function showAuthorForm(id){
+  let name="",role="",tone="",profileUrl="";
+  if(id){
+    db.collection("admin").doc(auth.currentUser.uid).collection("authors").doc(id).get().then(doc=>{
+      if(doc.exists){const v=doc.data();showAuthorModal(id,v.name,v.role,v.tone,v.profileUrl)}
+    });
+  }else{showAuthorModal("",name,role,tone,profileUrl)}
+}
+
+function showAuthorModal(id,name,role,tone,profileUrl){
+  openModal(`<h3>${id?"Modifier":"Ajouter"} un auteur</h3>
+    <div class="form-group"><label>Nom</label><input type="text" id="a-name" value="${esc(name||"")}"/></div>
+    <div class="form-group"><label>Role</label><input type="text" id="a-role" value="${esc(role||"")}" placeholder="ex: Fondateur & proprietaire"/></div>
+    <div class="form-group"><label>Ton de redaction</label><textarea id="a-tone" rows="3" placeholder="Decris le style, le ton, la personnalite...">${esc(tone||"")}</textarea></div>
+    <div class="form-group"><label>URL profil (optionnel)</label><input type="text" id="a-url" value="${esc(profileUrl||"")}" placeholder="/a-propos/nicolas/"/></div>
+    <div class="modal-actions"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button><button class="btn btn-primary btn-sm" onclick="saveAuthor('${id}')">Sauvegarder</button></div>`);
+}
+
+async function saveAuthor(id){
+  const name=document.getElementById("a-name").value.trim();
+  const role=document.getElementById("a-role").value.trim();
+  const tone=document.getElementById("a-tone").value.trim();
+  const profileUrl=document.getElementById("a-url").value.trim();
+  if(!name){toast("Le nom est requis","error");return}
+  try{
+    const ref=db.collection("admin").doc(auth.currentUser.uid).collection("authors");
+    const data={name,role,tone,profileUrl};
+    if(id){await ref.doc(id).update(data)}
+    else{const docId=name.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-");await ref.doc(docId).set(data)}
+    closeModal();toast("Auteur sauvegarde !");loadAuthors();
+  }catch(e){toast("Erreur: "+e.message,"error")}
+}
+
+async function deleteAuthor(id){
+  if(!confirm("Supprimer cet auteur ?"))return;
+  try{await db.collection("admin").doc(auth.currentUser.uid).collection("authors").doc(id).delete();toast("Auteur supprime");loadAuthors()}catch(e){toast(e.message,"error")}
+}
+
+// ─── SETTINGS ───
+async function loadSettings(){
+  try{
+    const doc=await db.collection("admin").doc(auth.currentUser.uid).get();
+    const data=doc.data()||{};
+    document.getElementById("claude-dot").className="sdot "+(data.claudeKey?"ok":"miss");
+    document.getElementById("gh-dot").className="sdot "+(data.token?"ok":"miss");
+    if(data.claudeKey)document.getElementById("set-claude-key").value="sk-ant-***"+data.claudeKey.slice(-4);
+    if(data.token)document.getElementById("set-gh-token").value="ghp_***"+data.token.slice(-4);
+  }catch(e){}
+}
+
+async function saveClaudeKey(){
+  const key=document.getElementById("set-claude-key").value.trim();
+  if(!key||!key.startsWith("sk-ant-")){toast("Cle invalide (doit commencer par sk-ant-)","error");return}
+  try{
+    await db.collection("admin").doc(auth.currentUser.uid).set({claudeKey:key},{merge:true});
+    document.getElementById("claude-dot").className="sdot ok";
+    toast("Cle API Claude sauvegardee !");
+  }catch(e){toast("Erreur: "+e.message,"error")}
+}
+
+async function saveGhToken(){
+  const token=document.getElementById("set-gh-token").value.trim();
+  if(!token){toast("Token requis","error");return}
+  try{
+    const r=await fetch(GH+`/repos/${OWNER}/${REPO}`,{headers:{"Authorization":"Bearer "+token}});
+    if(!r.ok)throw Error("Token invalide");
+    await db.collection("admin").doc(auth.currentUser.uid).set({token},{merge:true});
+    TOKEN=token;
+    document.getElementById("gh-dot").className="sdot ok";
+    toast("Token GitHub sauvegarde !");
+  }catch(e){toast("Erreur: "+e.message,"error")}
+}
 
 // ─── UTILS ───
 function esc(s){const d=document.createElement("div");d.textContent=s;return d.innerHTML}
