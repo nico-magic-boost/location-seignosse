@@ -1187,7 +1187,10 @@ ${links}
 Retourne UNIQUEMENT le contenu HTML du body de l'article.
 NE PAS inclure : html, head, body, article, header, footer, h1, aside author-box, sommaire/TOC.
 Ces elements sont generes automatiquement par le systeme.
-Commence par le commentaire META puis directement le premier <p> d'introduction.`;
+Commence par deux commentaires HTML puis directement le premier <p> :
+<!-- TITLE: Titre optimise SEO ici -->
+<!-- META: Meta description 150-160 caracteres ici -->
+Puis le contenu de l'article (premier <p>, puis <h2>, etc.).`;
 
   const btn=document.getElementById("gen-btn");
   btn.disabled=true;
@@ -1241,18 +1244,20 @@ Commence par le commentaire META puis directement le premier <p> d'introduction.
       }
     }
 
-    const metaMatch=fullText.match(/<!--\s*META:\s*(.*?)\s*-->/);
-    if(metaMatch){
-      document.getElementById("b-desc").value=metaMatch[1];
-      fullText=fullText.replace(metaMatch[0],"").trim();
-      document.getElementById("be").innerHTML=fullText;
+    const titleMatch=fullText.match(/<!--\s*TITLE:\s*(.*?)\s*-->/);
+    if(titleMatch){
+      document.getElementById("b-title").value=titleMatch[1].trim();
+      autoSlug();
+      fullText=fullText.replace(titleMatch[0],"").trim();
     }
 
-    const h1Match=fullText.match(/<h1[^>]*>(.*?)<\/h1>/i);
-    if(h1Match&&!document.getElementById("b-title").value){
-      document.getElementById("b-title").value=h1Match[1].replace(/<[^>]*>/g,"");
-      autoSlug();
+    const metaMatch=fullText.match(/<!--\s*META:\s*(.*?)\s*-->/);
+    if(metaMatch){
+      document.getElementById("b-desc").value=metaMatch[1].trim();
+      fullText=fullText.replace(metaMatch[0],"").trim();
     }
+
+    document.getElementById("be").innerHTML=fullText;
 
     toast("Article genere ! Sauvegarde auto en brouillon...","info");
     await saveDraft();
