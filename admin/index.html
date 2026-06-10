@@ -932,8 +932,8 @@ function buildHtml(data){
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PCYJBK00T3"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});try{if(localStorage.getItem('cookie-consent')==='granted')gtag('consent','update',{'analytics_storage':'granted'});}catch(e){}gtag('js',new Date());gtag('config','G-PCYJBK00T3',{'anonymize_ip':true});</script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PCYJBK00T3"><\/script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});try{if(localStorage.getItem('cookie-consent')==='granted')gtag('consent','update',{'analytics_storage':'granted'});}catch(e){}gtag('js',new Date());gtag('config','G-PCYJBK00T3',{'anonymize_ip':true});<\/script>
   <title>${esc(data.title)} | Uhaïna House</title>
   <meta name="description" content="${esc(data.description)}"/>
   <meta name="keywords" content="${esc(data.keywords||"")}"/>
@@ -958,10 +958,10 @@ function buildHtml(data){
   <link rel="stylesheet" href="/assets/css/style.css?v=4"/>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BlogPosting","headline":"${esc(data.title)}","description":"${esc(data.description)}","image":"https://location-seignosse.fr${coverImg}","datePublished":"${today}","dateModified":"${today}","author":{"@type":"Person","name":"${esc(authorName)}","url":"https://location-seignosse.fr${authorUrl}"},"publisher":{"@type":"Organization","name":"Uhaïna House","logo":{"@type":"ImageObject","url":"https://location-seignosse.fr/assets/img/logo.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"${url}"}}
-  </script>
+  <\/script>
   <script type="application/ld+json">
   {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"${n.labels[0]}","item":"https://location-seignosse.fr${n.home}"},{"@type":"ListItem","position":2,"name":"${n.newsLabel}","item":"https://location-seignosse.fr${n.news}"},{"@type":"ListItem","position":3,"name":"${esc(data.title)}"}]}
-  </script>
+  <\/script>
 </head>
 <body>
   <header class="site-header">
