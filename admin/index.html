@@ -69,7 +69,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .page-card .path{font-size:.73rem;color:var(--muted)}
 .lang-group{margin-bottom:1.5rem}.lang-group h3{font-size:.82rem;color:var(--accent);margin-bottom:.7rem;text-transform:uppercase;letter-spacing:.08em}
 
-.edit-panel{display:none;flex-direction:column;height:100%}.edit-panel.visible{display:flex}
+.edit-panel{display:none;flex-direction:column}.edit-panel.visible{display:flex}
 .edit-header{display:flex;align-items:center;gap:.8rem;margin-bottom:1rem}
 .back-btn{font-size:1.3rem;cursor:pointer;color:var(--muted);background:none;border:none;padding:.2rem .5rem;border-radius:6px}
 .back-btn:hover{color:var(--text);background:rgba(255,255,255,.06)}
@@ -162,7 +162,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
 .spinner{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
 @keyframes spin{to{transform:rotate(360deg)}}
-.section{display:none}.section.active{display:block}
+.section{display:none}.section.active{display:flex;flex-direction:column;flex:1;overflow:hidden}
 .search-input{padding:.45rem .8rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.83rem;width:200px}
 .search-input:focus{outline:none;border-color:var(--accent)}
 </style>
