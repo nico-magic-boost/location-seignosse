@@ -352,7 +352,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
         <div class="form-group"><label>Titre</label><input type="text" id="b-title" oninput="autoSlug()"/></div>
         <div class="form-group"><label>Slug (URL)</label><input type="text" id="b-slug" placeholder="mon-article"/></div>
       </div>
-      <div class="form-group"><label>Meta description</label><input type="text" id="b-desc" placeholder="150-160 caracteres"/></div>
+      <div class="form-row">
+        <div class="form-group"><label>Meta description</label><input type="text" id="b-desc" placeholder="150-160 caracteres"/></div>
+        <div class="form-group"><label>Image de couverture</label>
+          <div style="display:flex;gap:.5rem">
+            <input type="text" id="b-cover" placeholder="/assets/img/terrasse-jardin.jpg" value="/assets/img/terrasse-jardin.jpg"/>
+            <button class="btn btn-ghost btn-sm" onclick="pickCover()" style="white-space:nowrap">Choisir</button>
+          </div>
+        </div>
+      </div>
       <div class="form-group"><label>Contenu</label>
         <div class="blog-editor-tabs">
           <button class="active" onclick="blogEditorTab('visual',this)">Visuel</button>
@@ -638,6 +646,16 @@ function addImg(target){
   });
 }
 function pickImg(tid,src){document.getElementById(tid).focus();document.execCommand("insertImage",false,src);closeModal()}
+function setCover(p){document.getElementById("b-cover").value=p;closeModal()}
+function pickCover(){
+  getTree().then(tree=>{
+    const imgs=tree.filter(f=>f.type==="blob"&&f.path.startsWith("assets/img/"));
+    let h='<h3>Choisir l\'image de couverture</h3><div class="img-picker">';
+    imgs.forEach(i=>{const u=`https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${i.path}`;h+=`<div onclick="setCover('/${i.path}')"><img src="${u}"/></div>`});
+    h+='</div><div class="modal-actions"><button class="btn btn-ghost btn-sm" onclick="closeModal()">Annuler</button></div>';
+    openModal(h);
+  });
+}
 
 // ─── IMAGES ───
 async function loadImages(){
@@ -871,14 +889,150 @@ function getArticleData(){
   const content=document.getElementById("be").innerHTML;
   const keywords=document.getElementById("b-keywords").value.trim();
   const author=document.getElementById("b-author").value;
+  const coverImg=document.getElementById("b-cover")?.value||"/assets/img/terrasse-jardin.jpg";
   if(!title||!slug){toast("Titre et slug requis","error");return null}
-  return{title,slug,description:desc,lang,content,keywords,author};
+  return{title,slug,description:desc,lang,content,keywords,author,coverImg};
 }
 
 function buildHtml(data){
   const dm={fr:"actualites",en:"en/news",es:"es/noticias",de:"de/aktuelles"};
   const path=dm[data.lang]+"/"+data.slug+"/index.html";
-  const html=`<!doctype html>\n<html lang="${data.lang}">\n<head>\n  <meta charset="utf-8"/>\n  <meta name="viewport" content="width=device-width,initial-scale=1"/>\n  <title>${esc(data.title)} | Uhaina House</title>\n  <meta name="description" content="${esc(data.description)}"/>\n  <link rel="canonical" href="https://location-seignosse.fr/${path.replace('index.html','')}"/>\n  <link rel="stylesheet" href="/assets/css/style.css"/>\n</head>\n<body>\n  <main class="container" style="padding:2rem 0">\n    <article>\n      ${data.content}\n    </article>\n  </main>\n  <script src="/assets/js/main.js" defer><\/script>\n</body>\n</html>`;
+  const url="https://location-seignosse.fr/"+path.replace("index.html","");
+  const today=new Date().toISOString().split("T")[0];
+  const todayFr=new Date().toLocaleDateString("fr",{day:"numeric",month:"long",year:"numeric"});
+
+  const navs={
+    fr:{home:"/",maison:"/la-maison/",seignosse:"/seignosse/",avis:"/avis/",about:"/a-propos/",news:"/actualites/",book:"/reserver/",labels:["Accueil","La maison","Seignosse","Avis","À propos","Actualités"],newsLabel:"Actualités",bookLabel:"Réserver",langLinks:[['/','/en/news/','/es/noticias/','/de/aktuelles/'],['FR','EN','ES','DE']]},
+    en:{home:"/en/",maison:"/en/house/",seignosse:"/en/seignosse/",avis:"/en/reviews/",about:"/en/about/",news:"/en/news/",book:"/en/book/",labels:["Home","House","Seignosse","Reviews","About","News"],newsLabel:"News",bookLabel:"Book",langLinks:[['/en/news/','/en/news/','/es/noticias/','/de/aktuelles/'],['FR','EN','ES','DE']]},
+    es:{home:"/es/",maison:"/es/casa/",seignosse:"/es/seignosse/",avis:"/es/opiniones/",about:"/es/nosotros/",news:"/es/noticias/",book:"/es/reservar/",labels:["Inicio","Casa","Seignosse","Opiniones","Nosotros","Noticias"],newsLabel:"Noticias",bookLabel:"Reservar",langLinks:[['/es/noticias/','/en/news/','/es/noticias/','/de/aktuelles/'],['FR','EN','ES','DE']]},
+    de:{home:"/de/",maison:"/de/haus/",seignosse:"/de/seignosse/",avis:"/de/bewertungen/",about:"/de/ueber-uns/",news:"/de/aktuelles/",book:"/de/buchen/",labels:["Start","Haus","Seignosse","Bewertungen","Über uns","Aktuelles"],newsLabel:"Aktuelles",bookLabel:"Buchen",langLinks:[['/de/aktuelles/','/en/news/','/es/noticias/','/de/aktuelles/'],['FR','EN','ES','DE']]}
+  };
+  const n=navs[data.lang]||navs.fr;
+  const aboutLabel={fr:"À propos de l'auteur",en:"About the author",es:"Sobre el autor",de:"Über den Autor"}[data.lang]||"À propos de l'auteur";
+  const tocLabel={fr:"Sommaire",en:"Table of contents",es:"Índice",de:"Inhaltsverzeichnis"}[data.lang]||"Sommaire";
+  const readMore={fr:"En savoir plus sur",en:"Learn more about",es:"Saber más sobre",de:"Mehr erfahren über"}[data.lang]||"En savoir plus sur";
+
+  const authorName=data.authorData?.name||"Nicolas";
+  const authorBio=data.authorData?.bio||"";
+  const authorUrl=data.authorData?.profileUrl||"/a-propos/nicolas/";
+
+  const toc=[];
+  const bodyWithIds=data.content.replace(/<h2[^>]*>(.*?)<\/h2>/gi,(m,title)=>{
+    const id=title.replace(/<[^>]*>/g,"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").substring(0,40);
+    toc.push({id,title:title.replace(/<[^>]*>/g,"")});
+    return`<h2 id="${id}">${title}</h2>`;
+  });
+
+  const tocHtml=toc.length?`<aside class="article-toc" aria-label="${tocLabel}"><p class="article-toc-label">${tocLabel}</p><ol>${toc.map(t=>`<li><a href="#${t.id}">${esc(t.title)}</a></li>`).join("")}</ol></aside>`:"";
+
+  const coverImg=data.coverImg||"/assets/img/terrasse-jardin.jpg";
+
+  const html=`<!doctype html>
+<html lang="${data.lang}">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PCYJBK00T3"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'ad_storage':'denied','ad_user_data':'denied','ad_personalization':'denied','analytics_storage':'denied','wait_for_update':500});try{if(localStorage.getItem('cookie-consent')==='granted')gtag('consent','update',{'analytics_storage':'granted'});}catch(e){}gtag('js',new Date());gtag('config','G-PCYJBK00T3',{'anonymize_ip':true});</script>
+  <title>${esc(data.title)} | Uhaïna House</title>
+  <meta name="description" content="${esc(data.description)}"/>
+  <meta name="keywords" content="${esc(data.keywords||"")}"/>
+  <meta name="robots" content="index, follow, max-image-preview:large"/>
+  <meta name="theme-color" content="#1F2937"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:site_name" content="Uhaïna House"/>
+  <meta property="og:title" content="${esc(data.title)}"/>
+  <meta property="og:description" content="${esc(data.description)}"/>
+  <meta property="og:url" content="${url}"/>
+  <meta property="og:image" content="https://location-seignosse.fr${coverImg}"/>
+  <meta property="og:locale" content="${data.lang==="fr"?"fr_FR":data.lang==="en"?"en_GB":data.lang==="es"?"es_ES":"de_DE"}"/>
+  <meta property="article:published_time" content="${today}"/>
+  <meta property="article:author" content="${esc(authorName)}"/>
+  <link rel="canonical" href="${url}"/>
+  <link rel="icon" type="image/svg+xml" href="/assets/img/favicon.svg"/>
+  <link rel="apple-touch-icon" href="/assets/img/favicon.svg"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'"/>
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap"/></noscript>
+  <link rel="stylesheet" href="/assets/css/style.css?v=4"/>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BlogPosting","headline":"${esc(data.title)}","description":"${esc(data.description)}","image":"https://location-seignosse.fr${coverImg}","datePublished":"${today}","dateModified":"${today}","author":{"@type":"Person","name":"${esc(authorName)}","url":"https://location-seignosse.fr${authorUrl}"},"publisher":{"@type":"Organization","name":"Uhaïna House","logo":{"@type":"ImageObject","url":"https://location-seignosse.fr/assets/img/logo.svg"}},"mainEntityOfPage":{"@type":"WebPage","@id":"${url}"}}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"${n.labels[0]}","item":"https://location-seignosse.fr${n.home}"},{"@type":"ListItem","position":2,"name":"${n.newsLabel}","item":"https://location-seignosse.fr${n.news}"},{"@type":"ListItem","position":3,"name":"${esc(data.title)}"}]}
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="${n.home}" class="brand" aria-label="Uhaïna House"><img src="/assets/img/logo.svg" alt="" class="brand-logo" width="44" height="44"/><span class="brand-name">Uhaïna House</span></a>
+      <nav class="site-nav" aria-label="Navigation principale">
+        <a href="${n.home}">${n.labels[0]}</a><a href="${n.maison}">${n.labels[1]}</a><a href="${n.seignosse}">${n.labels[2]}</a><a href="${n.avis}">${n.labels[3]}</a><a href="${n.about}">${n.labels[4]}</a><a href="${n.news}" aria-current="page">${n.labels[5]}</a>
+      </nav>
+      <div class="lang-switch" role="navigation" aria-label="Language">
+        <a href="${n.langLinks[0][0]}" hreflang="fr">${n.langLinks[1][0]}</a><a href="${n.langLinks[0][1]}" hreflang="en">${n.langLinks[1][1]}</a><a href="${n.langLinks[0][2]}" hreflang="es">${n.langLinks[1][2]}</a><a href="${n.langLinks[0][3]}" hreflang="de">${n.langLinks[1][3]}</a>
+      </div>
+      <a class="cta cta-primary" href="${n.book}">${n.bookLabel}</a>
+    </div>
+  </header>
+  <main id="top">
+    <article>
+      <section class="article-hero">
+        <div class="container">
+          <nav class="breadcrumb" aria-label="Fil d'ariane">
+            <a href="${n.home}">${n.labels[0]}</a> <span>/</span>
+            <a href="${n.news}">${n.newsLabel}</a> <span>/</span>
+            <span aria-current="page">${esc(data.title)}</span>
+          </nav>
+          <h1>${data.title}</h1>
+          <div class="article-meta">
+            <a class="author" href="${authorUrl}"><img class="author-avatar" src="/assets/img/nicolas-charlene.png" alt="" width="32" height="32"/> Par ${esc(authorName)}</a>
+            <span class="sep">&middot;</span>
+            <time datetime="${today}">Publié le ${todayFr}</time>
+          </div>
+          <figure class="article-cover">
+            <img src="${coverImg}" alt="${esc(data.title)}" width="1600" height="900"/>
+          </figure>
+        </div>
+      </section>
+      <section>
+        <div class="container article-layout">
+          <div class="article-body">
+            ${bodyWithIds}
+            <aside class="author-box">
+              <img class="author-box-avatar" src="/assets/img/nicolas-charlene.png" alt="${esc(authorName)}" width="84" height="84"/>
+              <div class="author-box-body">
+                <p class="author-box-label">${aboutLabel}</p>
+                <h3>${esc(authorName)}</h3>
+                <p>${esc(authorBio||"Co-propriétaire de Uhaïna House, passionné par Seignosse et ses environs.")}</p>
+                <a class="author-box-link" href="${authorUrl}">${readMore} ${esc(authorName)} →</a>
+              </div>
+            </aside>
+          </div>
+          ${tocHtml}
+        </div>
+      </section>
+    </article>
+  </main>
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div><p class="footer-brand"><img src="/assets/img/logo.svg" alt="" width="32" height="32"/><strong>Uhaïna House</strong></p><p class="muted">Location maison de vacances à Seignosse (Landes, 40510).</p></div>
+      <div><p class="footer-heading">Navigation</p><ul class="footer-links"><li><a href="${n.home}">${n.labels[0]}</a></li><li><a href="${n.maison}">${n.labels[1]}</a></li><li><a href="${n.seignosse}">${n.labels[2]}</a></li><li><a href="${n.avis}">${n.labels[3]}</a></li><li><a href="${n.about}">${n.labels[4]}</a></li><li><a href="${n.news}">${n.labels[5]}</a></li><li><a href="${n.book}">${n.bookLabel}</a></li></ul></div>
+      <div><p class="footer-heading">Contact</p><ul class="footer-links"><li><a href="https://www.airbnb.fr/rooms/50843461" target="_blank" rel="noopener">Airbnb</a></li><li><a href="https://www.instagram.com/locationseignosse/" target="_blank" rel="noopener">Instagram</a></li><li><a href="mailto:contact@location-seignosse.fr">contact@location-seignosse.fr</a></li></ul></div>
+    </div>
+    <div class="container footer-bottom"><p>&copy; <span id="year"></span> Uhaïna House · Seignosse (40510)</p></div>
+  </footer>
+  <div id="cookie-banner" class="cookie-banner" role="dialog" aria-live="polite" aria-label="Cookies" hidden>
+    <div class="cookie-banner-inner"><div class="cookie-text"><strong>🍪 Cookies</strong><p>Nous utilisons des cookies d'analyse (Google Analytics).</p></div><div class="cookie-actions"><button type="button" class="cta cta-ghost cookie-refuse">Refuser</button><button type="button" class="cta cta-primary cookie-accept">Accepter</button></div></div>
+  </div>
+  <div class="floating-widgets">
+    <a class="rating-popup" href="/avis/" id="rating-popup"><span class="rating-popup-close" role="button" tabindex="0" aria-label="Fermer">&#10005;</span><span class="rating-badge-score">4,74</span><span class="rating-badge-detail"><span class="rating-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</span><span class="rating-badge-count">sur 5 · 47 avis</span><span class="rating-badge-source">Source : Airbnb →</span></span></a>
+    <a class="whatsapp-btn" href="https://wa.me/33611637915" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+  </div>
+  <script src="/assets/js/main.js" defer><\/script>
+</body>
+</html>`;
   return{path,html};
 }
 
@@ -910,6 +1064,7 @@ async function scheduleArticle(){
   if(publishAt<=new Date()){toast("La date doit etre dans le futur","error");return}
   toast("Programmation...","info");
   try{
+    await enrichAuthorData(data);
     const{path,html}=buildHtml(data);
     const ref=db.collection("admin").doc(auth.currentUser.uid).collection("drafts");
     const payload={...data,status:"scheduled",publishAt,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
@@ -924,10 +1079,21 @@ async function scheduleArticle(){
   }catch(e){toast("Erreur: "+e.message,"error")}
 }
 
+async function enrichAuthorData(data){
+  if(data.author){
+    try{
+      const aDoc=await db.collection("admin").doc(auth.currentUser.uid).collection("authors").doc(data.author).get();
+      if(aDoc.exists){const a=aDoc.data();data.authorData={name:a.name,bio:a.tone,profileUrl:a.profileUrl||"/a-propos/nicolas/"}}
+    }catch(e){}
+  }
+  return data;
+}
+
 async function publishNow(){
   const data=getArticleData();if(!data)return;
   toast("Publication...","info");
   try{
+    await enrichAuthorData(data);
     const{path,html}=buildHtml(data);
     await putFile(path,html,"Publish: "+data.title+" via admin",curBlogSha||undefined);
     if(curDraftId){
@@ -1006,18 +1172,22 @@ Insere 3 a 5 liens internes vers les pages du site avec des ancres optimisees. U
 ${links}
 
 --- STRUCTURE ---
-- H1 contenant le mot-cle principal (1 seul H1).
-- Introduction engageante de 2-3 phrases.
-- 3-6 sections H2, certaines avec H3 si necessaire.
+- NE PAS inclure de <h1> (il est genere automatiquement par le systeme).
+- Commence directement par un paragraphe d'introduction engageant (2-3 phrases).
+- Ajoute un <blockquote> "Bon a savoir" apres l'introduction.
+- 3-6 sections <h2 id="id-court">, certaines avec <h3> si necessaire.
+- IMPORTANT : chaque <h2> DOIT avoir un attribut id unique (ex: <h2 id="surf">Surfer a Seignosse</h2>).
 - Paragraphes courts (2-4 phrases).
 - Au moins une liste a puces ou numerotee.
 - Conclusion avec appel a l'action vers la reservation.
+- Termine par une section "Pour aller plus loin" avec 2-3 liens internes.
 - Longueur : 1200-1800 mots.
 
 --- FORMAT DE SORTIE ---
-Retourne UNIQUEMENT le contenu HTML de l'article (de <h1> a la fin).
-Pas de bloc html, head, body, article.
-Commence par le commentaire META puis directement le <h1>.`;
+Retourne UNIQUEMENT le contenu HTML du body de l'article.
+NE PAS inclure : html, head, body, article, header, footer, h1, aside author-box, sommaire/TOC.
+Ces elements sont generes automatiquement par le systeme.
+Commence par le commentaire META puis directement le premier <p> d'introduction.`;
 
   const btn=document.getElementById("gen-btn");
   btn.disabled=true;
