@@ -130,7 +130,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .gen-bar .form-group{flex:1;margin-bottom:0}
 .gen-btn{background:linear-gradient(135deg,var(--accent),#d35400);color:#fff;border:none;padding:.55rem 1.1rem;border-radius:var(--radius);font-size:.85rem;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap}
 .gen-btn:hover{filter:brightness(1.1)}.gen-btn:disabled{opacity:.6;cursor:wait}
-.status-bar{display:flex;gap:.8rem;align-items:center;margin-top:1rem;padding:.8rem;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);flex-wrap:wrap}
+.status-bar{display:flex;gap:.8rem;align-items:center;padding:.8rem 1.5rem;background:var(--sidebar);border-top:1px solid var(--border);position:sticky;bottom:0;z-index:10;flex-wrap:wrap}
 .status-bar .form-group{margin-bottom:0}
 .status-bar select{min-width:140px}
 .author-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem}
@@ -1029,7 +1029,8 @@ Commence par le commentaire META puis directement le <h1>.`;
       autoSlug();
     }
 
-    toast("Article genere avec succes !");
+    toast("Article genere ! Sauvegarde auto en brouillon...","info");
+    await saveDraft();
   }catch(e){
     toast("Erreur IA: "+e.message,"error");
     document.getElementById("be").innerHTML="<p>Erreur lors de la generation. Verifie ta cle API dans les Reglages.</p>";
