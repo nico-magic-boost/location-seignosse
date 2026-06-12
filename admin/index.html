@@ -761,28 +761,35 @@ async function loadScheduledDrafts(){
     const snap=await db.collection("admin").doc(auth.currentUser.uid).collection("drafts").where("status","==","scheduled").get();
     if(snap.empty){document.getElementById("n-scheduled").textContent="0";el.innerHTML='<p style="color:var(--muted)">Aucun article programme</p>';return}
     const now=new Date();
-    const overdue=[];const pending=[];
+    const overdue=[];const remaining=[];
     snap.docs.forEach(d=>{
       const v=d.data();
       const pa=v.publishAt?.seconds?new Date(v.publishAt.seconds*1000):v.publishAt?new Date(v.publishAt):null;
-      if(pa&&pa<=now)overdue.push(d);else pending.push(d);
+      if(pa&&pa<=now)overdue.push(d);else remaining.push(d);
     });
     if(overdue.length){
       toast(overdue.length+" article(s) en attente de publication...","info");
       for(const d of overdue){
-        try{await autoPublishOverdue(d.id,d.data())}catch(e){console.error("Auto-publish failed for "+d.id,e)}
+        try{
+          await autoPublishOverdue(d.id,d.data());
+        }catch(e){
+          console.error("Auto-publish failed for "+d.id,e);
+          toast("Echec publication auto: "+(d.data().title||d.id)+" - "+e.message,"error");
+          remaining.push(d);
+        }
       }
       loadPublished();
     }
-    document.getElementById("n-scheduled").textContent=pending.length;
-    if(!pending.length){el.innerHTML='<p style="color:var(--muted)">Aucun article programme</p>';return}
-    pending.sort((a,b)=>(a.data().publishAt?.seconds||0)-(b.data().publishAt?.seconds||0));
-    let h="";pending.forEach(d=>{const v=d.data();h+=blogCardHtml(d.id,v,"scheduled")});el.innerHTML=h;
+    document.getElementById("n-scheduled").textContent=remaining.length;
+    if(!remaining.length){el.innerHTML='<p style="color:var(--muted)">Aucun article programme</p>';return}
+    remaining.sort((a,b)=>(a.data().publishAt?.seconds||0)-(b.data().publishAt?.seconds||0));
+    let h="";remaining.forEach(d=>{const v=d.data();h+=blogCardHtml(d.id,v,"scheduled")});el.innerHTML=h;
   }catch(e){el.innerHTML=`<p style="color:var(--danger)">${e.message}</p>`}
 }
 
 async function autoPublishOverdue(id,v){
   const data={title:v.title,slug:v.slug,description:v.description||v.desc||"",lang:v.lang||"fr",content:v.content,keywords:v.keywords||"",author:v.author||"",coverImg:v.coverImg||"/assets/img/terrasse-jardin.jpg"};
+  if(!data.title||!data.slug||!data.content)throw new Error("Donnees incompletes");
   await enrichAuthorData(data);
   const{path,html}=buildHtml(data);
   await putFile(path,html,"Auto-publish: "+data.title,undefined);
